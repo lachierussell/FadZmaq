@@ -1,6 +1,6 @@
 #! /usr/bin/env python3
 
-from backend import backend
+import backend
 from flask import Flask
 
 if __name__ == '__main__':
