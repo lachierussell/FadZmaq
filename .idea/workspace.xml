@@ -1,18 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b99a2231-643f-4c98-9077-32cd14a0ea7b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/server/INSTALL.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/REAME.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/api/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/api/routes.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/server/etc/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client/flutter/fadzmaq/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/client/flutter/fadzmaq/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/backend/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/backend/routes.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/server.py" beforeDir="false" />
-    </list>
+    <list default="true" id="b99a2231-643f-4c98-9077-32cd14a0ea7b" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,7 +42,7 @@
           <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
             <state split_layout="SPLIT">
               <first_editor relative-caret-position="60">
-                <caret line="4" column="77" selection-start-line="4" selection-start-column="77" selection-end-line="4" selection-end-column="77" />
+                <caret line="4" column="40" selection-start-line="4" selection-start-column="40" selection-end-line="4" selection-end-column="40" />
               </first_editor>
               <second_editor />
             </state>
@@ -125,6 +114,18 @@
               <item name="CITS3200-dev" type="b2602c69:ProjectViewProjectNode" />
               <item name="CITS3200-dev" type="462c0819:PsiDirectoryNode" />
               <item name="server" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CITS3200-dev" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CITS3200-dev" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="api" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="CITS3200-dev" type="b2602c69:ProjectViewProjectNode" />
+              <item name="CITS3200-dev" type="462c0819:PsiDirectoryNode" />
+              <item name="server" type="462c0819:PsiDirectoryNode" />
+              <item name="etc" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -200,23 +201,22 @@
       <updated>1566727783514</updated>
       <workItem from="1566727787790" duration="111000" />
       <workItem from="1566777536587" duration="1007000" />
-      <workItem from="1566778673884" duration="4205000" />
+      <workItem from="1566778673884" duration="4405000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="5323000" />
+    <option name="totallyTimeSpent" value="5523000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="25" y="23" width="1655" height="1027" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25604463" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32941177" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49969003" visible="true" weight="0.32941177" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49969003" weight="0.32941177" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -327,7 +327,7 @@
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
         <state split_layout="SPLIT">
           <first_editor relative-caret-position="60">
-            <caret line="4" column="77" selection-start-line="4" selection-start-column="77" selection-end-line="4" selection-end-column="77" />
+            <caret line="4" column="40" selection-start-line="4" selection-start-column="40" selection-end-line="4" selection-end-column="40" />
           </first_editor>
           <second_editor />
         </state>
