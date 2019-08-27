@@ -23,8 +23,8 @@
 | /matches/`id`      | Un-match a user                       |           |                                                              | DELETE   |
 |                    |                                       |           |                                                              |          |
 | **Votes**          | *Could be unified*                    |           |                                                              |          |
-| /like/`id`         | Like a user                           |           |                                                              | POST     |
-| /pass/`id`         | Pass on a user                        |           |                                                              | POST     |
+| /like/`id`         | Like a user                           |           |                                                              | **POST** |
+| /pass/`id`         | Pass on a user                        |           |                                                              | **POST** |
 |                    |                                       |           |                                                              |          |
 |                    |                                       |           |                                                              |          |
 
