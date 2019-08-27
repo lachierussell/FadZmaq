@@ -15,7 +15,7 @@
 |                    |                                       |           |                                                              |          |
 | /profile           | Get your own profile data             |           | JSON of users own profile data.                              | **GET**  |
 | /profile/ping      | Set location                          |           | Confirmation                                                 | POST     |
-| /profile           | Set search preferences                | Filters   | Confirmation                                                 | **POST** |
+| /profile           | Set search preferences                | Filters   | Confirmation                                                 | POST     |
 |                    |                                       |           |                                                              |          |
 |                    |                                       |           |                                                              |          |
 | /matches           | Receive you current matches           |           |                                                              | **GET**  |
