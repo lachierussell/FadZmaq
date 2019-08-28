@@ -4,8 +4,6 @@ my_recs = {
                 "user": {
                     "user_id": "f1bd8af2a28adbf70af43cfc6d79ef95",
                     "name": "Michaela",
-                    "age": 20,
-                    "gender": 1,
                     "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/John_Legend_2019_by_Glenn_Francis.jpg/1280px-John_Legend_2019_by_Glenn_Francis.jpg",
                     "profile_fields": [
                         {
@@ -56,8 +54,6 @@ my_recs = {
                 "user": {
                     "user_id": "6c18ec1127d5a8951265f35c66b60f82",
                     "name": "Joshua",
-                    "age": 25,
-                    "gender": 0,
                     "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/John_Legend_2019_by_Glenn_Francis.jpg/1280px-John_Legend_2019_by_Glenn_Francis.jpg",
                     "profile_fields": [
                         {
@@ -139,8 +135,6 @@ my_candiate = {
                 "user": {
                     "user_id": "f1bd8af2a28adbf70af43cfc6d79ef95",
                     "name": "Michaela",
-                    "age": 20,
-                    "gender": 1,
                     "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/John_Legend_2019_by_Glenn_Francis.jpg/1280px-John_Legend_2019_by_Glenn_Francis.jpg",
                     "profile_fields": [
                         {

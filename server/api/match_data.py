@@ -2,8 +2,6 @@ my_match = {
         "match": {
             "user_id": "6c18ec1127d5a8951265f35c66b60f82",
             "name": "Joshua",
-            "age": 25,
-            "gender": 0,
             "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/John_Legend_2019_by_Glenn_Francis.jpg/1280px-John_Legend_2019_by_Glenn_Francis.jpg",
             "contact_details": {
                 "phone": "0423 161 368",
