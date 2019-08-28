@@ -1,3 +1,15 @@
+# @file
+# @brief        The api specification.
+# routes.py
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# This file handles the specification of our api.
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Lachlan Russell       22414249@student.uwa.edu.au
+
 from time import sleep
 from flask import jsonify, request
 from api import api
@@ -16,6 +28,10 @@ def index():
     }
     return jsonify(response), 300
 
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## USERS
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
 
 @api.route('/user/recs', methods=['GET'])
 def recommendations():
@@ -25,6 +41,11 @@ def recommendations():
 @api.route('/user/<string:id>', methods=['GET'])
 def get_user_by_id(id):
     return jsonify(recs_data.my_candiate), 200
+
+
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## PROFILE
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
 @api.route('/profile', methods=['GET'])
@@ -41,6 +62,11 @@ def update_profile():
     return jsonify(response), 200
 
 
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## MATCHES
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+
 @api.route('/matches', methods=['GET'])
 def get_matches():
     return jsonify(match_data.my_matches), 200
@@ -54,6 +80,21 @@ def get_matched_user(id):
 @api.route('/matches/<string:id>', methods=['DELETE'])
 def unmatch_user(id):
     return "User unmatched", 200
+
+
+@api.route('/matches/thumbs/down/<string:id>', methods=['DELETE'])
+def unmatch_user(id):
+    return "Thumbs down!", 200
+
+
+@api.route('/matches/thumbs/up/<string:id>', methods=['DELETE'])
+def unmatch_user(id):
+    return "Thumbs up!", 200
+
+
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## VOTES
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
 @api.route('/like/<string:id>', methods=['POST'])
