@@ -2,6 +2,8 @@
 
 ##### Lachlan Russell | 26/08/19
 
+Method is marked in **bold** when it has been implemented as a template route. 
+
 
 
 ## Route Specification
