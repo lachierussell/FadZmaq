@@ -14,7 +14,26 @@
 
 from flask import Flask
 from api import api
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+
+DATABASE_URI = 'postgres+psycopg2cffi://fadzmaq:[PASSWORD]@localhost:5432/fadzmaq'
 
 if __name__ == '__main__':
+
+    engine = create_engine(DATABASE_URI)
+    Session = sessionmaker(bind=engine)
+    s = Session()
+
+    account = Account (
+        user_id = 5,
+        username='lachie'
+    )
+
+    s.add(account)
+    s.commit()
+
+    s.query(account).first()
+    s.close_all()
     api.run()
 
