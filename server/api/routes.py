@@ -51,11 +51,16 @@ def get_matched_user(id):
     return jsonify(match_data.my_match), 200
 
 
+@api.route('/matches/<string:id>', methods=['DELETE'])
+def unmatch_user(id):
+    return "User unmatched", 200
+
+
 @api.route('/like/<string:id>', methods=['POST'])
 def like_user(id):
-    return "success", 200
+    return "User liked", 200
 
 
 @api.route('/pass/<string:id>', methods=['POST'])
 def pass_user(id):
-    return "success", 200
+    return "User passed", 200
