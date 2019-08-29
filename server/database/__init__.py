@@ -15,8 +15,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 from sqlalchemy import *
-
-DATABASE_URI= 'postgres+psycopg2cffi://[USER]:[PASSWORD]@localhost:5432/fadzmaq'
+DATABASE_URI= 'postgres+pg8000://postgres:root@localhost:5432/postgres'
 engine = create_engine(DATABASE_URI)
 Session_factory = sessionmaker(bind=engine)
 Base = declarative_base()

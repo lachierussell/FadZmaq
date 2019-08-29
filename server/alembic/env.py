@@ -18,7 +18,7 @@ fileConfig(config.config_file_name)
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 import importlib.util
-spec = importlib.util.spec_from_file_location("database.Base", "/Users/lachlanrussell/Developer/UNI/CITS3200-dev/server/database/__init__.py")
+spec = importlib.util.spec_from_file_location("database.Base", "/mnt/c/Users/tnaid/Documents/Github/CITS3200/server/database/__init__.py")
 database = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(database)
 

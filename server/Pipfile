@@ -9,10 +9,9 @@ verify_ssl = true
 flask = "==1.1.1"
 requests = "*"
 gunicorn = "*"
-psycopg2cffi = "*"
 sqlalchemy = "*"
 alembic = "*"
-urllib = "*"
+pg8000 = "*"
 
 [requires]
 python_version = "3.7"
