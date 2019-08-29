@@ -13,27 +13,34 @@
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
 from flask import Flask
+from sqlalchemy.ext.declarative import declarative_base
+
 from api import api
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import *
+from database import person
+import database
 
-DATABASE_URI = 'postgres+psycopg2cffi://fadzmaq:[PASSWORD]@localhost:5432/fadzmaq'
 
 if __name__ == '__main__':
 
-    engine = create_engine(DATABASE_URI)
-    Session = sessionmaker(bind=engine)
-    s = Session()
+    session = database.Session_factory()
+    # lachie = person.Person(5, 'lachie')
+    # josh = person.Person(7, 'josh')
 
-    account = Account (
-        user_id = 5,
-        username='lachie'
-    )
+    # session.add(lachie)
+    # session.add(josh)
+    #
+    # session.commit()
 
-    s.add(account)
-    s.commit()
+    users = session.query(person.Person).all()
 
-    s.query(account).first()
-    s.close_all()
-    api.run()
+    for user in users:
+        print(f'{user.first_name} has id {user.user_id}')
+
+    session.close()
+
+    # api.run()
+
+
 
