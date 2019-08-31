@@ -10,10 +10,11 @@
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
+from time import sleep
 from flask import jsonify, request
 from api import api
-from api import recs_data, match_data, profile_data
-
+from api import match_data, recs_data, profile_data
+import json
 
 @api.route('/')
 @api.route('/index')
@@ -27,9 +28,9 @@ def index():
     }
     return jsonify(response), 300
 
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-# USERS
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## USERS
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
 @api.route('/user/recs', methods=['GET'])
@@ -41,9 +42,10 @@ def recommendations():
 def get_user_by_id(id):
     return jsonify(recs_data.my_candiate), 200
 
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-# PROFILE
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## PROFILE
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
 @api.route('/profile', methods=['GET'])
@@ -60,9 +62,9 @@ def update_profile():
     return jsonify(response), 200
 
 
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-# MATCHES
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## MATCHES
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
 @api.route('/matches', methods=['GET'])
@@ -80,19 +82,19 @@ def unmatch_user(id):
     return "User unmatched", 200
 
 
-@api.route('/matches/thumbs/down/<string:id>', methods=['POST'])
-def rate_user_down(id):
+@api.route('/matches/thumbs/down/<string:id>', methods=['DELETE'])
+def unmatch_user(id):
     return "Thumbs down!", 200
 
 
-@api.route('/matches/thumbs/up/<string:id>', methods=['POST'])
-def rate_user_up(id):
+@api.route('/matches/thumbs/up/<string:id>', methods=['DELETE'])
+def unmatch_user(id):
     return "Thumbs up!", 200
 
 
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-# VOTES
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+## VOTES
+## ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
 @api.route('/like/<string:id>', methods=['POST'])

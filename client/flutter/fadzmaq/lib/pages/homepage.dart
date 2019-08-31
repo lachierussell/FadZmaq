@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:fadzmaq/app_config.dart';
+import 'package:fadzmaq/main.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -23,7 +24,33 @@ class HomePage extends StatefulWidget {
 
   @override
   _HomePageState createState() => _HomePageState();
+  Widget build(BuildContext context) {
+    return new Scaffold(
+        appBar: new AppBar(
+            title: new Text('Home')
+        ),
+        body: new ListView(
+          children: <Widget>[
+            new RaisedButton(
+                onPressed: () {
+                  // Replace user page to "splash" page.
+                  Navigator.pushReplacementNamed(context, 'splash');
+                },
+                child: new Text('Start again.')
+            ),
+            new FlatButton(
+                onPressed: () {
+                  // Redirect to user "about" page.
+                  Navigator.pushNamed(context, 'about');
+                },
+                child: new Text('About')
+            )
+          ],
+        )
+    );
+  }
 }
+
 
 class _HomePageState extends State<HomePage> {
   int _counter = 0;
@@ -85,10 +112,12 @@ class _HomePageState extends State<HomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              //'You have pushed the button this many times:',
-              config.testString
+            new Container(
+              height: 70.0,
+              width: 70.0,
+              color: Color(0xFF18D191)
             ),
+            /*
             FutureBuilder<Post>(
               future: post,
               builder: (context, snapshot) {
@@ -102,11 +131,24 @@ class _HomePageState extends State<HomePage> {
                 return CircularProgressIndicator();
               },
             ),
+            */
             Text(
               '$_counter',
               style: Theme.of(context).textTheme.display1,
             ),
+            new Text('Welcome to App!'),
+            new FlatButton(
+                child: new Text(
+                    'Logout'
+                ),
+                onPressed: () {
+                  appAuth.logout().then(
+                          (_) => Navigator.of(context).pushReplacementNamed('/login')
+                  );
+                }
+            )
           ],
+
         ),
       ),
       floatingActionButton: FloatingActionButton(

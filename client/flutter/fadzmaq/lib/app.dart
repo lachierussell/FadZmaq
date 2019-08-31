@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
+import 'package:fadzmaq/pages/homepage.dart';
 
+import 'main.dart';
+import 'pages/homepage.dart';
+import 'pages/loginpage.dart';
 
-// void main() {
-//   runApp(App());
-// }
+Widget _defaultHome = new LoginPage();
 
 class App extends StatelessWidget {
+  // an explicit initialization method to set a default home and processes the
+  // async function authentication.login
+  App();
+  Future init() async{
+    bool _result = await appAuth.login();
+    if (_result) {
+      _defaultHome = new HomePage();
+    }
+  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
+        title: 'App',
+        home: _defaultHome,
+        routes: <String, WidgetBuilder>{
+          // Set routes for using the Navigator.
+          '/home': (BuildContext context) => new HomePage(title: "Home"),
+          '/login': (BuildContext context) => new LoginPage()
+        }
     );
   }
 }
