@@ -115,8 +115,20 @@ class _HomePageState extends State<HomePage> {
             new Container(
               height: 70.0,
               width: 70.0,
-              color: Color(0xFF18D191)
+              color: Color(0xFF18D191),
+
+
             ),
+        new FlatButton(
+            child: new Text(
+                'Profile'
+            ),
+            onPressed: () {
+              appAuth.logout().then(
+                      (_) => Navigator.of(context).pushReplacementNamed('/profilepage')
+              );
+            }
+        ),
             /*
             FutureBuilder<Post>(
               future: post,

@@ -4,6 +4,7 @@ import 'package:fadzmaq/pages/homepage.dart';
 import 'main.dart';
 import 'pages/homepage.dart';
 import 'pages/loginpage.dart';
+import 'pages/profilepage.dart';
 
 Widget _defaultHome = new LoginPage();
 
@@ -26,7 +27,8 @@ class App extends StatelessWidget {
         routes: <String, WidgetBuilder>{
           // Set routes for using the Navigator.
           '/home': (BuildContext context) => new HomePage(title: "Home"),
-          '/login': (BuildContext context) => new LoginPage()
+          '/login': (BuildContext context) => new LoginPage(),
+          '/profilepage': (BuildContext context) => new ProfilePage()
         }
     );
   }
