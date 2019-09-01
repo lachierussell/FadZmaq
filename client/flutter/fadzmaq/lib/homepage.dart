@@ -7,6 +7,16 @@ import 'package:http/http.dart' as http;
 
 import 'package:fadzmaq/app_config.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  scopes: <String>[
+    'email',
+    'https://www.googleapis.com/auth/contacts.readonly',
+  ],
+);
+
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
 
@@ -26,25 +36,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
-
-  Future<Post> post;
+  GoogleSignInAccount _currentUser;
+  String _contactText;
 
   @override
   void initState() {
     super.initState();
-    post = fetchPost();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      setState(() {
+        _currentUser = account;
+      });
+      if (_currentUser != null) {
+      }
+    });
+    _googleSignIn.signInSilently();
   }
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+  Future<void> _handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> _handleSignOut() async {
+    _googleSignIn.disconnect();
   }
 
   @override
@@ -60,12 +77,14 @@ class _HomePageState extends State<HomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
+      backgroundColor: Color(0xFFFA8052),
+      // appBar: AppBar(
+      //   // Here we take the value from the MyHomePage object that was created by
+      //   // the App.build method, and use it to set our appbar title.
+      //   title: Text(widget.title),
+      // ),
+      body:
+      Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
@@ -85,68 +104,45 @@ class _HomePageState extends State<HomePage> {
           // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              //'You have pushed the button this many times:',
-              config.testString
+            Icon(
+              // Change this to an image when we have a logo designed
+              Icons.swap_horizontal_circle,
+              size: 260,
             ),
-            FutureBuilder<Post>(
-              future: post,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return Text(snapshot.data.title, textAlign: TextAlign.center,);
-                } else if (snapshot.hasError) {
-                  return Text("${snapshot.error}");
-                }
+            GoogleSignInButton(
+              onPressed: () {
+                _handleSignIn();
+              })
+              ,
+            // Text(
+            //   'Fadzmaq',
+            //   textScaleFactor: 2,
+            // ),
+            // FutureBuilder<Post>(
+            //   future: post,
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       return Text(snapshot.data.title, textAlign: TextAlign.center,);
+            //     } else if (snapshot.hasError) {
+            //       return Text("${snapshot.error}");
+            //     }
 
-                // By default, show a loading spinner.
-                return CircularProgressIndicator();
-              },
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
+            //     // By default, show a loading spinner.
+            //     return CircularProgressIndicator();
+            //   },
+            // ),
+            // Text(
+            //   '$_counter',
+            //   style: Theme.of(context).textTheme.display1,
+            // ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
-}
-
-
-Future<Post> fetchPost() async {
-  final response =
-      await http.get('https://jsonplaceholder.typicode.com/posts/1');
-
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON.
-    return Post.fromJson(json.decode(response.body));
-  } else {
-    // If that call was not successful, throw an error.
-    throw Exception('Failed to load post');
-  }
-}
-
-
-class Post {
-  final int userId;
-  final int id;
-  final String title;
-  final String body;
-
-  Post({this.userId, this.id, this.title, this.body});
-
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: _incrementCounter,
+      //   tooltip: 'Increment',
+      //   child: Icon(Icons.add),
+      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
