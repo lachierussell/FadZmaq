@@ -1,0 +1,1 @@
+DATABASE_URI = 'postgres+pg8000://[USER]:[PASSWORD]@localhost/[DATABASE_NAME]'

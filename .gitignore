@@ -2,3 +2,4 @@
 .idea
 **/__pycache__
 /server/api/__pycache__/*
+/server/database/db_conf.py
