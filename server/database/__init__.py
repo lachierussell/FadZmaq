@@ -10,20 +10,8 @@
 #
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
-
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import *
-
-from database import db_conf
+from sqlalchemy import create_engine
+from database import db_conf, db
 
 engine = create_engine(db_conf.DATABASE_URI)
-Session_factory = sessionmaker(bind=engine)
-Base = declarative_base()
-
-
-def session_factory():
-    Base.metadata.create_all(engine)
-    return Session_factory()
-
-from database import person
+connection = engine.connect()
