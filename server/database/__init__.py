@@ -16,7 +16,6 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import *
 
 from database import db_conf
-from database import person
 
 engine = create_engine(db_conf.DATABASE_URI)
 Session_factory = sessionmaker(bind=engine)
@@ -26,3 +25,5 @@ Base = declarative_base()
 def session_factory():
     Base.metadata.create_all(engine)
     return Session_factory()
+
+from database import person
