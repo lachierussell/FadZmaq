@@ -12,6 +12,9 @@
 
 from flask import jsonify, request, Flask
 from api import recs_data, match_data, profile_data
+from google.oauth2 import id_token
+from google.auth import jwt
+from google.auth.transport import requests
 import database
 
 api = Flask(__name__)
@@ -32,6 +35,41 @@ def index():
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # USERS
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+
+@api.route('/auth', methods=['POST'])
+def authentication():
+    # (Receive token by HTTPS POST)
+    # TODO: Get actual google token (speak with Seharsh)
+    # TODO: Send json data to client app
+
+    token = request.get_data()
+    token = jwt.decode(token, verify=False)
+    print(token)
+    try:
+        # Verifying the token, if it fails proceed to except block.
+        idinfo = id_token.verify_oauth2_token(token, requests.Request())
+        print(idinfo['name'])
+
+        # TODO: make a database query -- later
+        # Will need to be a query to the database.
+        # if idinfo['aud'] not in ['CLIENT_ID_1', 'CLIENT_ID_2', 'CLIENT_ID_3']:
+        #     raise ValueError('Could not verify audience.')
+
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+
+        # ID token is valid. Get the user's Google Account ID from the decoded token.
+        userid = idinfo['sub']
+        return userid
+
+    except ValueError:
+        # Invalid token
+        # TODO: Return unauthorised error code
+        err = 'Invalid token'
+        print(err)
+        return err
+
 
 
 @api.route('/user/recs', methods=['GET'])
