@@ -1,3 +1,10 @@
+
+drop table if exists matches;
+drop table if exists votes;
+drop table if exists hobbies;
+drop table if exists primary_user;
+
+
 create table if not exists primary_user
 (
 	bio varchar(400),
@@ -9,8 +16,6 @@ create table if not exists primary_user
 	phone varchar
 );
 
-alter table primary_user owner to postgres;
-
 create table if not exists matches
 (
 	match_id serial not null
@@ -20,16 +25,12 @@ create table if not exists matches
 	rating boolean
 );
 
-alter table matches owner to postgres;
-
 create table if not exists votes
 (
 	time time,
 	user_from integer,
 	user_to integer
 );
-
-alter table votes owner to postgres;
 
 create table if not exists hobbies
 (
@@ -39,4 +40,3 @@ create table if not exists hobbies
 	name varchar
 );
 
-alter table hobbies owner to postgres;
