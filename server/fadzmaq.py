@@ -111,7 +111,7 @@ def pass_user(id):
 if __name__ == '__main__':
 
     conn = database.connection
-    users = conn.execute("SELECT * FROM user;")
+    users = conn.execute("SELECT * FROM primary_user;")
     for user in users:
         print(user)
     conn.close()
