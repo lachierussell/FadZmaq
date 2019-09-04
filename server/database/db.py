@@ -29,8 +29,6 @@ def retrieve_profile(subject):
     )
 
     for row in rows:
-        # TODO: Need to implement the remaining data.
-        # TODO: Needs additions and modifications to the database.
         # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
@@ -58,6 +56,9 @@ def retrieve_profile(subject):
     raise ValueError
 
 
+# Retrieves the user hobbies
+# @param subject    User id
+# @return List of share/discover hobbies as per API spec.
 def get_hobbies(subject):
     # Retrieves hobbies
     rows = connection.execute(
@@ -77,9 +78,9 @@ def get_hobbies(subject):
 
     for row in rows:
         data = {
-                'id': row['hobby_id'],
-                'name': row['name']
-               }
+            'id': row['hobby_id'],
+            'name': row['name']
+        }
         if row['swap'] == 'share':
             share.append(data)
 
@@ -87,13 +88,13 @@ def get_hobbies(subject):
             discover.append(data)
 
     return [
-                {
-                    'share': share
-                },
-                {
-                    'discover': discover
-                }
-           ]
+        {
+            'share': share
+        },
+        {
+            'discover': discover
+        }
+    ]
 
 
 

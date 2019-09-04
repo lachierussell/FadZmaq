@@ -34,7 +34,6 @@ def index():
 # USERS
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-
 @api.route('/user/recs', methods=['GET'])
 def recommendations():
     return jsonify(recs_data.my_recs), 200
@@ -49,7 +48,6 @@ def get_user_by_id(id):
 # PROFILE
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-
 @api.route('/profile', methods=['GET'])
 def get_profile():
     # TODO: Send to authenticate function and return sub id.
@@ -58,8 +56,6 @@ def get_profile():
     # TODO: Clean and retrieve inputs.
     subject = 1  # Temp value.
 
-    # TODO: Make call to retrieve profile from db.py
-    # TODO: Handle error conditions.
     try:
         return db.retrieve_profile(subject), 200
 
@@ -80,7 +76,6 @@ def update_profile():
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # MATCHES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-
 
 @api.route('/matches', methods=['GET'])
 def get_matches():
@@ -111,7 +106,6 @@ def rate_user_up(id):
 # VOTES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-
 @api.route('/like/<string:id>', methods=['POST'])
 def like_user(id):
     return "User liked", 200
@@ -121,6 +115,10 @@ def like_user(id):
 def pass_user(id):
     return "User passed", 200
 
+
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# MAIN APPLICATION
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 if __name__ == '__main__':
 
