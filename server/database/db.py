@@ -28,19 +28,19 @@ def retrieve_profile(subject):
     for row in rows:
         # TODO: Need to implement the remaining data.
         # TODO: Needs additions and modifications to the database.
+        # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
                 'user_id': hashlib.md5(str(row['user_id']).encode()).hexdigest(),
                 'name': row['nickname'],
                 'age': str(row['age']),
-                'birth-date': row['dob'],
+                'birth-date': str(row['dob']),
                 'gender': row['gender'],
                 'photo_location': 'DOES NOT EXIST',
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
                 },
-                # TODO: Dynamically serve profile fields data.
                 'profile_fields': [
                     {
                         'id': 1,
