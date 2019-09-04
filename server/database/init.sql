@@ -1,42 +1,44 @@
+DROP TABLE IF EXISTS matches;
+DROP TABLE IF EXISTS votes;
+DROP TABLE IF EXISTS hobbies;
+DROP TABLE IF EXISTS profile;
 
-drop table if exists matches;
-drop table if exists votes;
-drop table if exists hobbies;
-drop table if exists primary_user;
 
-
-create table if not exists primary_user
+CREATE TABLE IF NOT EXISTS profile
 (
-	bio varchar(400),
-	nickname varchar(200),
-	email varchar(300),
-	age integer,
-	gender "char",
-	user_id serial not null,
-	phone varchar
+    bio      VARCHAR(400),
+    nickname VARCHAR(20),
+    email    VARCHAR(320),
+    age      INTEGER,
+    gender   char,
+    user_id  SERIAL NOT NULL,
+    phone    VARCHAR
 );
 
-create table if not exists matches
+CREATE TABLE IF NOT EXISTS matches
 (
-	match_id serial not null
-		constraint matches_pk
-			primary key,
-	time time,
-	rating boolean
+    match_id SERIAL NOT NULL
+        CONSTRAINT matches_pk
+            PRIMARY KEY,
+    time     TIME,
+    rating   BOOLEAN
 );
 
-create table if not exists votes
+CREATE TABLE IF NOT EXISTS votes
 (
-	time time,
-	user_from integer,
-	user_to integer
+    time      TIME,
+    user_from INTEGER,
+    user_to   INTEGER
 );
 
-create table if not exists hobbies
+CREATE TABLE IF NOT EXISTS hobbies
 (
-	hobby_id serial not null
-		constraint hobbies_pk
-			primary key,
-	name varchar
+    hobby_id SERIAL NOT NULL
+        CONSTRAINT hobbies_pk
+            PRIMARY KEY,
+    name     VARCHAR
 );
 
+
+INSERT INTO profile (bio, nickname, email, age, gender, phone)
+    VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'some@email.com', 20, 'M', '0423199199');

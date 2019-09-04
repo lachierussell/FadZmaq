@@ -25,6 +25,8 @@ def retrieve_profile(subject):
                               )
 
     for row in rows:
+        # TODO: Need to implement the remaining data.
+        # TODO: Needs additions and modifications to the database.
         profile = {
             'profile': {
                 'user_id': hashlib.md5(str(row['user_id']).encode()).hexdigest(),
