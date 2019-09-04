@@ -10,15 +10,18 @@
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
-from database import *
+from database import connection
 import json
 
 
+# Retrieves profile information for the subject.
+# @param    subject     user_id for the database entry
+# @return   json profile data or raises value error.
 def retrieve_profile(subject):
 
     rows = connection.execute('SELECT * FROM primary_user \
-                         WHERE user_id =' + str(subject) + ';'
-                        )
+                               WHERE user_id =' + str(subject) + ';'
+                              )
 
     for row in rows:
         profile = {
@@ -41,5 +44,4 @@ def retrieve_profile(subject):
             }
         }
         return json.dumps(profile)
-
-    return json.dumps({'error': 'Profile not found'})
+    raise ValueError

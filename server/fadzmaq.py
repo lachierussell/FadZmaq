@@ -12,7 +12,7 @@
 
 from flask import jsonify, request, Flask
 from api import recs_data, match_data, profile_data
-import database
+from database import db
 import json
 
 api = Flask(__name__)
@@ -59,10 +59,12 @@ def get_profile():
     subject = 1  # Temp value.
 
     # TODO: Make call to retrieve profile from db.py
-
     # TODO: Handle error conditions.
+    try:
+        return db.retrieve_profile(subject), 200
 
-    return '{"error":"failed"}', 404
+    except ValueError:
+        return '{"error":"Profile not found."}', 404
 
 
 # Possible cant be used for change settings
