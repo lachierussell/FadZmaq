@@ -11,6 +11,7 @@
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
 from database import connection
+import hashlib
 import json
 
 
@@ -26,7 +27,7 @@ def retrieve_profile(subject):
     for row in rows:
         profile = {
             'profile': {
-                'user_id': row['user_id'],
+                'user_id': hashlib.md5(str(row['user_id']).encode()).hexdigest(),
                 'name': row['nickname'],
                 'age': row['age'],
                 'gender': row['gender'],
