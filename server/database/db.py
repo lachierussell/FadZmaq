@@ -19,7 +19,7 @@ import json
 # @param    subject     user_id for the database entry
 # @return   json profile data or raises value error.
 def retrieve_profile(subject):
-
+    # Retrieves user info.
     rows = connection.execute('SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age '
                               + 'FROM profile '
                               + 'WHERE user_id = ' + str(subject) + ';'
@@ -47,8 +47,50 @@ def retrieve_profile(subject):
                         'name': 'About me',
                         'display_value': row['bio']
                     }
-                ]
+                ],
+                'hobbies': get_hobbies(subject)
             }
         }
         return json.dumps(profile)
     raise ValueError
+
+
+def get_hobbies(subject):
+    # Retrieves hobbies
+    rows = connection.execute(
+        '''      
+        SELECT  h.hobby_id, h.name, uh.swap
+        FROM profile
+          JOIN user_hobbies uh
+            ON profile.user_id = uh.user_id
+          JOIN hobbies h
+            ON uh.hobby_id = h.hobby_id
+        WHERE profile.user_id =  '1';
+        '''
+    )
+
+    share = []
+    discover = []
+
+    for row in rows:
+        data = {
+                'id': row['hobby_id'],
+                'name': row['name']
+               }
+        if row['swap'] == 'share':
+            share.append(data)
+
+        if row['swap'] == 'discover':
+            discover.append(data)
+
+    return [
+                {
+                    'share': share
+                },
+                {
+                    'discover': discover
+                }
+           ]
+
+
+

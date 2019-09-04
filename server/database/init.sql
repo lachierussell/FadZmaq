@@ -77,19 +77,18 @@ INSERT INTO profile (bio, nickname, email, dob, gender, phone)
 INSERT INTO profile (bio, nickname, email, dob, gender, phone)
     VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', 'F', '0404239188');
 
--- INSERT INTO hobbies (name) VALUES ('Boxing');
--- INSERT INTO hobbies (name) VALUES ('Boating');
--- INSERT INTO hobbies (name) VALUES ('Rock Climbing');
--- INSERT INTO hobbies (name) VALUES ('Hiking');
--- INSERT INTO hobbies (name) VALUES ('Golf');
--- INSERT INTO hobbies (name) VALUES ('Surfing');
--- INSERT INTO hobbies (name) VALUES ('Cycling');
---
--- INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
--- INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
--- INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
--- INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
--- INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
--- INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
--- INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
+INSERT INTO hobbies (name) VALUES ('Boxing');
+INSERT INTO hobbies (name) VALUES ('Boating');
+INSERT INTO hobbies (name) VALUES ('Rock Climbing');
+INSERT INTO hobbies (name) VALUES ('Hiking');
+INSERT INTO hobbies (name) VALUES ('Golf');
+INSERT INTO hobbies (name) VALUES ('Surfing');
+INSERT INTO hobbies (name) VALUES ('Cycling');
+
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 3, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 2, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (2, 3, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 4, 'share');
+
 
