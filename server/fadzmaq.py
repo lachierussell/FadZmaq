@@ -125,7 +125,7 @@ def pass_user(id):
 if __name__ == '__main__':
 
     data = json.loads(get_profile()[0])
-    print(json.dumps(data, indent=4))
+    print(json.dumps(data, indent=2))
 
 
     # api.run()

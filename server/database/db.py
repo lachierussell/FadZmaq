@@ -20,10 +20,13 @@ import json
 # @return   json profile data or raises value error.
 def retrieve_profile(subject):
     # Retrieves user info.
-    rows = connection.execute('SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age '
-                              + 'FROM profile '
-                              + 'WHERE user_id = ' + str(subject) + ';'
-                              )
+    rows = connection.execute(
+        '''
+        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        FROM profile 
+        WHERE user_id = {}
+        '''.format(subject)
+    )
 
     for row in rows:
         # TODO: Need to implement the remaining data.
@@ -65,8 +68,8 @@ def get_hobbies(subject):
             ON profile.user_id = uh.user_id
           JOIN hobbies h
             ON uh.hobby_id = h.hobby_id
-        WHERE profile.user_id =  '1';
-        '''
+        WHERE profile.user_id = {};
+        '''.format(subject)
     )
 
     share = []
