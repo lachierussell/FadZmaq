@@ -12,7 +12,7 @@ my_profile = {
             },
             "profile_fields": [
                 {
-                    "id": 7,
+                    "id": 2,
                     "name": "Location",
                     "display_value": "Duncraig",
                     "distance": 0,
@@ -21,7 +21,7 @@ my_profile = {
                     "time": 1566966101,
                 },
                 {
-                    "id": 3,
+                    "id": 1,
                     "name": "About me",
                     "display_value": "I am a boxer. Lets get in the ring."
                 }

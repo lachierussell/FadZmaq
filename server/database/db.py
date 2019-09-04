@@ -20,8 +20,9 @@ import json
 # @return   json profile data or raises value error.
 def retrieve_profile(subject):
 
-    rows = connection.execute('SELECT * FROM primary_user \
-                               WHERE user_id =' + str(subject) + ';'
+    rows = connection.execute('SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age '
+                              + 'FROM profile '
+                              + 'WHERE user_id = ' + str(subject) + ';'
                               )
 
     for row in rows:
@@ -31,15 +32,18 @@ def retrieve_profile(subject):
             'profile': {
                 'user_id': hashlib.md5(str(row['user_id']).encode()).hexdigest(),
                 'name': row['nickname'],
-                'age': row['age'],
+                'age': str(row['age']),
+                'birth-date': row['dob'],
                 'gender': row['gender'],
+                'photo_location': 'DOES NOT EXIST',
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
                 },
+                # TODO: Dynamically serve profile fields data.
                 'profile_fields': [
                     {
-                        'id': 3,
+                        'id': 1,
                         'name': 'About me',
                         'display_value': row['bio']
                     }
