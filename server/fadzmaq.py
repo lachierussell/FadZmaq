@@ -13,6 +13,7 @@
 from flask import jsonify, request, Flask
 from api import recs_data, match_data, profile_data
 import database
+import json
 
 api = Flask(__name__)
 
@@ -51,9 +52,20 @@ def get_user_by_id(id):
 
 @api.route('/profile', methods=['GET'])
 def get_profile():
-    return jsonify(profile_data.my_profile), 200
+    # TODO: Send to authenticate function and return sub id.
+    # print(request.headers['auth'])
+
+    # TODO: Clean and retrieve inputs.
+    subject = 1  # Temp value.
+
+    # TODO: Make call to retrieve profile from db.py
+
+    # TODO: Handle error conditions.
+
+    return '{"error":"failed"}', 404
 
 
+# Possible cant be used for change settings
 @api.route('/profile', methods=['POST'])
 def update_profile():
     user = request.form['somedata']
@@ -110,10 +122,8 @@ def pass_user(id):
 
 if __name__ == '__main__':
 
-    conn = database.connection
-    users = conn.execute("SELECT * FROM primary_user;")
-    for user in users:
-        print(user)
-    conn.close()
+    data = json.loads(get_profile()[0])
+    print(json.dumps(data, indent=4))
 
-    api.run()
+
+    # api.run()
