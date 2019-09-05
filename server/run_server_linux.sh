@@ -1,2 +1,3 @@
 pipenv install --dev
-pipenv run python3.7 fadzmaq.py
+export FLASK_APP=fadzmaq/fadzmaq.py
+pipenv run flask run

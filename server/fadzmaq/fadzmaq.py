@@ -11,28 +11,20 @@
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
 from flask import jsonify, request, Flask
-
+from fadzmaq.api import recs_data, match_data, profile_data
+from fadzmaq import database
 
 
 def create_app(test_config=None):
 
-
-    if test_config is None:
-        from api import recs_data, match_data, profile_data
-        import database
-    else:
-        from .api import recs_data, match_data, profile_data
-        from . import database
 
     api = Flask(__name__)
     conn = database.connection
     users = conn.execute("SELECT * FROM primary_user;")
     for user in users:
         print(user)
-    conn.close()
-
-
-    
+    # not sure why we were closing the db connection right after opening it? -Jordan
+    # conn.close()
 
 
     @api.route('/')
