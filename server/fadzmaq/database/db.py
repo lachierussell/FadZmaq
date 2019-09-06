@@ -23,8 +23,8 @@ def init_app(app):
 
 def get_engine():
     if'db_engine' not in g:
-        # g.db_engine = create_engine(current_app.config['DATABASE'])
-        g.db_engine = create_engine(db_conf.DATABASE_URI)
+        g.db_engine = create_engine(current_app.config['DATABASE_URI'])
+        # g.db_engine = create_engine(db_conf.DATABASE_URI)
     return g.db_engine
 
 def get_db():

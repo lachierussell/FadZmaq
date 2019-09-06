@@ -9,7 +9,7 @@ DROP DATABASE IF EXISTS fadzmaq_test;
 -- do creation
 CREATE DATABASE fadzmaq_test;
 
-CREATE ROLE test_fadzmaq_admin WITH PASSWORD 'test_admin_pass' CREATEROLE LOGIN;
+CREATE ROLE test_fadzmaq_admin WITH PASSWORD 'test_admin_pass' CREATEROLE CREATESCHEMA LOGIN;
 GRANT ALL PRIVILEGES ON DATABASE "fadzmaq_test" TO test_fadzmaq_admin;
 
 
