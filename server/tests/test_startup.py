@@ -1,5 +1,5 @@
 import pytest
-from fadzmaq.database.db import get_db, get_engine
+from fadzmaq.database.db import get_db, engine
 import sqlalchemy
 
 # Tests that the server is up at all.
@@ -26,7 +26,6 @@ def test_get_close_db(api):
 # Tests the correct tables are present
 def test_tables(api):
     with api.app_context():
-        engine = get_engine()
         assert engine.dialect.has_table(engine, "primary_user")
         assert engine.dialect.has_table(engine, "hobbies")
         assert engine.dialect.has_table(engine, "matches")

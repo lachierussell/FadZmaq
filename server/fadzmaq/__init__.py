@@ -14,7 +14,7 @@ def create_app(test_config=None):
     #     print(user)
     # conn.close()
 
-    db.init_db(api)
+    db.init_app(api)
     
     api.register_blueprint(route_bp)
     

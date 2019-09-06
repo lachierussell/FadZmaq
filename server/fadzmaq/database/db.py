@@ -18,14 +18,11 @@ from fadzmaq import api
 
 from fadzmaq.database import db_conf
 
-def init_db(app):
-    app.teardown_appcontext(close_db)
+# need to change this to be config based
+engine = create_engine(db_conf.DATABASE_URI)
 
-def get_engine():
-    if'db_engine' not in g:
-        # g.db_engine = create_engine(current_app.config['DATABASE'])
-        g.db_engine = create_engine(db_conf.DATABASE_URI)
-    return g.db_engine
+def init_app(app):
+    app.teardown_appcontext(close_db)
 
 def get_db():
     if 'db' not in g:
@@ -39,7 +36,7 @@ def close_db(e=None):
         db.close()
 
 def connect_db():
-    engine = get_engine()
+    # engine = get_engine()
     return engine.connect()
 
 # Retrieves profile information for the subject.
