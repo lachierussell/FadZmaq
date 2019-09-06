@@ -4,8 +4,6 @@ import sqlalchemy
 from fadzmaq import create_app
 
 
-
-
 def test_get_close_db(api):
     with api.app_context():
         db = get_db()
@@ -22,14 +20,6 @@ def test_index(client):
     response = client.get('/', follow_redirects=True)
     assert response.status_code == 300
 
-
-
-# def test_database(client):
-#     results = db.engine.execute('SELECT 1')
-#     print(results.first())
-
-
-
 # Tests the correct tables are present
 def test_tables(api):
     with api.app_context():
@@ -40,6 +30,3 @@ def test_tables(api):
         assert engine.dialect.has_table(engine, "user_hobbies")
         assert engine.dialect.has_table(engine, "votes")
   
-
-def repr_failure(self, excinfo): 
-    return "test"

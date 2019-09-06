@@ -62,8 +62,6 @@ def execute_sql(engine, file):
         except sqlalchemy.exc.ProgrammingError as e:
             if "query was empty" not in str(e):
                 print(str(e))
-        except:
-            pass
 
     connection.close()
     fd.close()
