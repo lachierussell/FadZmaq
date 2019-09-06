@@ -10,17 +10,44 @@
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
-from fadzmaq import database
 import hashlib
 import json
+from flask import current_app, g
+from sqlalchemy import create_engine
+from fadzmaq import api
 
+from fadzmaq.database import db_conf
+
+def init_db(app):
+    app.teardown_appcontext(close_db)
+
+def get_engine():
+    if'db_engine' not in g:
+        # g.db_engine = create_engine(current_app.config['DATABASE'])
+        g.db_engine = create_engine(db_conf.DATABASE_URI)
+    return g.db_engine
+
+def get_db():
+    if 'db' not in g:
+        g.db = connect_db()
+    return g.db
+
+def close_db(e=None):
+    db = g.pop('db',None)
+
+    if db is not None:
+        db.close()
+
+def connect_db():
+    engine = get_engine()
+    return engine.connect()
 
 # Retrieves profile information for the subject.
 # @param    subject     user_id for the database entry
 # @return   json profile data or raises value error.
 def retrieve_profile(subject):
     # Retrieves user info.
-    rows = database.connection.execute(
+    rows = g.db.execute(
         '''
         SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
         FROM profile 
@@ -61,7 +88,7 @@ def retrieve_profile(subject):
 # @return List of share/discover hobbies as per API spec.
 def get_hobbies(subject):
     # Retrieves hobbies
-    rows = connection.execute(
+    rows = g.db.execute(
         '''      
         SELECT  h.hobby_id, h.name, uh.swap
         FROM profile
