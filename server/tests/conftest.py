@@ -15,13 +15,23 @@ def api():
         'TESTING': True,
     })
 
+    # # rebuild the database for each test
+    # build_test_db(api)
+
+    yield api
+    # # drop all tables - just in case some scripts rely on remnet tables
+    # teardown_test_db(api)
+    
+@pytest.fixture
+def db_api(api):
+
+    # rebuild the database for each test
     build_test_db(api)
 
     yield api
 
+    # drop all tables - just in case some scripts rely on remnet tables
     teardown_test_db(api)
-
-
 
 @pytest.fixture
 def client(api):
@@ -29,7 +39,6 @@ def client(api):
     return api.test_client()
 
     
-
 def build_test_db(api):
     engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
 
