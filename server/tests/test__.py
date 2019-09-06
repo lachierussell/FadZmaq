@@ -14,11 +14,7 @@ def test_get_close_db(api):
 
     assert 'closed' in str(e.value)
 
-# Tests that the server is up at all.
-# Code is 300 because we shouldn't be using index (I think?) - Jordan 
-def test_index(client):
-    response = client.get('/', follow_redirects=True)
-    assert response.status_code == 300
+
 
 # Tests the correct tables are present
 def test_tables(api):

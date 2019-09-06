@@ -47,7 +47,7 @@ def connect_db():
 # @return   json profile data or raises value error.
 def retrieve_profile(subject):
     # Retrieves user info.
-    rows = g.db.execute(
+    rows = get_db().execute(
         '''
         SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
         FROM profile 
@@ -88,7 +88,7 @@ def retrieve_profile(subject):
 # @return List of share/discover hobbies as per API spec.
 def get_hobbies(subject):
     # Retrieves hobbies
-    rows = g.db.execute(
+    rows = get_db().execute(
         '''      
         SELECT  h.hobby_id, h.name, uh.swap
         FROM profile
