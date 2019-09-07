@@ -11,7 +11,7 @@
 
 from flask import jsonify, request, Flask, Blueprint
 from fadzmaq.api import recs_data, match_data, profile_data
-
+from fadzmaq.database import db
 route_bp = Blueprint("route_bp", __name__)
 
 
@@ -54,7 +54,17 @@ def get_user_by_id(id):
 
 @route_bp.route('/profile', methods=['GET'])
 def get_profile():
-    return jsonify(profile_data.my_profile), 200
+    # TODO: Send to authenticate function and return sub id.
+    # print(request.headers['auth'])
+
+    # TODO: Clean and retrieve inputs.
+    subject = 1  # Temp value.
+
+    try:
+        return db.retrieve_profile(subject), 200
+
+    except ValueError:
+        return '{"error":"Profile not found."}', 404
 
 
 @route_bp.route('/profile', methods=['POST'])

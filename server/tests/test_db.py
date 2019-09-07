@@ -12,6 +12,7 @@ import pytest
 from fadzmaq.database.db import get_db, get_engine
 from fadzmaq.database import db
 import sqlalchemy
+import json
 
 
 # Tests the correct tables are present
@@ -41,7 +42,8 @@ def test_get_close_db(db_api):
 # We still need to check the data is accurate
 def test_retrieve_profile(db_api):
     with db_api.app_context():
-        db.retrieve_profile(1)
+        a = json.loads(db.retrieve_profile(1))
+        print(json.dumps(a, indent=2))
 
 
 # Only tests that the sql command can be executed

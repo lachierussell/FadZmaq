@@ -77,8 +77,7 @@ VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '4
 INSERT INTO profile (bio, nickname, email, dob, gender, phone)
 VALUES ('Boating admirer', 'Smith', 'smith@email.com', '5/12/1970', 'M', '0413239199');
 INSERT INTO profile (bio, nickname, email, dob, gender, phone)
-<<<<<<< Updated upstream:server/fadzmaq/database/init.sql
-    VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', 'F', '0404239188');
+VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', 'F', '0404239188');
 
 INSERT INTO hobbies (name) VALUES ('Boxing');
 INSERT INTO hobbies (name) VALUES ('Boating');
@@ -93,32 +92,32 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 2, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 5, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (2, 3, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 4, 'discover');
-
-CREATE OR REPLACE FUNCTION match()
-    RETURNS TRIGGER AS
-$BODY$
-BEGIN
-    IF (
-        SELECT v.user_from, v.user_to
-        FROM votes v
-        WHERE v.user_to = NEW.user_from
-        AND 
-
-
---         SELECT v1.user_from, v1.user_to
---         FROM votes v1
---             INNER JOIN votes v2
---                 ON v1.user_from = v2.user_to
---                 AND v2.user_from = v1.user_to
---         WHERE v2.vote = TRUE
---           AND v1.vote = TRUE
---     )
---     INSERT INTO matches (user_a, user_b)
---     SELECT m1.user_to, m1.user_from
---     FROM match_pair m1;
-END;
-$BODY$
-
-CREATE TRIGGER body INSTEAD OF INSERT OR UPDATE ON votes
-    FOR EACH ROW EXECUTE FUNCTION match();
+--
+-- CREATE OR REPLACE FUNCTION match()
+--     RETURNS TRIGGER AS
+-- $BODY$
+-- BEGIN
+--     IF (
+--         SELECT v.user_from, v.user_to
+--         FROM votes v
+--         WHERE v.user_to = NEW.user_from
+--         AND
+--
+--
+-- --         SELECT v1.user_from, v1.user_to
+-- --         FROM votes v1
+-- --             INNER JOIN votes v2
+-- --                 ON v1.user_from = v2.user_to
+-- --                 AND v2.user_from = v1.user_to
+-- --         WHERE v2.vote = TRUE
+-- --           AND v1.vote = TRUE
+-- --     )
+-- --     INSERT INTO matches (user_a, user_b)
+-- --     SELECT m1.user_to, m1.user_from
+-- --     FROM match_pair m1;
+-- END;
+-- $BODY$
+--
+-- CREATE TRIGGER body INSTEAD OF INSERT OR UPDATE ON votes
+--     FOR EACH ROW EXECUTE FUNCTION match();
 
