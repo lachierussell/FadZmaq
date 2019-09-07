@@ -12,7 +12,7 @@ SELECT pid AS process_id,
 FROM pg_stat_activity;
 
 -- drop everything and start again
-DROP DATABASE IF EXISTS fadzmaq_test;
+DROP DATABASE IF EXISTS fadzmaq_test ;
 DROP ROLE IF EXISTS test_fadzmaq_admin;
 
 
