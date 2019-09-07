@@ -12,6 +12,8 @@ gunicorn = "*"
 sqlalchemy = "*"
 alembic = "*"
 pg8000 = "*"
+pytest = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.7"

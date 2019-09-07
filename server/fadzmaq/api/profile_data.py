@@ -4,7 +4,6 @@ my_profile = {
             "name": "Joshua",
             "age": 20,
             "birth-date": "28/08/1999",
-            "gender": 0,
             "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/John_Legend_2019_by_Glenn_Francis.jpg/1280px-John_Legend_2019_by_Glenn_Francis.jpg",
             "contact_details": {
                 "phone": "0423 161 368",
@@ -12,7 +11,7 @@ my_profile = {
             },
             "profile_fields": [
                 {
-                    "id": 7,
+                    "id": 2,
                     "name": "Location",
                     "display_value": "Duncraig",
                     "distance": 0,
@@ -21,7 +20,7 @@ my_profile = {
                     "time": 1566966101,
                 },
                 {
-                    "id": 3,
+                    "id": 1,
                     "name": "About me",
                     "display_value": "I am a boxer. Lets get in the ring."
                 }

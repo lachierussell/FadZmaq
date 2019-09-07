@@ -1,5 +1,0 @@
-# Config file
-# Remove the .template from the filename to create the config file.
-# DO NOT REMOVE THIS TEMPLATE FILE.
-
-DATABASE_URI = 'postgres+pg8000://[USER]:[PASSWORD]@localhost/[DATABASE_NAME]'

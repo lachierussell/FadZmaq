@@ -1,6 +1,1 @@
-/server/venv
-.idea
-**/__pycache__
-server/database/db_conf.py
-database/db_conf.py
-server/Pipfile.lock
+**/.idea
