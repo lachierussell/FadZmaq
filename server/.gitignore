@@ -5,10 +5,9 @@
 Pipfile.lock
 
 # Coverage
-fadzmaq/htmlcov
-fadzmaq/.coverage
+htmlcov
+.coverage
 
 # Config
 fadzmaq/fadzmaq.conf
-fadzmaq/test.conf
-fadzmaq/database/db_conf.py
+

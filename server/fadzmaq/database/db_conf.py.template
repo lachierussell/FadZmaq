@@ -1,6 +1,0 @@
-# Config file
-# Remove the .template from the filename to create the config file.
-# DO NOT REMOVE THIS TEMPLATE FILE.
-
-password = input("Database Password: ")
-DATABASE_URI = 'postgres+pg8000://[USER]:password@localhost/[DATABASE_NAME]'
