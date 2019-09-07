@@ -1,1 +1,9 @@
-DATABASE_URI = ''
+# Config file
+# Remove the .template from the filename to create the config file.
+# DO NOT REMOVE THIS TEMPLATE FILE.
+
+# Upon running the database enter your password:
+# eg. fadzmaqpass
+password = input("Database Password: ")
+
+DATABASE_URI = 'postgresql+pg8000://fadzmaq:{}@localhost/fadzmaq'.format(password)
