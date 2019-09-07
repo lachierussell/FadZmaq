@@ -37,7 +37,7 @@ def index():
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
-@api.route('/auth', methods=['POST'])
+@route_bp.route('/auth', methods=['POST'])
 def authentication():
     # (Receive token by HTTPS POST)
     # TODO: Get actual google token (speak with Seharsh)
