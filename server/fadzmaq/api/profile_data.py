@@ -3,10 +3,7 @@ my_profile = {
             "user_id": "6c18ec1127d5a8951265f35c66b60f82",
             "name": "Joshua",
             "age": 20,
-            # Privacy issue, we shouldn't make birthdates public -Jordan
-            "birth-date": "28/08/1999", 
-            # No reason to send gender to clients -Jordan
-            "gender": 0,
+            "birth-date": "28/08/1999",
             "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/John_Legend_2019_by_Glenn_Francis.jpg/1280px-John_Legend_2019_by_Glenn_Francis.jpg",
             "contact_details": {
                 "phone": "0423 161 368",
@@ -16,7 +13,6 @@ my_profile = {
                 {
                     "id": 2,
                     "name": "Location",
-                    # Privacy issue, we shouldn't make locations public, only distance -Jordan
                     "display_value": "Duncraig",
                     "distance": 0,
                     "lat": 55.7558,
