@@ -1,3 +1,13 @@
+# @file
+# @brief
+# fadzmaq.py
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Jordan Russell    [email]
+
 
 # entry point for the api
 from fadzmaq import create_app

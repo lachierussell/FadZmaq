@@ -1,6 +1,15 @@
+.idea
+.vscode
+**/__pycache__
+.pytest_cache/
+
+Pipfile.lock
+
 # Coverage
-htmlcov
-.coverage
+fadzmaq/htmlcov
+fadzmaq/.coverage
 
-fadzmaq/fadzmaq.cfg
-
+# Config
+fadzmaq/fadzmaq.conf
+fadzmaq/test.conf
+fadzmaq/database/db_conf.py

@@ -1,7 +1,18 @@
+# @file
+# @brief
+# tests/test_db.py
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Jordan Russell    [email]
+
 import pytest
 from fadzmaq.database.db import get_db, get_engine
 from fadzmaq.database import db
 import sqlalchemy
+
 
 # Tests the correct tables are present
 def test_tables(db_api):
@@ -12,6 +23,7 @@ def test_tables(db_api):
         assert engine.dialect.has_table(engine, "profile")
         assert engine.dialect.has_table(engine, "user_hobbies")
         assert engine.dialect.has_table(engine, "votes")
+
 
 # Checks that the connection is closed outside the flask context
 def test_get_close_db(db_api):
@@ -24,18 +36,16 @@ def test_get_close_db(db_api):
 
     assert 'closed' in str(e.value)
 
+
 # Only tests that the sql command can be executed
 # We still need to check the data is accurate
 def test_retrieve_profile(db_api):
     with db_api.app_context():
         db.retrieve_profile(1)
 
+
 # Only tests that the sql command can be executed
 # We still need to check the data is accurate
 def test_get_hobbies(db_api):
     with db_api.app_context():
         db.get_hobbies(1)
-
-
-
-

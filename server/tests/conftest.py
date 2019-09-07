@@ -1,12 +1,20 @@
+# @file
+# @brief
+# tests/conftest.py
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Jordan Russell    [email]
+
 import pytest
 
 from fadzmaq import create_app
-from fadzmaq import database
-
-from fadzmaq.database.db import get_db
 
 from sqlalchemy import create_engine
 import sqlalchemy
+
 
 @pytest.fixture
 def api():
@@ -21,7 +29,8 @@ def api():
     yield api
     # # drop all tables - just in case some scripts rely on remnet tables
     # teardown_test_db(api)
-    
+
+
 @pytest.fixture
 def db_api(api):
 
@@ -32,6 +41,7 @@ def db_api(api):
 
     # drop all tables - just in case some scripts rely on remnet tables
     teardown_test_db(api)
+
 
 @pytest.fixture
 def client(api):
@@ -59,13 +69,14 @@ def teardown_test_db(api):
     # Drop the test fadzmaq app user
     execute_sql(engine, "tests/drop_roles.sql")
 
+
 def execute_sql(engine, file):
     connection = engine.connect()
     fd = open(file, "r")
-    sqlFile = fd.read()
-    sqlCommands = sqlFile.split(";")
+    sql_file = fd.read()
+    sql_commands = sql_file.split(";")
 
-    for command in sqlCommands:
+    for command in sql_commands:
         try:
             connection.execute(command)
         except sqlalchemy.exc.ProgrammingError as e:

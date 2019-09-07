@@ -90,5 +90,3 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 2, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 5, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (2, 3, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 4, 'discover');
-
-

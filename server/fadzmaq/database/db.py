@@ -1,6 +1,6 @@
 # @file
 # @brief        Database functions
-# database/__init__.py
+# database/db.py
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
@@ -9,17 +9,17 @@
 #
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
+# @author Jordan Russell        [email]
 
 import hashlib
 import json
 from flask import current_app, g
 from sqlalchemy import create_engine
-from fadzmaq import api
 
-from fadzmaq.database import db_conf
 
 def init_app(app):
     app.teardown_appcontext(close_db)
+
 
 def get_engine():
     if'db_engine' not in g:
@@ -27,20 +27,24 @@ def get_engine():
         # g.db_engine = create_engine(db_conf.DATABASE_URI)
     return g.db_engine
 
+
 def get_db():
     if 'db' not in g:
         g.db = connect_db()
     return g.db
 
+
 def close_db(e=None):
-    db = g.pop('db',None)
+    db = g.pop('db', None)
 
     if db is not None:
         db.close()
 
+
 def connect_db():
     engine = get_engine()
     return engine.connect()
+
 
 # Retrieves profile information for the subject.
 # @param    subject     user_id for the database entry
@@ -122,6 +126,3 @@ def get_hobbies(subject):
             'discover': discover
         }
     ]
-
-
-

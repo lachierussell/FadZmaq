@@ -1,19 +1,16 @@
 # @file
 # @brief        The api specification.
-# fadzmaq.py
+# fadzmaq/routes.py
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
 #
-# The main application. It specifies the wsgi routes, and begins the running of the application.
-#
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
+
 from flask import jsonify, request, Flask, Blueprint
 from fadzmaq.api import recs_data, match_data, profile_data
-from fadzmaq import database
-from fadzmaq.database import db
 
 route_bp = Blueprint("route_bp", __name__)
 
@@ -112,6 +109,3 @@ def like_user(id):
 @route_bp.route('/pass/<string:id>', methods=['POST'])
 def pass_user(id):
     return "User passed", 200
-
-
-

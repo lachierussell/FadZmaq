@@ -1,7 +1,9 @@
 ## Setup
 To run the server you will need postgres installed
-- Build the databse and test database from the scripts, you will need to enter your postgres password. This will create a fadzmaq and fadzmaq_test database in postgres
-- Tests should work correctly at this stage, but to run the server proper you will need to enter the fadzmaq database credentials into fadzmaq.cfg
+- Build the databse and test database from the scripts, you will need to enter your postgres password.
+This will create a fadzmaq and fadzmaq_test database in postgres
+- Tests should work correctly at this stage, but to run the server proper you will need to enter the fadzmaq database 
+credentials into fadzmaq.conf
 - Once this is configured you can run the server from the scripts
 
 ## Testing
