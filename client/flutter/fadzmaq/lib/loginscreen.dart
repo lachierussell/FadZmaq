@@ -25,11 +25,12 @@ class _LoginScreenState extends State<LoginScreen> {
       _currentUser = account;
     });
     if (_currentUser != null) {
-      Navigator.pushNamed(context, "/UwaAll");
+      // Navigator.pushNamed(context, "/UwaAll");
     }
     });
-    _googleSignIn.signInSilently().whenComplete( () =>
-    Navigator.pushNamed(context, "/UwaAll")
+    _googleSignIn.signInSilently().whenComplete( () => {
+      // Navigator.pushNamed(context, "/UwaAll")
+    }
     );
   }
 
