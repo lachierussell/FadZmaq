@@ -11,7 +11,7 @@
 
 from flask import jsonify, request, Flask, Blueprint
 from fadzmaq.api import recs_data, match_data, profile_data
-
+from fadzmaq.database import db
 route_bp = Blueprint("route_bp", __name__)
 
 
@@ -37,6 +37,40 @@ def index():
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
+@route_bp.route('/auth', methods=['POST'])
+def authentication():
+    # (Receive token by HTTPS POST)
+    # TODO: Get actual google token (speak with Seharsh)
+    # TODO: Send json data to client app
+
+    token = request.get_data()
+    token = jwt.decode(token, verify=False)
+    print(token)
+    try:
+        # Verifying the token, if it fails proceed to except block.
+        idinfo = id_token.verify_oauth2_token(token, requests.Request())
+        print(idinfo['name'])
+
+        # TODO: make a database query -- later
+        # Will need to be a query to the database.
+        # if idinfo['aud'] not in ['CLIENT_ID_1', 'CLIENT_ID_2', 'CLIENT_ID_3']:
+        #     raise ValueError('Could not verify audience.')
+
+        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+            raise ValueError('Wrong issuer.')
+
+        # ID token is valid. Get the user's Google Account ID from the decoded token.
+        userid = idinfo['sub']
+        return userid
+
+    except ValueError:
+        # Invalid token
+        # TODO: Return unauthorised error code
+        err = 'Invalid token'
+        print(err)
+        return err
+
+
 @route_bp.route('/user/recs', methods=['GET'])
 def recommendations():
     return jsonify(recs_data.my_recs), 200
@@ -54,7 +88,17 @@ def get_user_by_id(id):
 
 @route_bp.route('/profile', methods=['GET'])
 def get_profile():
-    return jsonify(profile_data.my_profile), 200
+    # TODO: Send to authenticate function and return sub id.
+    # print(request.headers['auth'])
+
+    # TODO: Clean and retrieve inputs.
+    subject = 1  # Temp value.
+
+    try:
+        return db.retrieve_profile(subject), 200
+
+    except ValueError:
+        return '{"error":"Profile not found."}', 404
 
 
 @route_bp.route('/profile', methods=['POST'])
