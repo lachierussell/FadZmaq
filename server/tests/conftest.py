@@ -16,31 +16,29 @@ import sqlalchemy
 
 
 @pytest.fixture
-def api():
+def api_no_db():
 
     api = create_app({
         'TESTING': True,
     })
 
-    # # rebuild the database for each test
-    build_test_db(api)
-
     yield api
-    # # drop all tables - just in case some scripts rely on remnet tables
-    teardown_test_db(api)
 
 
 @pytest.fixture
-def db_api(api):
+def api(api_no_db):
 
     # rebuild the database for each test
-    build_test_db(api)
+    build_test_db(api_no_db)
 
-    yield api
+    yield api_no_db
 
     # drop all tables - just in case some scripts rely on remnet tables
-    teardown_test_db(api)
+    teardown_test_db(api_no_db)
 
+@pytest.fixture
+def client_no_db(api_no_db):
+    return api.test_client()
 
 @pytest.fixture
 def client(api):
