@@ -1,3 +1,5 @@
+import 'package:fadzmaq/loginscreen.dart';
+import 'package:fadzmaq/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
 
@@ -24,7 +26,15 @@ class App extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
+      // home: HomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        '/': (context) => SplashScreen(),
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        '/login': (context) => LoginScreen(),
+        // '/profile': (context) => LoginScreen(),
+      },
     );
   }
 }
