@@ -1,4 +1,1 @@
-/server/venv
-.idea
-**/__pycache__
-/server/api/__pycache__/*
+**/.idea

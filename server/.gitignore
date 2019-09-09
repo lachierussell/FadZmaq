@@ -1,0 +1,13 @@
+.vscode
+**/__pycache__
+.pytest_cache/
+
+Pipfile.lock
+
+# Coverage
+htmlcov
+.coverage
+
+# Config
+fadzmaq/fadzmaq.conf
+

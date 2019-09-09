@@ -1,20 +1,20 @@
 # @file
-# @brief        The main entry point of the application.
+# @brief
 # fadzmaq.py
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
 #
-# This is the main entry point of the application.
-# Run the application through this file.
-# Please view the README, INSTALL, and LICENSE before using this project.
-#
 # Copyright FadZmaq © 2019      All rights reserved.
-# @author Lachlan Russell       22414249@student.uwa.edu.au
+# @author Jordan Russell    [email]
 
-from flask import Flask
-from api import api
 
-if __name__ == '__main__':
-    api.run()
+# entry point for the api
+from fadzmaq import create_app
+app = create_app()
+
+# only run if we are executing this script, otherwise handled by WSGI
+if __name__ == "__main__":
+    app.run()
+
 

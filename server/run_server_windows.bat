@@ -1,3 +1,5 @@
 @echo on
 start /wait /B pipenv install --dev
-start /wait /B pipenv run python fadzmaq.py
+SET FLASK_APP=fadzmaq.py
+start /wait /B pipenv run flask run
+timeout -1
