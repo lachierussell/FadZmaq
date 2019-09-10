@@ -12,7 +12,9 @@ import json
 from flask import jsonify, request, Flask, Blueprint
 from fadzmaq.api import recs_data, match_data, profile_data
 from fadzmaq.database import db
-from pip._vendor import requests
+from firebase_admin import auth
+import requests
+
 
 route_bp = Blueprint("route_bp", __name__)
 
@@ -43,51 +45,34 @@ def index():
 def authentication():
     # (Receive token by HTTPS POST)
     # TODO: Get actual google token (speak with Seharsh)
-
-
-
-    # TODO: Send json data to client app
-
-    # (Does that mean that we have to stringify the data?)
-    def stringify():
-        databaselist = {
-            "/user/recs": "Get recommendations",
-            "/user/`id`": "Get user profile",
-            "/profile": "Get your own profile information",
-            "/matches": "Get a list of matches",
-            "/matches/`id`": "Get profile information of a single match"
-        }
-        print(json.dumps(databaselist), 300)
-        # As it said on https://www.webucator.com/how-to/how-send-receive-json-data-from-the-server.cfm
-        # sending json string to the client should be as the response body
-        # Is it how it works??
-        url = '0000000'  # needs database url
-        # https://stackoverflow.com/questions/6386308/http-requests-and-json-parsing-in-python/6386366
-        response = requests.get(url=url, databaselist=databaselist)
-        data = response.json()
-
     token = request.get_data()
-    token = jwt.decode(token, verify=False)
-    print(token)
+    # token = jwt.decode(token, verify=False)
+    # print(token)
     try:
         # Verifying the token, if it fails proceed to except block.
-        idinfo = id_token.verify_oauth2_token(token, requests.Request())
-        print(idinfo['name'])
+        # todo: change to firebase
+
+
+        # idinfo = id_token.verify_oauth2_token(token, requests.Request())
+        # print(idinfo['name'])
 
         # TODO: make a database query -- later
-        #found this web may be helpful
-        #https://www.google.com/search?rlz=1C1CHBF_en-GBAU783AU783&biw=1366&bih=625&sxsrf=ACYBGNTj9xbd13MOsvbZqAAMUoG0asexIA%3A1567945873643&ei=kfR0Xa-AJ9vgrQG44bDABw&q=make+a+database+query+in+python&oq=make+a+database+query+in+python&gs_l=psy-ab.3...7779.7779..8015...0.1..0.218.218.2-1......0....1..gws-wiz.......0i71._XUm7LjZ_jg&ved=0ahUKEwjvjM3GncHkAhVbcCsKHbgwDHg4ChDh1QMICw&uact=5
+
+        decoded_token = auth.verify_id_token(token)
+        uid = docoded_token['uid']
+        db.verify_user(uid)
 
         # Will need to be a query to the database.
         # if idinfo['aud'] not in ['CLIENT_ID_1', 'CLIENT_ID_2', 'CLIENT_ID_3']:
         #     raise ValueError('Could not verify audience.')
 
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
+        # if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
+        #     raise ValueError('Wrong issuer.')
 
         # ID token is valid. Get the user's Google Account ID from the decoded token.
-        userid = idinfo['sub']
+        # userid = idinfo['sub']
         return userid
+
 
     except ValueError:
         # Invalid token

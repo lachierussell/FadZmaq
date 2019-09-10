@@ -126,3 +126,17 @@ def get_hobbies(subject):
             'discover': discover
         }
     ]
+
+def verify_user(subject):
+    rows = get_db().execute(
+        '''
+        SELECT COUNT(user_id)
+        FROM profile
+        WHERE user_id = {};
+        '''.format(subject)
+    )
+
+    for row in rows:
+        if row['count'] == 1:
+            return True
+    return False
