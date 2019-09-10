@@ -92,32 +92,33 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 2, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 5, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (2, 3, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 4, 'discover');
---
--- CREATE OR REPLACE FUNCTION match()
---     RETURNS TRIGGER AS
--- $BODY$
--- BEGIN
---     IF (
---         SELECT v.user_from, v.user_to
---         FROM votes v
---         WHERE v.user_to = NEW.user_from
---         AND
---
---
--- --         SELECT v1.user_from, v1.user_to
--- --         FROM votes v1
--- --             INNER JOIN votes v2
--- --                 ON v1.user_from = v2.user_to
--- --                 AND v2.user_from = v1.user_to
--- --         WHERE v2.vote = TRUE
--- --           AND v1.vote = TRUE
--- --     )
--- --     INSERT INTO matches (user_a, user_b)
--- --     SELECT m1.user_to, m1.user_from
--- --     FROM match_pair m1;
--- END;
--- $BODY$
---
--- CREATE TRIGGER body INSTEAD OF INSERT OR UPDATE ON votes
---     FOR EACH ROW EXECUTE FUNCTION match();
 
+
+CREATE OR REPLACE FUNCTION match()
+    RETURNS TRIGGER
+    LANGUAGE plpgsql
+    AS
+$BODY$
+BEGIN
+    IF (
+        SELECT v.user_from
+        FROM votes v
+        WHERE v.user_to = NEW.user_from
+        AND v.user_from = NEW.user_to
+    )
+    THEN
+        INSERT INTO matches (user_a, user_b, time, rating)
+        VALUES (NEW.user_from, NEW.user_to, now(), null);
+        DELETE FROM votes WHERE user_to = NEW.user_from;
+    END IF;
+    RETURN NULL;
+END;
+$BODY$;
+
+CREATE TRIGGER body BEFORE INSERT OR UPDATE ON votes
+    FOR EACH ROW EXECUTE FUNCTION match(user_from, user_to);
+
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 1, 2);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 2, 1);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 3, 4);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 1, 4);
