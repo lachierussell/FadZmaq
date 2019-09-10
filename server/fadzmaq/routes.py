@@ -98,7 +98,7 @@ def get_profile():
         return db.retrieve_profile(subject), 200
 
     except ValueError:
-        return '{"error":"Profile not found."}', 404
+        return '{"error":"Profile not found"}', 404
 
 
 @route_bp.route('/profile', methods=['POST'])
@@ -117,7 +117,11 @@ def update_profile():
 
 @route_bp.route('/matches', methods=['GET'])
 def get_matches():
-    return jsonify(match_data.my_matches), 200
+    subject = int(request.get_data())
+    try:
+        return db.get_matches(subject), 200
+    except ValueError:
+        return '{"error":"Internal server error"}', 404
 
 
 @route_bp.route('/matches/<string:id>', methods=['GET'])

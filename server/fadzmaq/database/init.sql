@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS profile;
 DROP TABLE IF EXISTS primary_user;
 DROP TYPE IF EXISTS HOBBY_SWAP;
 DROP FUNCTION IF EXISTS match;
-DROP TRIGGER IF EXISTS body ON votes;
+DROP TRIGGER IF EXISTS make_match ON votes;
 
 
 CREATE TABLE IF NOT EXISTS profile
@@ -80,6 +80,8 @@ INSERT INTO profile (bio, nickname, email, dob, gender, phone)
 VALUES ('Boating admirer', 'Smith', 'smith@email.com', '5/12/1970', 'M', '0413239199');
 INSERT INTO profile (bio, nickname, email, dob, gender, phone)
 VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', 'F', '0404239188');
+INSERT INTO profile (bio, nickname, email, dob, gender, phone)
+VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/14/1980', 'M', '0415239188');
 
 INSERT INTO hobbies (name) VALUES ('Boxing');
 INSERT INTO hobbies (name) VALUES ('Boating');
@@ -100,32 +102,35 @@ CREATE OR REPLACE FUNCTION match()
     RETURNS TRIGGER
     LANGUAGE plpgsql
     AS
-$BODY$
+$make_match$
 BEGIN
     IF (
         SELECT v.user_from
         FROM votes v
-        WHERE v.user_to = NEW.user_from
-        AND v.user_from = NEW.user_to
-        AND v.vote
-        AND NEW.vote
-    )
-    THEN
+        WHERE NEW.vote
+          AND v.vote
+          AND v.user_to = new.user_from
+          AND new.user_to = v.user_from
+    ) THEN
         INSERT INTO matches (user_a, user_b, time, rating)
-        VALUES (NEW.user_from, NEW.user_to, now(), null);
+          VALUES (NEW.user_from, NEW.user_to, now(), null);
         DELETE FROM votes WHERE user_to = NEW.user_from;
         RETURN NULL;
     END IF;
     RETURN NEW;
 END;
-$BODY$;
+$make_match$;
 
-CREATE TRIGGER body BEFORE INSERT OR UPDATE ON votes
-    FOR EACH ROW EXECUTE FUNCTION match(user_from, user_to);
+CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
+    FOR EACH ROW EXECUTE FUNCTION match();
 
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 1, 2);
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 2, 1);
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 3, 4);
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 1, 4);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  1, 2);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  2, 1);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  3, 4);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  1, 4);
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), False, 1, 3);
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 3, 1);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  4, 1);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  3, 2);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  4, 3);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  3, 4);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  3, 1);

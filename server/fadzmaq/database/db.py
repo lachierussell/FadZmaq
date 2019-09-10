@@ -46,6 +46,10 @@ def connect_db():
     return engine.connect()
 
 
+def hash_id(id):
+    return hashlib.md5(str(id).encode()).hexdigest()
+
+
 # Retrieves profile information for the subject.
 # @param    subject     user_id for the database entry
 # @return   json profile data or raises value error.
@@ -63,7 +67,7 @@ def retrieve_profile(subject):
         # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': hashlib.md5(str(row['user_id']).encode()).hexdigest(),
+                'user_id': hash_id(row['user_id']),
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
@@ -126,3 +130,36 @@ def get_hobbies(subject):
             'discover': discover
         }
     ]
+
+
+def get_matches(subject):
+    rows = get_db().execute(
+        '''
+        SELECT profile.nickname, profile.user_id FROM profile
+        WHERE profile.user_id IN (
+            SELECT user_a
+            FROM matches
+            WHERE user_a = {}
+               OR user_b = {}
+        ) OR profile.user_id IN (
+            SELECT user_b
+            FROM matches
+            WHERE user_a = {}
+               OR user_b = {}
+        ) AND profile.user_id != {};
+        '''.format(subject, subject, subject, subject, subject)
+    )
+
+    matches = []
+
+    for row in rows:
+        matches.append({
+            'id': hash_id(row['user_id']),
+            'name': row['nickname'],
+            'photo': 'DOES NOT EXIST'
+        })
+
+    return {
+        "matches": matches
+    }
+

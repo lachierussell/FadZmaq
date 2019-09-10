@@ -36,9 +36,11 @@ def api(api_no_db):
     # drop all tables - just in case some scripts rely on remnet tables
     teardown_test_db(api_no_db)
 
+
 @pytest.fixture
 def client_no_db(api_no_db):
     return api.test_client()
+
 
 @pytest.fixture
 def client(api):
