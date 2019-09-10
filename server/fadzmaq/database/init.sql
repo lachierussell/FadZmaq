@@ -107,6 +107,8 @@ BEGIN
         FROM votes v
         WHERE v.user_to = NEW.user_from
         AND v.user_from = NEW.user_to
+        AND v.vote
+        AND NEW.vote
     )
     THEN
         INSERT INTO matches (user_a, user_b, time, rating)
@@ -125,3 +127,5 @@ INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 1, 2);
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 2, 1);
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 3, 4);
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 1, 4);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), False, 1, 3);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True, 3, 1);
