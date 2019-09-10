@@ -16,6 +16,7 @@ from firebase_admin import auth
 import requests
 
 
+
 route_bp = Blueprint("route_bp", __name__)
 
 
@@ -41,45 +42,20 @@ def index():
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
-@route_bp.route('/auth', methods=['POST'])
-def authentication():
-    # (Receive token by HTTPS POST)
-    # TODO: Get actual google token (speak with Seharsh)
-    token = request.get_data()
-    # token = jwt.decode(token, verify=False)
-    # print(token)
+# @route_bp.route('/auth', methods=['POST'])
+def authentication(token):
+    # token = request.get_data()
     try:
         # Verifying the token, if it fails proceed to except block.
-        # todo: change to firebase
-
-
-        # idinfo = id_token.verify_oauth2_token(token, requests.Request())
-        # print(idinfo['name'])
-
-        # TODO: make a database query -- later
-
         decoded_token = auth.verify_id_token(token)
-        uid = docoded_token['uid']
-        db.verify_user(uid)
-
-        # Will need to be a query to the database.
-        # if idinfo['aud'] not in ['CLIENT_ID_1', 'CLIENT_ID_2', 'CLIENT_ID_3']:
-        #     raise ValueError('Could not verify audience.')
-
-        # if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-        #     raise ValueError('Wrong issuer.')
-
-        # ID token is valid. Get the user's Google Account ID from the decoded token.
-        # userid = idinfo['sub']
-        return userid
-
+        uid = decoded_token['uid']
+        if not db.verify_user(uid):
+            raise ValueError
+        return uid
 
     except ValueError:
         # Invalid token
-        # TODO: Return unauthorised error code
-        userid != idinfo['sub']
         err = 'Invalid token 404'
-        print(err)
         return err
 
 
