@@ -20,6 +20,8 @@ DROP TABLE IF EXISTS hobbies;
 DROP TABLE IF EXISTS profile;
 DROP TABLE IF EXISTS primary_user;
 DROP TYPE IF EXISTS HOBBY_SWAP;
+DROP FUNCTION IF EXISTS match;
+DROP TRIGGER IF EXISTS body ON votes;
 
 
 CREATE TABLE IF NOT EXISTS profile
@@ -110,8 +112,9 @@ BEGIN
         INSERT INTO matches (user_a, user_b, time, rating)
         VALUES (NEW.user_from, NEW.user_to, now(), null);
         DELETE FROM votes WHERE user_to = NEW.user_from;
+        RETURN NULL;
     END IF;
-    RETURN NULL;
+    RETURN NEW;
 END;
 $BODY$;
 
