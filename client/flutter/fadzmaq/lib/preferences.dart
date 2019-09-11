@@ -7,13 +7,25 @@ class PreferencesTempApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const UserPreferencesPage(),
+      home: new UserPreferencesPage(),
     );
   }
 }
 
-class UserPreferencesPage extends StatelessWidget {
-  const UserPreferencesPage([Key key]) : super(key: key);
+class UserPreferencesPage extends StatefulWidget  {
+  UserPreferencesState createState(){
+    return UserPreferencesState();
+  }
+
+}
+
+
+
+class UserPreferencesState extends State {
+  // const UserPreferencesPage([Key key]) : super(key: key);
+
+  double _locationDistance = 50;
+  bool _notificationsBool = true;
 
   @override
   Widget build(BuildContext context) {
@@ -59,8 +71,11 @@ class UserPreferencesPage extends StatelessWidget {
                     child: Slider(
                       min: 10,
                       max: 200,
-                      value: 50,
-                      onChanged: (double d) {},
+                      // value: 50,
+                      onChanged: (newRating) {
+                        setState(() => _locationDistance = newRating);
+                      },
+                      value: _locationDistance,
                     ),
                   ),
                 ],
@@ -69,8 +84,10 @@ class UserPreferencesPage extends StatelessWidget {
                 children: <Widget>[
                   Text("Notifications"),
                   Switch(
-                    onChanged: (bool b) {},
-                    value: true,
+                    onChanged: (b) {
+                      setState(()=> _notificationsBool = b);
+                    },
+                    value: _notificationsBool,
                   ),
                 ],
               )
