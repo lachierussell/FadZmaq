@@ -20,7 +20,7 @@ import objectpath
 route_bp = Blueprint("route_bp", __name__)
 cred = firebase_admin.credentials.Certificate("/Users/lachlanrussell/Developer/UNI/fadzmaq1-firebase-adminsdk-78gsi-b01a0a6212.json")
 auth_app = firebase_admin.initialize_app(cred)
-print(auth_app)
+
 
 @route_bp.route('/')
 @route_bp.route('/index')
@@ -55,13 +55,12 @@ def authentication(token):
         uid = decoded_token['uid']
         print(uid)
         if not db.verify_user(uid):
-            raise ValueError
+            raise UnknownUserError(uid)
         return uid
 
-    except IOError:
+    except ValueError:
         # Invalid token
-        err = 'Invalid token 404'
-        return err
+        raise UnauthorizedError('Invalid Token')
 
 
 @route_bp.route('/user/recs', methods=['GET'])
@@ -102,15 +101,23 @@ def update_profile():
 @route_bp.route('/account', methods=['POST'])
 def create_account():
     data = json.loads(request.get_data())
-    header = request.headers['google_token']
     user = data["new_user"]
-    print(header)
+    if 'Authorization' not in request.headers:
+        return 'Token not present', 403
 
     try:
-        user_id = db.make_user(user['name'], user['name'], header['uid'])
+        uid = authentication(request.headers['Authorization'])
+
+    except UnknownUserError as e:
+        uid = str(e)
+    except UnauthorizedError:
+        return 'Account creation failed', 401
+
+    try:
+        user_id = db.make_user(user['name'], user['name'], uid)
         return user_id
     except IOError:
-        return 'account creation failed', 200
+        return 'Account creation failed', 500
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -160,3 +167,11 @@ def like_user(id):
 @route_bp.route('/pass/<string:id>', methods=['POST'])
 def pass_user(id):
     return "User passed", 200
+
+
+class UnauthorizedError(Exception):
+    pass
+
+
+class UnknownUserError(Exception):
+    pass

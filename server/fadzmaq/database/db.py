@@ -169,7 +169,7 @@ def verify_user(subject):
         '''
         SELECT COUNT(user_id)
         FROM profile
-        WHERE user_id = {};
+        WHERE user_id = '{}';
         '''.format(subject)
     )
 
