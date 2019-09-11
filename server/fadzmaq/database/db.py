@@ -131,6 +131,7 @@ def get_hobbies(subject):
         }
     ]
 
+
 def get_matches(subject):
     rows = get_db().execute(
         '''

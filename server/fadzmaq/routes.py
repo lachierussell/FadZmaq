@@ -16,7 +16,6 @@ from firebase_admin import auth
 import requests
 
 
-
 route_bp = Blueprint("route_bp", __name__)
 
 
@@ -37,10 +36,10 @@ def index():
     }
     return jsonify(response), 300
 
+
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # USERS
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-
 
 # @route_bp.route('/auth', methods=['POST'])
 def authentication(token):
@@ -73,7 +72,6 @@ def get_user_by_id(id):
 # PROFILE
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-
 @route_bp.route('/profile', methods=['GET'])
 def get_profile():
     # TODO: Send to authenticate function and return sub id.
@@ -101,7 +99,6 @@ def update_profile():
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # MATCHES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-
 
 @route_bp.route('/matches', methods=['GET'])
 def get_matches():
@@ -136,7 +133,6 @@ def rate_user_up(id):
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # VOTES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-
 
 @route_bp.route('/like/<string:id>', methods=['POST'])
 def like_user(id):
