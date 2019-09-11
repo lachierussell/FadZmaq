@@ -12,19 +12,17 @@ class PreferencesTempApp extends StatelessWidget {
   }
 }
 
-class UserPreferencesPage extends StatefulWidget  {
-  UserPreferencesState createState(){
+class UserPreferencesPage extends StatefulWidget {
+  UserPreferencesState createState() {
     return UserPreferencesState();
   }
-
 }
-
-
 
 class UserPreferencesState extends State {
   // const UserPreferencesPage([Key key]) : super(key: key);
 
   double _locationDistance = 50;
+  int _roundDist = 50;
   bool _notificationsBool = true;
 
   @override
@@ -49,34 +47,63 @@ class UserPreferencesState extends State {
             // crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Image.network(
-                'https://upload.wikimedia.org/wikipedia/commons/a/a2/Rowan_Atkinson%2C_2011.jpg',
-                height: 200,
-                width: 200,
-                fit: BoxFit.contain,
-              ),
-              Text("Rowan Atkinson"),
-              RaisedButton(
-                onPressed: () {},
-                child: Text("View Profile"),
-              ),
-              RaisedButton(
-                onPressed: () {},
-                child: Text("Edit Profile"),
-              ),
-              Row(
-                children: <Widget>[
-                  Text("Distance"),
-                  Expanded(
-                    child: Slider(
-                      min: 10,
-                      max: 200,
-                      // value: 50,
-                      onChanged: (newRating) {
-                        setState(() => _locationDistance = newRating);
-                      },
-                      value: _locationDistance,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: <Widget>[
+                    Image.network(
+                      'https://upload.wikimedia.org/wikipedia/commons/a/a2/Rowan_Atkinson%2C_2011.jpg',
+                      height: 200,
+                      width: 200,
+                      fit: BoxFit.contain,
                     ),
+                    Text("Rowan Atkinson"),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text("View Profile"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {},
+                  child: Text("Edit Profile"),
+                ),
+              ),
+              Column(
+                children: <Widget>[
+                  Text("Distance: $_roundDist"),
+                  Row(
+                    children: <Widget>[
+                      Text("Distance"),
+                      Expanded(
+                        child: Slider(
+                          min: 10,
+                          max: 200,
+                          // value: 50,
+                          onChanged: (newDist) {
+                            setState(() {
+                              int rounded = (newDist / 5).round() * 5;
+                              _locationDistance = newDist;
+                              _roundDist = rounded;
+                            });
+                          },
+                          // onChangeEnd: (newDist){
+                          //   setState(() {
+                          //     int rounded = (newDist / 5).round() * 5;
+                          //     _locationDistance = rounded as double;
+                          //     _roundDist = rounded;
+                          //   });
+                          // },
+                          value: _locationDistance,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -85,7 +112,7 @@ class UserPreferencesState extends State {
                   Text("Notifications"),
                   Switch(
                     onChanged: (b) {
-                      setState(()=> _notificationsBool = b);
+                      setState(() => _notificationsBool = b);
                     },
                     value: _notificationsBool,
                   ),
