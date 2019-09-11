@@ -131,7 +131,6 @@ def get_hobbies(subject):
         }
     ]
 
-
 def get_matches(subject):
     rows = get_db().execute(
         '''
@@ -163,3 +162,17 @@ def get_matches(subject):
         "matches": matches
     }
 
+
+def verify_user(subject):
+    rows = get_db().execute(
+        '''
+        SELECT COUNT(user_id)
+        FROM profile
+        WHERE user_id = {};
+        '''.format(subject)
+    )
+
+    for row in rows:
+        if row['count'] == 1:
+            return True
+    return False
