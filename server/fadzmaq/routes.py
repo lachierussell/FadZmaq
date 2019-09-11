@@ -116,7 +116,7 @@ def create_account():
     try:
         user_id = db.make_user(user['name'], user['name'], uid)
         return user_id
-    except IOError:
+    except Exception:
         return 'Account creation failed', 500
 
 
