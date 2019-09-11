@@ -1,7 +1,7 @@
-import 'package:fadzmaq/loginscreen.dart';
-import 'package:fadzmaq/splashscreen.dart';
+import 'package:fadzmaq/views/loginscreen.dart';
+import 'package:fadzmaq/views/splashscreen.dart';
 import 'package:flutter/material.dart';
-import 'homepage.dart';
+import 'package:fadzmaq/views/homepage.dart';
 
 
 // void main() {
