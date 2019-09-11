@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "126247573200",
+    "firebase_url": "https://fadzmaq1.firebaseio.com",
+    "project_id": "fadzmaq1",
+    "storage_bucket": "fadzmaq1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126247573200:android:e502e4c7957cbbe83270d5",
+        "android_client_info": {
+          "package_name": "com.team26.fadzmaq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "126247573200-9qjhcpo4fiojufh53vfsnieq7f4n6bc1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.team26.fadzmaq",
+            "certificate_hash": "8dd077926e1f3a1aadcfa595fff8725db85834ff"
+          }
+        },
+        {
+          "client_id": "126247573200-qb1vj0755ntihlro0buhus43kg0drkno.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjC1Mfk4M6j8DTunfW_XdDel8Q4mEIqa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "126247573200-qb1vj0755ntihlro0buhus43kg0drkno.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
