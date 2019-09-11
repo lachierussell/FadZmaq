@@ -1,5 +1,11 @@
+import 'package:fadzmaq/controllers/profile_request.dart';
+import 'package:fadzmaq/models/profile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fadzmaq/views/loginscreen.dart';
+import 'package:fadzmaq/controllers/request.dart';
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -58,6 +64,26 @@ class UserPreferencesState extends State {
                       fit: BoxFit.contain,
                     ),
                     Text("Rowan Atkinson"),
+                    // GetProfileData(builder: (context) {
+                    //   return Row(
+                    //     children: <Widget>[
+                    //       Text("test"),
+                    //       Text(InheritedProfile.of(context).test),
+                    //     ],
+                    //   );
+                    // }),
+                    RequestProfile(builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return Row(
+                          children: <Widget>[
+                            Text("test"),
+                            Text(InheritedProfile.of(context).test),
+                          ],
+                        );
+                      } else {
+                        return Text("null");
+                      }
+                    })
                   ],
                 ),
               ),
@@ -117,11 +143,24 @@ class UserPreferencesState extends State {
                     value: _notificationsBool,
                   ),
                 ],
-              )
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: logOut,
+                  child: Text("Log out"),
+                ),
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void logOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }

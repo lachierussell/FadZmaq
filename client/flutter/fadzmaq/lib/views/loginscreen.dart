@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
+import 'package:fadzmaq/views/preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -86,6 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () {
                         _handleSignIn().then((FirebaseUser user) {
                           // print(user);
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => UserPreferencesPage()));
                         }).catchError((e) => print(e));
                       }),
                 ),

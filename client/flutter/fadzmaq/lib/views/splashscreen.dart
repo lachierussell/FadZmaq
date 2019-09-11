@@ -1,5 +1,6 @@
 import 'package:fadzmaq/views/loginscreen.dart';
-import 'package:fadzmaq/views/homepage.dart';
+import 'package:fadzmaq/views/preferences.dart';
+import 'package:fadzmaq/views/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -30,7 +31,7 @@ class SplashScreenState extends State<SplashScreen> {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
     if(user != null){
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage(title: 'Flutter Demo Home Page')));
+      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => UserPreferencesPage()));
     }else{
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
     }
