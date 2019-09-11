@@ -27,10 +27,9 @@ DROP TRIGGER IF EXISTS make_match ON votes;
 CREATE TABLE IF NOT EXISTS profile
 (
     user_id  SERIAL      NOT NULL PRIMARY KEY,
-    nickname VARCHAR(35) NOT NULL,
-    bio      VARCHAR(400),
-    dob      TIMESTAMP   NOT NULL,
-    gender   CHAR,
+    nickname VARCHAR(35) DEFAULT NULL,
+    bio      VARCHAR(400) DEFAULT NULL,
+    dob      TIMESTAMP   DEFAULT NULL,
     email    VARCHAR(255) UNIQUE,
     phone    VARCHAR UNIQUE
 );
@@ -72,16 +71,16 @@ CREATE TABLE IF NOT EXISTS user_hobbies
 
 -- Inserting dummy values --
 -- DOB IN USA (month/day/year)
-INSERT INTO profile (bio, nickname, email, dob, gender, phone)
-VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '4/09/1999', 'M', '0423199199');
-INSERT INTO profile (bio, nickname, email, dob, gender, phone)
-VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '4/10/1999', 'M', '0423239199');
-INSERT INTO profile (bio, nickname, email, dob, gender, phone)
-VALUES ('Boating admirer', 'Smith', 'smith@email.com', '5/12/1970', 'M', '0413239199');
-INSERT INTO profile (bio, nickname, email, dob, gender, phone)
-VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', 'F', '0404239188');
-INSERT INTO profile (bio, nickname, email, dob, gender, phone)
-VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/14/1980', 'M', '0415239188');
+INSERT INTO profile (bio, nickname, email, dob, phone)
+VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '4/09/1999', '0423199199');
+INSERT INTO profile (bio, nickname, email, dob, phone)
+VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '4/10/1999', '0423239199');
+INSERT INTO profile (bio, nickname, email, dob, phone)
+VALUES ('Boating admirer', 'Smith', 'smith@email.com', '5/12/1970', '0413239199');
+INSERT INTO profile (bio, nickname, email, dob, phone)
+VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', '0404239188');
+INSERT INTO profile (bio, nickname, email, dob, phone)
+VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/14/1980', '0415239188');
 
 INSERT INTO hobbies (name) VALUES ('Boxing');
 INSERT INTO hobbies (name) VALUES ('Boating');

@@ -177,3 +177,14 @@ def verify_user(subject):
         if row['count'] == 1:
             return True
     return False
+
+
+def make_user(email, phone):
+    rows = get_db().execute(
+        '''
+        INSERT INTO profile (email, phone) VALUES ('{}', '{}') RETURNING user_id; 
+        '''.format(email, phone)
+    )
+    for row in rows:
+        return str(row['user_id'])
+    raise IOError

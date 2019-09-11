@@ -89,11 +89,18 @@ def get_profile():
 
 @route_bp.route('/profile', methods=['POST'])
 def update_profile():
-    user = request.form['somedata']
-    response = {
-        "status": user
-    }
-    return jsonify(response), 200
+    response = request.get_data()
+    return response, 200
+
+
+@route_bp.route('/account', methods=['POST'])
+def create_account():
+    data = json.loads(request.get_data())
+    try:
+        user_id = db.make_user(data['email'], data['phone'])
+        return user_id
+    except IOError:
+        return 'account creation failed', 200
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -103,6 +110,7 @@ def update_profile():
 @route_bp.route('/matches', methods=['GET'])
 def get_matches():
     # TODO: Get subject from auth
+    print(request.get_data())
     subject = int(request.get_data())
     try:
         return db.get_matches(subject), 200
