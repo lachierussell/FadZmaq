@@ -5,6 +5,7 @@ import 'main.dart';
 import 'pages/homepage.dart';
 import 'pages/loginpage.dart';
 import 'pages/profilepage.dart';
+import 'pages/editprofilepage.dart';
 
 Widget _defaultHome = new LoginPage();
 
@@ -28,7 +29,8 @@ class App extends StatelessWidget {
           // Set routes for using the Navigator.
           '/home': (BuildContext context) => new HomePage(title: "Home"),
           '/login': (BuildContext context) => new LoginPage(),
-          '/profilepage': (BuildContext context) => new ProfilePage()
+          '/profilepage': (BuildContext context) => new ProfilePage(),
+          '/editprofilepage': (BuildContext context) => new EditProfilePage()
         }
     );
   }

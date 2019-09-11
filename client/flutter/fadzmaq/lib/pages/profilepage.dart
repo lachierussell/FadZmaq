@@ -1,15 +1,57 @@
 import 'package:fadzmaq/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+import 'dart:convert';
+
+Future<User> test;
+
+@override
+void initState(){
+  test = fetchPost();
+}
 
 class ProfilePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => new _ProfilePageState();
 }
 
+Future<User> fetchPost() async {
+  final response =
+  await http.get('http://localhost:5000/profile');
+  if (response.statusCode == 200) {
+    // If the call to the server was successful, parse the JSON.
+    print(User.fromJson(json.decode(response.body)));
+    return User.fromJson(json.decode(response.body));
+  } else {
+    // If that call was not successful, throw an error.
+    throw Exception('Failed to load post');
+  }
+}
+
+class User {
+  final String nickname;
+  final String dob;
+  final String email;
+  final String phone;
+  final String bio;
+  User({this.nickname, this.dob, this.email, this.phone, this.bio});
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+        nickname : json['name'],
+        dob : json ['dob'],
+        email :json['email'],
+        phone : json['phone'],
+        bio : json['bio']
+    );
+  }
+}
+
+
+
 class _ProfilePageState extends State<ProfilePage> {
   String _status = 'no-action';
-
 
   @override
   Widget build(BuildContext context){
@@ -106,9 +148,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         child: Row(
                           children: <Widget>[
                             IconButton(
-                              color: Colors.white,
-                              icon: Icon(CupertinoIcons.person_solid),
-                              onPressed: (){},
+                                icon: Icon(CupertinoIcons.person_solid),
+                                onPressed: () {
+                                  appAuth.logout().then(
+                                          (_) => Navigator.of(context).pushReplacementNamed('/editprofilepage')
+                                  );
+                                }
                             ),
                             IconButton(
                               color: Colors.white,
@@ -148,12 +193,20 @@ class _ProfilePageState extends State<ProfilePage> {
             elevation: 0,
             actions: <Widget>[
               IconButton(
-                icon: Icon(CupertinoIcons.home),
+                icon: Icon(CupertinoIcons.pencil),
                 onPressed: () {
                   appAuth.logout().then(
-                          (_) => Navigator.of(context).pushReplacementNamed('/home')
+                          (_) => Navigator.of(context).pushReplacementNamed('/editprofilepage')
                   );
                 }
+              ),
+              IconButton(
+                  icon: Icon(CupertinoIcons.left_chevron),
+                  onPressed: () {
+                    appAuth.logout().then(
+                            (_) => Navigator.of(context).pushReplacementNamed('/home')
+                    );
+                  }
               ),
             ],
           ),
@@ -161,4 +214,32 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
+  Future<User> fetchPost() async {
+    final response =
+    await http.get('http://localhost:5000/profile');
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON.
+      return User.fromJson(json.decode(response.body));
+    } else {
+      // If that call was not successful, throw an error.
+      throw Exception('Failed to load post');
+    }
+  }
+//  class User {
+//  final String nickname;
+//  final String dob;
+//  final String email;
+//  final String phone;
+//  final String bio;
+//  User({this.userId, this.id, this.title, this.body});
+//  factory User.fromJson(Map<String, dynamic> json) {
+//  return User(
+//  nickname : json['name']
+//  dob : json ['dob']
+//  email :json['email']
+//  phone : json['phone']
+//  bio : json['bio']
+//  );
+//  }
+//  }
 }
