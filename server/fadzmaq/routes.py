@@ -117,6 +117,7 @@ def update_profile():
 
 @route_bp.route('/matches', methods=['GET'])
 def get_matches():
+    # TODO: Get subject from auth
     subject = int(request.get_data())
     try:
         return db.get_matches(subject), 200

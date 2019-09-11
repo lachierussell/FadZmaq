@@ -122,11 +122,12 @@ END;
 $make_match$;
 
 CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
-    FOR EACH STATEMENT EXECUTE FUNCTION match();
+    FOR EACH ROW EXECUTE FUNCTION match();
 
 
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  2, 1);
+
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  1, 2);
+INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  2, 1);
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  3, 4);
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  1, 4);
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), False, 1, 3);
