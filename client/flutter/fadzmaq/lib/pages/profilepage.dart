@@ -7,12 +7,10 @@ import 'dart:convert';
 
 Future<User> test;
 
-@override
-void initState(){
-  test = fetchPost();
-}
+
 
 class ProfilePage extends StatefulWidget {
+  ProfilePage({Key key}) : super(key : key);
   @override
   State<StatefulWidget> createState() => new _ProfilePageState();
 }
@@ -224,6 +222,12 @@ class _ProfilePageState extends State<ProfilePage> {
       // If that call was not successful, throw an error.
       throw Exception('Failed to load post');
     }
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    test = fetchPost();
   }
 //  class User {
 //  final String nickname;
