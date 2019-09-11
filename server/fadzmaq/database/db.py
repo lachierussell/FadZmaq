@@ -179,11 +179,11 @@ def verify_user(subject):
     return False
 
 
-def make_user(email, phone):
+def make_user(name, email, uid):
     rows = get_db().execute(
         '''
-        INSERT INTO profile (email, phone) VALUES ('{}', '{}') RETURNING user_id; 
-        '''.format(email, phone)
+        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id; 
+        '''.format(name, email, uid)
     )
     for row in rows:
         return str(row['user_id'])

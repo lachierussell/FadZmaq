@@ -13,11 +13,14 @@ from flask import jsonify, request, Flask, Blueprint
 from fadzmaq.api import recs_data, match_data, profile_data
 from fadzmaq.database import db
 from firebase_admin import auth
+import firebase_admin
 import requests
-
+import objectpath
 
 route_bp = Blueprint("route_bp", __name__)
-
+cred = firebase_admin.credentials.Certificate("/Users/lachlanrussell/Developer/UNI/fadzmaq1-firebase-adminsdk-78gsi-b01a0a6212.json")
+auth_app = firebase_admin.initialize_app(cred)
+print(auth_app)
 
 @route_bp.route('/')
 @route_bp.route('/index')
@@ -45,14 +48,17 @@ def index():
 def authentication(token):
     # token = request.get_data()
     try:
+        print('try')
         # Verifying the token, if it fails proceed to except block.
-        decoded_token = auth.verify_id_token(token)
+        decoded_token = auth.verify_id_token(token, auth_app, False)
+        print('verified')
         uid = decoded_token['uid']
+        print(uid)
         if not db.verify_user(uid):
             raise ValueError
         return uid
 
-    except ValueError:
+    except IOError:
         # Invalid token
         err = 'Invalid token 404'
         return err
@@ -96,8 +102,12 @@ def update_profile():
 @route_bp.route('/account', methods=['POST'])
 def create_account():
     data = json.loads(request.get_data())
+    header = request.headers['google_token']
+    user = data["new_user"]
+    print(header)
+
     try:
-        user_id = db.make_user(data['email'], data['phone'])
+        user_id = db.make_user(user['name'], user['name'], header['uid'])
         return user_id
     except IOError:
         return 'account creation failed', 200
