@@ -1,4 +1,4 @@
-import 'package:fadzmaq/app_config.dart';
+import 'package:fadzmaq/models/app_config.dart';
 
 class ConfigResourceDefault implements ConfigResource {
   @override

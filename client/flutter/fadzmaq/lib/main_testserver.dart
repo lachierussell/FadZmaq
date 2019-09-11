@@ -1,4 +1,4 @@
-import 'package:fadzmaq/app_config.dart';
+import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/app.dart';
 import 'package:fadzmaq/resource/config_testserver.dart';
 
