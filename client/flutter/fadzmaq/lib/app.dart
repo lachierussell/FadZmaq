@@ -1,6 +1,7 @@
 import 'package:fadzmaq/loginscreen.dart';
 import 'package:fadzmaq/splashscreen.dart';
 import 'package:fadzmaq/matches.dart';
+import 'package:fadzmaq/preferences.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
 
@@ -33,7 +34,8 @@ class App extends StatelessWidget {
         // When navigating to the "/" route, build the FirstScreen widget.
         // '/': (context) => SplashScreen(),
 
-        '/': (context) => MatchesTempApp(),
+        // '/': (context) => MatchesTempApp(),
+        '/': (context) => PreferencesTempApp(),
 
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/login': (context) => LoginScreen(),
