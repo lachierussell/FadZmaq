@@ -16,6 +16,22 @@ class MatchesTempApp extends StatelessWidget {
 class MatchesPage extends StatelessWidget {
   const MatchesPage([Key key]) : super(key: key);
 
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          title: Text('Matches'),
+        ),
+        body: ListView.builder(
+          itemCount: _matchedProfiles.length,
+          // itemExtent: 100,
+          itemBuilder: _listItemBuilder,
+          // physics: BouncingScrollPhysics(),
+        ));
+  }
+
+
   Widget _listItemBuilder(BuildContext context, int index) {
     return _listItem(context, _matchedProfiles[index]);
   }
@@ -97,19 +113,7 @@ class MatchesPage extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Matches'),
-        ),
-        body: ListView.builder(
-          itemCount: _matchedProfiles.length,
-          // itemExtent: 100,
-          itemBuilder: _listItemBuilder,
-          // physics: BouncingScrollPhysics(),
-        ));
-  }
+
 }
 
 final TextStyle nameStyle = TextStyle(
