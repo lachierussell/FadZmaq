@@ -51,8 +51,8 @@ def client(api):
 def build_test_db(api):
     engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
 
-    os.system('psql -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
-    os.system('psql -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
+    os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
+    os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
 
     # execute_sql(engine, "fadzmaq/database/init.sql")
     # execute_sql(engine, "tests/create_test_user.sql")

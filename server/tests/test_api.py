@@ -53,6 +53,7 @@ def test_profile_post(client):
 def test_matches(client):
     response = client.get('/matches', follow_redirects=True)
     assert response.status_code == 200
+    print(response)
 
 
 def test_match_request_by_id(client):
