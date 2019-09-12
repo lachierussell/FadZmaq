@@ -1,10 +1,10 @@
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/models.dart';
+import 'package:fadzmaq/views/matches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
-
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -41,7 +41,7 @@ class UserPreferencesState extends State {
   }
 
   Widget page() {
-    return Container(
+    return SingleChildScrollView(
       // color: Colors.grey,
       child: Align(
         alignment: Alignment.topCenter,
@@ -63,7 +63,6 @@ class UserPreferencesState extends State {
                       fit: BoxFit.contain,
                     ),
                     Text("Rowan Atkinson"),
-
                     GetRequest<MatchesData>(
                       url: "matches",
                       builder: (context) {
@@ -90,6 +89,18 @@ class UserPreferencesState extends State {
                 child: RaisedButton(
                   onPressed: () {},
                   child: Text("Edit Profile"),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: RaisedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MatchesPage()),
+                    );
+                  },
+                  child: Text("View Matches"),
                 ),
               ),
               Column(
@@ -157,11 +168,10 @@ class UserPreferencesState extends State {
 }
 
 class TestWid extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     MatchesData matches = InheritedRequest.of<MatchesData>(context);
-    
+
     return Text(matches.matches[0].name);
   }
 }
