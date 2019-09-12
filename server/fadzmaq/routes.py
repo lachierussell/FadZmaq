@@ -97,7 +97,6 @@ def get_user_by_id(uid, id):
 def get_profile(uid):
     try:
         return db.retrieve_profile(uid), 200
-
     except ValueError:
         return '{"error":"Profile not found"}', 404
 
