@@ -40,8 +40,8 @@ def index():
 def auth_required(func):
     def authenticate(*args, **kwargs):
         try:
-            uid = verify_token(*args, **kwargs)
-            verify_user(uid=uid, *args, **kwargs)
+            uid = verify_token()
+            verify_user(uid=uid)
             return func(uid=uid, *args, **kwargs)
         except ValueError as e:
             # Invalid token or user
@@ -55,7 +55,7 @@ def auth_required(func):
     return authenticate
 
 
-def verify_token(*args, **kwargs):
+def verify_token():
     if 'Authorization' not in request.headers:
         raise ValueError("Token not present")
 
@@ -68,7 +68,7 @@ def verify_token(*args, **kwargs):
     return uid
 
 
-def verify_user(uid, *args, **kwargs):
+def verify_user(uid):
     if not db.verify_user(uid):
         raise ValueError("User does not exist")
 
