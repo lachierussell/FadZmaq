@@ -7,7 +7,7 @@
 #
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
-
+import firebase_admin
 from flask import jsonify, request, Blueprint
 import fadzmaq
 from fadzmaq.api import recs_data, match_data
@@ -43,7 +43,7 @@ def auth_required(func):
             uid = verify_token()
             verify_user(uid=uid)
             return func(uid=uid, *args, **kwargs)
-        except ValueError as e:
+        except Exception as e:
             # Invalid token or user
             print('Authentication failed:', str(e))
             uid = 'hello'
@@ -111,12 +111,11 @@ def update_profile(uid):
 
 @route_bp.route('/account', methods=['POST'])
 def create_account():
-    data = json.loads(request.get_data())
-    user = data["new_user"]
-
-    uid = verify_token()
-    print('here')
     try:
+        data = json.loads(request.get_data())
+        user = data["new_user"]
+
+        uid = verify_token()
         user_id = db.make_user(user['name'], user['name'], uid)
         return user_id
     except Exception as e:
