@@ -1,4 +1,5 @@
-import 'package:fadzmaq/models/models.dart';
+import 'package:fadzmaq/models/profile.dart';
+import 'package:fadzmaq/models/matches.dart';
 import 'dart:core';
 
 // Dart does not support instantiating from a generic type aparemeter
@@ -15,56 +16,6 @@ T fromJson<T>(Map<String, dynamic> json) {
   throw UnimplementedError();
 }
 
-class ProfileData {
-  final String userId;
-  final String name;
-  final int age;
 
-  ProfileData({this.userId, this.name, this.age});
 
-  factory ProfileData.fromJson(Map<String, dynamic> json) {
-    var profile = json['profile'];
 
-    return ProfileData(
-      userId: profile['user_id'],
-      name: profile['name'],
-      age: int.parse(profile['age']),
-    );
-  }
-}
-
-class MatchesData {
-  List<MatchProfileData> matches;
-
-  MatchesData({this.matches});
-
-  factory MatchesData.fromJson(Map<String, dynamic> json) =>
-      _matchesFromJson(json);
-}
-
-MatchesData _matchesFromJson(Map<String, dynamic> json) {
-  var matchesJson = json['matches'] as List;
-  List<MatchProfileData> matches = matchesJson != null
-      ? matchesJson.map((i) => MatchProfileData.fromJson(i)).toList()
-      : null;
-
-  return MatchesData(
-    matches: matches,
-  );
-}
-
-class MatchProfileData {
-  final String id;
-  final String name;
-  final String photo;
-
-  MatchProfileData({this.id, this.name, this.photo});
-
-  factory MatchProfileData.fromJson(Map<String, dynamic> json) {
-    return MatchProfileData(
-      id: json['id'],
-      name: json['name'],
-      photo: json['photo'],
-    );
-  }
-}

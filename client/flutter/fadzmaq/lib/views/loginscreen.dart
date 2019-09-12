@@ -93,37 +93,57 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () async {
                         // _handleSignIn().then((FirebaseUser user) {
                         // print(user);
+
+                        // TODO add a future builder in here so we show a loading circle during log in
+
                         FirebaseUser user = await _handleSignIn();
-                        await sleep1();
+                        // await sleep1();
+
                         if (user != null) {
+                          // a quick check to the server to see if we have an account already
+                          // fetch response code will use Firebase Authentication to send our token
                           String url = "matches";
                           int code =
                               await fetchResponseCode(config.server + url);
 
+                          // 401: no user account
                           if (code == 401) {
                             // TODO make this better, its a bit of a hack at the moment
 
+                            // Get our id token from firebase
                             FirebaseAuth auth = FirebaseAuth.instance;
                             FirebaseUser user = await auth.currentUser();
                             IdTokenResult result = await user.getIdToken();
 
-                            String json =
-                                '{"new_user":{"email":"lachie@gmail-com", "name":"lachie"}}';
+                            // put together our post request for a new account
+                            String json = '{"new_user":{"email":' +
+                                user.email +
+                                ', "name":"' +
+                                user.displayName +
+                                '"}}';
+
+                            // print(json);
+                            // post to account with our auth
                             http.Response response = await http.post(
                               config.server + "account",
                               headers: {"Authorization": result.token},
                               body: json,
                             );
 
+                            // update our code
                             code = response.statusCode;
                           }
 
+                          // success with the server
+                          // go to main page (perferences at the moment)
                           if (code == 200) {
                             Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         UserPreferencesPage()));
                           }
+
+                          // TODO error check here
                         }
                         // }).catchError((e) => print(e));
                       }),
@@ -134,6 +154,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ));
   }
 
+  // TODO remove me
   Future sleep1() {
     return new Future.delayed(const Duration(seconds: 2), () => "2");
   }

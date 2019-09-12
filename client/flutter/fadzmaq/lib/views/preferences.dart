@@ -1,5 +1,6 @@
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/models.dart';
+import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/views/matches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,17 @@ class PreferencesTempApp extends StatelessWidget {
   }
 }
 
+/// Test widget that lives below a [GetRequest<T>] model of type [MatchesData]
+class TestWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    MatchesData matches = RequestProvider.of<MatchesData>(context);
+
+    return Text(matches.matches[0].name);
+  }
+}
+
+/// stateful because we have the slider and switches to keep track of
 class UserPreferencesPage extends StatefulWidget {
   UserPreferencesState createState() {
     return UserPreferencesState();
@@ -63,13 +75,24 @@ class UserPreferencesState extends State {
                       fit: BoxFit.contain,
                     ),
                     Text("Rowan Atkinson"),
+
+                    /// the [GetRequest<MatchesData>] for this page
+                    /// note [url] is matches and the [builder] creates the below children
+                    /// this is a [builder] because [children] are initialised independent to heirachy
+                    /// only [builder] waits for the parent to initialise
                     GetRequest<MatchesData>(
                       url: "matches",
                       builder: (context) {
                         return Row(
                           children: <Widget>[
                             Text("test"),
-                            TestWid(),
+                            /// here we see [TestWidget], it accesses the 
+                            /// [RequestProvider<T>] created by [GetRequest<T>] 
+                            /// to access the model data
+                            /// 
+                            /// this is all test at the moment, I'll adjust it shortly,
+                            /// but you can hopefully see how its arranged - Jordan
+                            TestWidget(),
                           ],
                         );
                       },
@@ -160,19 +183,11 @@ class UserPreferencesState extends State {
     );
   }
 
+  // temp living here, to be moved to auth(?)
   void logOut() async {
     // TODO log out of google account as well
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
-  }
-}
-
-class TestWid extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    MatchesData matches = InheritedRequest.of<MatchesData>(context);
-
-    return Text(matches.matches[0].name);
   }
 }

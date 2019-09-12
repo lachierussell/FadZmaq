@@ -6,14 +6,14 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fadzmaq/models/models.dart';
 
+/// Takes a type [T], [url] and [builder] and creates an [RequestProvider<T>] of that type
+///
 /// This should be used for most requests from the server
-/// The premise is a model class is passed in with an address, this model is then populated with the
-/// server response and encpasulated by an inherited widget. The inherited
+/// The premise is a model class is passed in with a URL address, this model is then populated with the
+/// server response and encpasulated by an extension of [InheritedWidget], [RequestProvider<T>]. The inherited
 /// widget can then be accessed by any children widgets, which will have access the fields of the model
-/// 
+///
 /// TODO error checking and timeouts
-/// 
-/// Takes a type, url and builder and creates an inherited widget of that type
 class GetRequest<T> extends StatefulWidget {
   /// The relative url to request
   final String url;
@@ -29,11 +29,12 @@ class GetRequest<T> extends StatefulWidget {
   _GetRequestState<T> createState() => _GetRequestState<T>();
 }
 
+/// State for [GetRequest<T>]
 class _GetRequestState<T> extends State<GetRequest<T>> {
   Future _future;
 
-  // did change dependencies is called after init, but is then only called once a dependency changes
-  // we init the future here to avoid state changes refiring it
+  /// [didChangeDependencies] is called after [init], but is then only called once a dependency changes
+  /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
   @override
   void didChangeDependencies() {
     String server = AppConfig.of(context).server + widget.url;
@@ -47,7 +48,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return InheritedRequest<T>(
+          return RequestProvider<T>(
             // the fromJson method takes T but checks it against specified types
             // (dart cannot initialise generic types so we can't use an extended class)
             // this converts json data into our model class
@@ -67,14 +68,17 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   }
 }
 
+/// Only cares about the reponse code
+/// This is used for checking whether a user has logged in
 Future<int> fetchResponseCode(String url) async {
   http.Response response = await fetchResponse(url);
   return response.statusCode;
 }
 
+/// returns a [http.Response] for a given [url]
+/// async operation which includes authorisation headers for
+/// the current user
 Future<http.Response> fetchResponse(String url) async {
-  // print(url);
-
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
@@ -83,10 +87,10 @@ Future<http.Response> fetchResponse(String url) async {
     url,
     headers: {"Authorization": result.token},
   );
-  // await http.get('https://jsonplaceholder.typicode.com/posts/1');
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.
+    // TODO remove this, temp for testing
     await sleep1();
 
     return response;
@@ -95,26 +99,32 @@ Future<http.Response> fetchResponse(String url) async {
     // TODO we need to treat this internally
     throw Exception('Failed to load post');
   }
+
+  // TODO time outs and other errors
 }
 
-// temp for testing
+/// temp for testing
 Future sleep1() {
   return new Future.delayed(const Duration(seconds: 2), () => "2");
 }
 
-/// the inherited widget that encapsulates a model T
-class InheritedRequest<T> extends InheritedWidget {
+/// the inherited widget that encapsulates a model [T]
+/// a model will represent the JSON sent by the server API
+class RequestProvider<T> extends InheritedWidget {
   final T data;
 
-  InheritedRequest({this.data, Widget child}) : super(child: child);
+  RequestProvider({this.data, Widget child}) : super(child: child);
 
+  // We can configure this to update the state of children on a change here
+  // At this moment I didn't see it being used so it will always return false - Jordan
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;
 
-  // a static call which gives us easy access to our model
+  // a static call which gives us a shorter call to access to our model
+  // a bit more complex than normal because of the way dart handles generics
   static T of<T>(BuildContext context) {
-    final type = _typeOf<InheritedRequest<T>>();
-    return (context.inheritFromWidgetOfExactType(type) as InheritedRequest)
+    final type = _typeOf<RequestProvider<T>>();
+    return (context.inheritFromWidgetOfExactType(type) as RequestProvider)
         .data;
   }
 
