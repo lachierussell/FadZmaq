@@ -169,7 +169,7 @@ def verify_user(subject):
         '''
         SELECT COUNT(user_id)
         FROM profile
-        WHERE user_id = {};
+        WHERE user_id = '{}';
         '''.format(subject)
     )
 
@@ -177,3 +177,14 @@ def verify_user(subject):
         if row['count'] == 1:
             return True
     return False
+
+
+def make_user(name, email, uid):
+    rows = get_db().execute(
+        '''
+        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id; 
+        '''.format(name, email, uid)
+    )
+    for row in rows:
+        return str(row['user_id'])
+    raise IOError
