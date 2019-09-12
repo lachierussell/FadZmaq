@@ -45,31 +45,39 @@ def index():
 
 # Login decorator
 def auth_required(func):
-    def verify_token(*args, **kwargs):
+    def authenticate(*args, **kwargs):
         try:
-            if 'Authorization' not in request.headers:
-                raise ValueError("Token not present")
-
-            # Verifying the token, if it fails proceed to except block.
-            token = request.headers['Authorization']
-            print('Attempting to verify token:', token)
-            decoded_token = auth.verify_id_token(token, auth_app, False)
-            uid = decoded_token['uid']
-            print('Verified, UID:', uid)
-
-            if not db.verify_user(uid):
-                raise ValueError("User does not exist")
+            uid = verify_token(*args, **kwargs)
+            verify_user(uid=uid, *args, **kwargs)
             return func(uid=uid, *args, **kwargs)
-
         except ValueError as e:
-            # Invalid token
+            # Invalid token or user
             print('Authentication failed:', str(e))
             uid = 'hello'
             return func(uid=uid, *args, **kwargs)
             # Replace above return with below when in production
             # return 'Authentication failed: ' + str(e), 401
-    verify_token.__name__ = func.__name__
-    return verify_token
+
+    authenticate.__name__ = func.__name__
+    return authenticate
+
+
+def verify_token(*args, **kwargs):
+    if 'Authorization' not in request.headers:
+        raise ValueError("Token not present")
+
+    # Verifying the token, if it fails proceed to except block.
+    token = request.headers['Authorization']
+    print('Attempting to verify token:', token)
+    decoded_token = auth.verify_id_token(token, auth_app, False)
+    uid = decoded_token['uid']
+    print('Verified, UID:', uid)
+    return uid
+
+
+def verify_user(uid, *args, **kwargs):
+    if not db.verify_user(uid):
+        raise ValueError("User does not exist")
 
 
 @route_bp.route('/user/recs', methods=['GET'])
@@ -118,22 +126,14 @@ def update_profile(uid):
 def create_account():
     data = json.loads(request.get_data())
     user = data["new_user"]
-    if 'Authorization' not in request.headers:
-        return 'Token not present', 401
 
-    try:
-        uid = authentication(request.headers['Authorization'])
-
-    except UnknownUserError as e:
-        uid = str(e)
-    except UnauthorizedError:
-        return 'Account creation failed', 401
-
+    uid = verify_token()
+    print('here')
     try:
         user_id = db.make_user(user['name'], user['name'], uid)
         return user_id
-    except Exception:
-        return 'Account creation failed', 500
+    except Exception as e:
+        return 'Account creation failed ' + str(e), 500
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
