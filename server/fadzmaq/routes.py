@@ -190,11 +190,3 @@ def like_user(uid, id):
 @auth_required
 def pass_user(uid, id):
     return "User passed", 200
-
-
-class UnauthorizedError(Exception):
-    pass
-
-
-class UnknownUserError(Exception):
-    pass
