@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-
-
 class Request<T> extends StatelessWidget {
   // final String url;
-  final Widget child;
+  final WidgetBuilder builder;
   final Future<T> future;
 
-  const Request({this.child, this.future});
+  const Request({this.builder, this.future});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +14,10 @@ class Request<T> extends StatelessWidget {
       future: future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return InheritedRequest<T>(data: snapshot.data, child: child,);
+          return InheritedRequest<T>(
+            data: snapshot.data,
+            child: builder(context),
+          );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -28,19 +29,19 @@ class Request<T> extends StatelessWidget {
   }
 }
 
-class InheritedRequest<T> extends InheritedWidget{
+class InheritedRequest<T> extends InheritedWidget {
   final T data;
 
-  InheritedRequest({this.data, Widget child}) : super(child:child);
+  InheritedRequest({this.data, Widget child}) : super(child: child);
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;
 
-  static T of<T>(BuildContext context){
+  static T of<T>(BuildContext context) {
     final type = _typeOf<InheritedRequest<T>>();
-    return (context.inheritFromWidgetOfExactType(type) as InheritedRequest).data;
+    return (context.inheritFromWidgetOfExactType(type) as InheritedRequest)
+        .data;
   }
 
   static _typeOf<T>() => T;
 }
-

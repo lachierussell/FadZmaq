@@ -31,10 +31,17 @@ class SplashScreenState extends State<SplashScreen> {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
     if(user != null){
+      // var token = await user.getIdToken();
+      // printWrapped(token.token);
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => UserPreferencesPage()));
     }else{
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
     }
+  }
+
+  void printWrapped(String text) {
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
   @override

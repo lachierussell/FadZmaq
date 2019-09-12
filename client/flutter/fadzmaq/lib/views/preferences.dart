@@ -1,4 +1,5 @@
 import 'package:fadzmaq/controllers/profile_request.dart';
+import 'package:fadzmaq/controllers/provider.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -64,26 +65,34 @@ class UserPreferencesState extends State {
                       fit: BoxFit.contain,
                     ),
                     Text("Rowan Atkinson"),
-                    // GetProfileData(builder: (context) {
-                    //   return Row(
+                    // Provider(
+                    //   child: Column(
                     //     children: <Widget>[
                     //       Text("test"),
-                    //       Text(InheritedProfile.of(context).test),
+                    //       TestWid(),
                     //     ],
-                    //   );
-                    // }),
-                    RequestProfile(builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Row(
-                          children: <Widget>[
-                            Text("test"),
-                            Text(InheritedProfile.of(context).test),
-                          ],
-                        );
-                      } else {
-                        return Text("null");
-                      }
-                    })
+                    //   ),
+                    // ),
+                    GetProfileData(builder: (context) {
+                      return Row(
+                        children: <Widget>[
+                          Text("test"),
+                          TestWid(),
+                        ],
+                      );
+                    }),
+                    // RequestProfile(builder: (context, snapshot) {
+                    //   if (snapshot.hasData) {
+                    //     return Row(
+                    //       children: <Widget>[
+                    //         Text("test"),
+                    //         Text(InheritedProfile.of(context).test),
+                    //       ],
+                    //     );
+                    //   } else {
+                    //     return Text("null");
+                    //   }
+                    // })
                   ],
                 ),
               ),
@@ -162,5 +171,25 @@ class UserPreferencesState extends State {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+}
+
+class TestWid extends StatelessWidget {
+  // @override
+  // Widget build(BuildContext context) {
+  //   String prov = Provider.of(context).data;
+  //   return Text(prov);
+  // }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   String prov = InheritedProfile.of(context).test;
+  //   return Text(prov);
+  // }
+
+  @override
+  Widget build(BuildContext context) {
+    String prov = InheritedRequest.of<ProfileData>(context).title;
+    return Text(prov);
   }
 }
