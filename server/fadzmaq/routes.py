@@ -9,25 +9,18 @@
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
 from flask import jsonify, request, Blueprint
+import fadzmaq
 from fadzmaq.api import recs_data, match_data
 from fadzmaq.database import db
 from firebase_admin import auth
-import firebase_admin
 import json
 
 route_bp = Blueprint("route_bp", __name__)
-cred = firebase_admin.credentials.Certificate("/Users/lachlanrussell/Developer/UNI/fadzmaq1-firebase-adminsdk-78gsi"
-                                              "-b01a0a6212.json")
-auth_app = firebase_admin.initialize_app(cred)
 
 
 @route_bp.route('/')
 @route_bp.route('/index')
 def index():
-
-    # conn = db.connect_db()
-    # users = conn.execute("SELECT * FROM primary_user;")
-    # conn.close()
 
     response = {
         "/user/recs": "Get recommendations",
@@ -69,7 +62,7 @@ def verify_token(*args, **kwargs):
     # Verifying the token, if it fails proceed to except block.
     token = request.headers['Authorization']
     print('Attempting to verify token:', token)
-    decoded_token = auth.verify_id_token(token, auth_app, False)
+    decoded_token = auth.verify_id_token(token, fadzmaq.auth_app, False)
     uid = decoded_token['uid']
     print('Verified, UID:', uid)
     return uid
@@ -102,12 +95,6 @@ def get_user_by_id(uid, id):
 @route_bp.route('/profile', methods=['GET'])
 @auth_required
 def get_profile(uid):
-    # TODO: Send to authenticate function and return sub id.
-    # print(request.headers['auth'])
-
-    # TODO: Clean and retrieve inputs.
-    uid = 1  # Temp value.
-
     try:
         return db.retrieve_profile(uid), 200
 

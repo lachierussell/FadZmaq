@@ -7,3 +7,4 @@
 password = input("Database Password: ")
 
 DATABASE_URI = 'postgresql+pg8000://fadzmaq:{}@localhost/fadzmaq'.format(password)
+CERT = '[Location of your service certificate -- do not keep in project directory]'
