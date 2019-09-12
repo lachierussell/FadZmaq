@@ -7,18 +7,17 @@
 #
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
-import json
 
-from flask import jsonify, request, Flask, Blueprint
-from fadzmaq.api import recs_data, match_data, profile_data
+from flask import jsonify, request, Blueprint
+from fadzmaq.api import recs_data, match_data
 from fadzmaq.database import db
 from firebase_admin import auth
 import firebase_admin
-import requests
-import objectpath
+import json
 
 route_bp = Blueprint("route_bp", __name__)
-cred = firebase_admin.credentials.Certificate("/Users/lachlanrussell/Developer/UNI/fadzmaq1-firebase-adminsdk-78gsi-b01a0a6212.json")
+cred = firebase_admin.credentials.Certificate("/Users/lachlanrussell/Developer/UNI/fadzmaq1-firebase-adminsdk-78gsi"
+                                              "-b01a0a6212.json")
 auth_app = firebase_admin.initialize_app(cred)
 
 
@@ -44,32 +43,47 @@ def index():
 # USERS
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-# @route_bp.route('/auth', methods=['POST'])
-def authentication(token):
-    # token = request.get_data()
-    try:
-        print('try')
-        # Verifying the token, if it fails proceed to except block.
-        decoded_token = auth.verify_id_token(token, auth_app, False)
-        print('verified')
-        uid = decoded_token['uid']
-        print(uid)
-        if not db.verify_user(uid):
-            raise UnknownUserError(uid)
-        return uid
+# Login decorator
+def auth_required(func):
+    def verify_token(*args, **kwargs):
+        try:
+            if 'Authorization' not in request.headers:
+                raise ValueError("Token not present")
 
-    except ValueError:
-        # Invalid token
-        raise UnauthorizedError('Invalid Token')
+            # Verifying the token, if it fails proceed to except block.
+            token = request.headers['Authorization']
+            print('Attempting to verify token:', token)
+            decoded_token = auth.verify_id_token(token, auth_app, False)
+            uid = decoded_token['uid']
+            print('Verified, UID:', uid)
+
+            if not db.verify_user(uid):
+                raise ValueError("User does not exist")
+            return func(uid=uid, *args, **kwargs)
+
+        except ValueError as e:
+            # Invalid token
+            print('Authentication failed:', str(e))
+            uid = 'hello'
+            return func(uid=uid, *args, **kwargs)
+            # Replace above return with below when in production
+            # return 'Authentication failed: ' + str(e), 401
+    verify_token.__name__ = func.__name__
+    return verify_token
 
 
 @route_bp.route('/user/recs', methods=['GET'])
-def recommendations():
+@auth_required
+def recommendations(uid):
+    print(uid)
     return jsonify(recs_data.my_recs), 200
 
 
 @route_bp.route('/user/<string:id>', methods=['GET'])
-def get_user_by_id(id):
+@auth_required
+def get_user_by_id(uid, id):
+    print(uid)
+    print(id)
     return jsonify(recs_data.my_candiate), 200
 
 
@@ -78,22 +92,24 @@ def get_user_by_id(id):
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 @route_bp.route('/profile', methods=['GET'])
-def get_profile():
+@auth_required
+def get_profile(uid):
     # TODO: Send to authenticate function and return sub id.
     # print(request.headers['auth'])
 
     # TODO: Clean and retrieve inputs.
-    subject = 1  # Temp value.
+    uid = 1  # Temp value.
 
     try:
-        return db.retrieve_profile(subject), 200
+        return db.retrieve_profile(uid), 200
 
     except ValueError:
         return '{"error":"Profile not found"}', 404
 
 
 @route_bp.route('/profile', methods=['POST'])
-def update_profile():
+@auth_required
+def update_profile(uid):
     response = request.get_data()
     return response, 200
 
@@ -103,7 +119,7 @@ def create_account():
     data = json.loads(request.get_data())
     user = data["new_user"]
     if 'Authorization' not in request.headers:
-        return 'Token not present', 403
+        return 'Token not present', 401
 
     try:
         uid = authentication(request.headers['Authorization'])
@@ -125,7 +141,8 @@ def create_account():
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 @route_bp.route('/matches', methods=['GET'])
-def get_matches():
+@auth_required
+def get_matches(uid):
     # TODO: Get subject from auth
     print(request.get_data())
     subject = int(request.get_data())
@@ -136,22 +153,26 @@ def get_matches():
 
 
 @route_bp.route('/matches/<string:id>', methods=['GET'])
-def get_matched_user(id):
+@auth_required
+def get_matched_user(uid, id):
     return jsonify(match_data.my_match), 200
 
 
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
-def unmatch_user(id):
+@auth_required
+def unmatch_user(uid, id):
     return "User unmatched", 200
 
 
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
-def rate_user_down(id):
+@auth_required
+def rate_user_down(uid, id):
     return "Thumbs down!", 200
 
 
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
-def rate_user_up(id):
+@auth_required
+def rate_user_up(uid, id):
     return "Thumbs up!", 200
 
 
@@ -160,12 +181,14 @@ def rate_user_up(id):
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 @route_bp.route('/like/<string:id>', methods=['POST'])
-def like_user(id):
+@auth_required
+def like_user(uid, id):
     return "User liked", 200
 
 
 @route_bp.route('/pass/<string:id>', methods=['POST'])
-def pass_user(id):
+@auth_required
+def pass_user(uid, id):
     return "User passed", 200
 
 
