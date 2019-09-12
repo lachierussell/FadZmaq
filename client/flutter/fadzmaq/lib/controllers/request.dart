@@ -1,16 +1,13 @@
 import 'dart:async';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fadzmaq/models/models.dart';
 
-
-
-
 /// Takes a type, url and builder and creates an inherited widget of that type
-class GetRequest<T> extends StatelessWidget {
-
+class GetRequest<T> extends StatefulWidget {
   /// The relative url to request
   final String url;
   final WidgetBuilder builder;
@@ -21,21 +18,35 @@ class GetRequest<T> extends StatelessWidget {
   })  : assert(builder != null),
         assert(url != null);
 
+  @override
+  _GetRequestState<T> createState() => _GetRequestState<T>();
+}
 
-  
+class _GetRequestState<T> extends State<GetRequest<T>> {
+  Future _future;
+
+  // initState() {
+  //   super.initState();
+  //   String server = AppConfig.of(context).appConfig.server + widget.url;
+  //   _future = fetchResponse(server);
+  // }
+
+  @override
+  void didChangeDependencies() {
+    String server = AppConfig.of(context).appConfig.server + widget.url;
+    _future = fetchResponse(server);
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    String server = AppConfig.of(context).appConfig.server + url;
-
     return FutureBuilder<http.Response>(
-      future: fetchResponse(server),
+      future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return InheritedRequest<T>(
             data: fromJson<T>(json.decode(snapshot.data.body)),
-            child: builder(context),
+            child: widget.builder(context),
           );
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
@@ -48,13 +59,18 @@ class GetRequest<T> extends StatelessWidget {
   }
 }
 
-
-
 Future<http.Response> fetchResponse(String url) async {
   print(url);
-  final response =
-      await http.get(url);
-      // await http.get('https://jsonplaceholder.typicode.com/posts/1');
+
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseUser user = await auth.currentUser();
+  IdTokenResult result = await user.getIdToken();
+
+  final response = await http.get(
+    url,
+    headers: {"Authorization": result.token},
+  );
+  // await http.get('https://jsonplaceholder.typicode.com/posts/1');
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.
@@ -73,7 +89,6 @@ Future sleep1() {
 }
 
 class InheritedRequest<T> extends InheritedWidget {
-
   final T data;
 
   InheritedRequest({this.data, Widget child}) : super(child: child);
