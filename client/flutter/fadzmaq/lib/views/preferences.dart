@@ -161,6 +161,7 @@ class UserPreferencesState extends State {
   }
 
   void logOut() async {
+    // TODO log out of google account as well
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));

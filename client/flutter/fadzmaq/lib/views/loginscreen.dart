@@ -1,8 +1,12 @@
+import 'package:fadzmaq/models/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:fadzmaq/views/preferences.dart';
+import 'package:fadzmaq/controllers/request.dart';
+
+import 'package:http/http.dart' as http;
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -54,12 +58,14 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void printWrapped(String text) {
-  final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
-  pattern.allMatches(text).forEach((match) => print(match.group(0)));
-}
+    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+    pattern.allMatches(text).forEach((match) => print(match.group(0)));
+  }
 
   @override
   Widget build(BuildContext context) {
+    ConfigResource config = AppConfig.of(context);
+
     return Scaffold(
         backgroundColor: Colors.orangeAccent,
         // appBar: AppBar(
@@ -84,16 +90,51 @@ class _LoginScreenState extends State<LoginScreen> {
                 Center(
                   child: RaisedButton(
                       child: (Text("Login With Google")),
-                      onPressed: () {
-                        _handleSignIn().then((FirebaseUser user) {
-                          // print(user);
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => UserPreferencesPage()));
-                        }).catchError((e) => print(e));
+                      onPressed: () async {
+                        // _handleSignIn().then((FirebaseUser user) {
+                        // print(user);
+                        FirebaseUser user = await _handleSignIn();
+                        await sleep1();
+                        if (user != null) {
+                          String url = "matches";
+                          int code =
+                              await fetchResponseCode(config.server + url);
+
+                          if (code == 401) {
+                            // TODO make this better, its a bit of a hack at the moment
+
+                            FirebaseAuth auth = FirebaseAuth.instance;
+                            FirebaseUser user = await auth.currentUser();
+                            IdTokenResult result = await user.getIdToken();
+
+                            String json =
+                                '{"new_user":{"email":"lachie@gmail-com", "name":"lachie"}}';
+                            http.Response response = await http.post(
+                              config.server + "account",
+                              headers: {"Authorization": result.token},
+                              body: json,
+                            );
+
+                            code = response.statusCode;
+                          }
+
+                          if (code == 200) {
+                            Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        UserPreferencesPage()));
+                          }
+                        }
+                        // }).catchError((e) => print(e));
                       }),
                 ),
               ],
             ),
           ),
         ));
+  }
+
+  Future sleep1() {
+    return new Future.delayed(const Duration(seconds: 2), () => "2");
   }
 }

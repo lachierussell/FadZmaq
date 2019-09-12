@@ -35,6 +35,7 @@ class SplashScreenState extends State<SplashScreen> {
       // printWrapped(token.token);
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => UserPreferencesPage()));
     }else{
+      // TODO try for a silent google sign in
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
     }
   }

@@ -59,8 +59,13 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   }
 }
 
+Future<int> fetchResponseCode(String url) async {
+  http.Response response = await fetchResponse(url); 
+  return response.statusCode;
+}
+
 Future<http.Response> fetchResponse(String url) async {
-  print(url);
+  // print(url);
 
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
