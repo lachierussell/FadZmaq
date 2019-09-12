@@ -131,6 +131,8 @@ def get_hobbies(subject):
     ]
 
 
+# @brief Gets a users current matches
+# @return A dictionary (JSON based) containing their match information.
 def get_matches(subject):
     rows = get_db().execute(
         '''
@@ -163,6 +165,8 @@ def get_matches(subject):
     }
 
 
+# @brief Verifies the user is in the database
+# @returns True if the user exists
 def verify_user(subject):
     rows = get_db().execute(
         '''
@@ -178,6 +182,8 @@ def verify_user(subject):
     return False
 
 
+# @brief Creates a user in the database
+# @throws IOError if the user already exists or the database insertion fails.
 def make_user(name, email, uid):
     rows = get_db().execute(
         '''
