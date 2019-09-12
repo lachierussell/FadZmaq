@@ -1,12 +1,10 @@
-import 'package:fadzmaq/controllers/profile_request.dart';
-import 'package:fadzmaq/controllers/provider.dart';
-import 'package:fadzmaq/models/profile.dart';
+import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/models/models.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
-import 'package:fadzmaq/controllers/request.dart';
+
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -65,34 +63,18 @@ class UserPreferencesState extends State {
                       fit: BoxFit.contain,
                     ),
                     Text("Rowan Atkinson"),
-                    // Provider(
-                    //   child: Column(
-                    //     children: <Widget>[
-                    //       Text("test"),
-                    //       TestWid(),
-                    //     ],
-                    //   ),
-                    // ),
-                    GetProfileData(builder: (context) {
-                      return Row(
-                        children: <Widget>[
-                          Text("test"),
-                          TestWid(),
-                        ],
-                      );
-                    }),
-                    // RequestProfile(builder: (context, snapshot) {
-                    //   if (snapshot.hasData) {
-                    //     return Row(
-                    //       children: <Widget>[
-                    //         Text("test"),
-                    //         Text(InheritedProfile.of(context).test),
-                    //       ],
-                    //     );
-                    //   } else {
-                    //     return Text("null");
-                    //   }
-                    // })
+
+                    GetRequest<MatchesData>(
+                      url: "matches",
+                      builder: (context) {
+                        return Row(
+                          children: <Widget>[
+                            Text("test"),
+                            TestWid(),
+                          ],
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -175,21 +157,11 @@ class UserPreferencesState extends State {
 }
 
 class TestWid extends StatelessWidget {
-  // @override
-  // Widget build(BuildContext context) {
-  //   String prov = Provider.of(context).data;
-  //   return Text(prov);
-  // }
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   String prov = InheritedProfile.of(context).test;
-  //   return Text(prov);
-  // }
 
   @override
   Widget build(BuildContext context) {
-    String prov = InheritedRequest.of<ProfileData>(context).title;
-    return Text(prov);
+    MatchesData matches = InheritedRequest.of<MatchesData>(context);
+    
+    return Text(matches.matches[0].name);
   }
 }
