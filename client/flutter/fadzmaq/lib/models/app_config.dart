@@ -8,8 +8,8 @@ class AppConfig extends InheritedWidget {
 
   final ConfigResource appConfig;
 
-  static AppConfig of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(AppConfig);
+  static ConfigResource of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(AppConfig)as AppConfig).appConfig;
   }
 
   // static String of(BuildContext context){

@@ -36,7 +36,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    var config = AppConfig.of(context).appConfig;
+    var config = AppConfig.of(context);
 
     return Scaffold(
       appBar: AppBar(

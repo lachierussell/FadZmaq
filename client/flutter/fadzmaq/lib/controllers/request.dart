@@ -33,7 +33,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 
   @override
   void didChangeDependencies() {
-    String server = AppConfig.of(context).appConfig.server + widget.url;
+    String server = AppConfig.of(context).server + widget.url;
     _future = fetchResponse(server);
     super.didChangeDependencies();
   }
