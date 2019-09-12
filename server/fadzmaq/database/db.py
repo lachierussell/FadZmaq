@@ -59,7 +59,7 @@ def retrieve_profile(subject):
         '''
         SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
         FROM profile 
-        WHERE user_id = {}
+        WHERE user_id = '{}'
         '''.format(subject)
     )
 
