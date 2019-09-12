@@ -6,6 +6,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fadzmaq/models/models.dart';
 
+/// This should be used for most requests from the server
+/// The premise is a model class is passed in with an address, this model is then populated with the
+/// server response and encpasulated by an inherited widget. The inherited
+/// widget can then be accessed by any children widgets, which will have access the fields of the model
+/// 
+/// TODO error checking and timeouts
+/// 
 /// Takes a type, url and builder and creates an inherited widget of that type
 class GetRequest<T> extends StatefulWidget {
   /// The relative url to request
@@ -25,12 +32,8 @@ class GetRequest<T> extends StatefulWidget {
 class _GetRequestState<T> extends State<GetRequest<T>> {
   Future _future;
 
-  // initState() {
-  //   super.initState();
-  //   String server = AppConfig.of(context).appConfig.server + widget.url;
-  //   _future = fetchResponse(server);
-  // }
-
+  // did change dependencies is called after init, but is then only called once a dependency changes
+  // we init the future here to avoid state changes refiring it
   @override
   void didChangeDependencies() {
     String server = AppConfig.of(context).server + widget.url;
@@ -45,6 +48,9 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return InheritedRequest<T>(
+            // the fromJson method takes T but checks it against specified types
+            // (dart cannot initialise generic types so we can't use an extended class)
+            // this converts json data into our model class
             data: fromJson<T>(json.decode(snapshot.data.body)),
             child: widget.builder(context),
           );
@@ -53,6 +59,8 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
         }
 
         // By default, show a loading spinner.
+        // We can pipe something else in here later if we wish,
+        // or make our own default
         return CircularProgressIndicator();
       },
     );
@@ -60,7 +68,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 }
 
 Future<int> fetchResponseCode(String url) async {
-  http.Response response = await fetchResponse(url); 
+  http.Response response = await fetchResponse(url);
   return response.statusCode;
 }
 
@@ -89,10 +97,12 @@ Future<http.Response> fetchResponse(String url) async {
   }
 }
 
+// temp for testing
 Future sleep1() {
   return new Future.delayed(const Duration(seconds: 2), () => "2");
 }
 
+/// the inherited widget that encapsulates a model T
 class InheritedRequest<T> extends InheritedWidget {
   final T data;
 
@@ -101,6 +111,7 @@ class InheritedRequest<T> extends InheritedWidget {
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;
 
+  // a static call which gives us easy access to our model
   static T of<T>(BuildContext context) {
     final type = _typeOf<InheritedRequest<T>>();
     return (context.inheritFromWidgetOfExactType(type) as InheritedRequest)
