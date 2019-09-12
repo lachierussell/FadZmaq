@@ -132,9 +132,8 @@ def create_account():
 def get_matches(uid):
     # TODO: Get subject from auth
     print(request.get_data())
-    subject = int(request.get_data())
     try:
-        return db.get_matches(subject), 200
+        return db.get_matches(uid), 200
     except ValueError:
         return '{"error":"Internal server error"}', 404
 

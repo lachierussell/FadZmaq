@@ -15,6 +15,7 @@ pytest = "*"
 coverage = "*"
 firebase-admin = "*"
 objectpath = "*"
+firebase = "*"
 
 [requires]
 python_version = "3.7"

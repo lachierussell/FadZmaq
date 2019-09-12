@@ -71,7 +71,6 @@ def retrieve_profile(subject):
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
-                'gender': row['gender'],
                 'photo_location': 'DOES NOT EXIST',
                 'contact_details': {
                     'phone': row['phone'],
@@ -104,7 +103,7 @@ def get_hobbies(subject):
             ON profile.user_id = uh.user_id
           JOIN hobbies h
             ON uh.hobby_id = h.hobby_id
-        WHERE profile.user_id = {};
+        WHERE profile.user_id = '{}';
         '''.format(subject)
     )
 
@@ -139,14 +138,14 @@ def get_matches(subject):
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
-            WHERE user_a = {}
-               OR user_b = {}
+            WHERE user_a = '{}'
+               OR user_b = '{}'
         ) OR profile.user_id IN (
             SELECT user_b
             FROM matches
-            WHERE user_a = {}
-               OR user_b = {}
-        ) AND profile.user_id != {};
+            WHERE user_a = '{}'
+               OR user_b = '{}'
+        ) AND profile.user_id != '{}';
         '''.format(subject, subject, subject, subject, subject)
     )
 

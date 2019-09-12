@@ -9,8 +9,23 @@
 # @author Jordan Russell    [email]
 
 import json
+import firebase
+
+# firebase = firebase.FirebaseApplication('https://your_storage.firebaseio.com', authentication=None)
+# result = firebase.get('/users', None, {'print': 'pretty'})
+# print result
+# {'error': 'Permission denied.'}
+#
+# authentication = firebase.Authentication('', 'ozgurvt@gmail.com', extra={'id': 123})
+# firebase.authentication = authentication
+# print(authentication.extra)
+#
+# user = authentication.get_user()
+# print(user.firebase_auth_token)
 
 
+
+result = firebase.get('/users', None, {'print': 'pretty'})
 # Tests that the server is up at all.
 # Code is 300 because we shouldn't be using index (I think?) - Jordan 
 def test_index(client):
