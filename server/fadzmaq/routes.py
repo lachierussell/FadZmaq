@@ -7,7 +7,7 @@
 #
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
-import firebase_admin
+
 from flask import jsonify, request, Blueprint
 import fadzmaq
 from fadzmaq.api import recs_data, match_data
@@ -22,21 +22,24 @@ route_bp = Blueprint("route_bp", __name__)
 @route_bp.route('/index')
 def index():
 
-    response = {
-        "/user/recs": "Get recommendations",
-        "/user/`id`": "Get user profile",
-        "/profile": "Get your own profile information",
-        "/matches": "Get a list of matches",
-        "/matches/`id`": "Get profile information of a single match"
-    }
-    return jsonify(response), 300
+    response = '''
+        It appears you have come to the wrong place. <br>
+        Please try out our mobile app, fadzmaq. <br>
+        This website is <strong> not </strong> for users.
+    '''
+    return response, 300
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # USERS
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-# Login decorator
+# @brief The auth_required function decorator.
+# This function is responsible for authenticating users.
+# It checks the validity of their token. And makes sure they are recorded in the database.
+# If the user is not authenticated this will return the error as a string, and unauthorized http code.
+# @param func   Function pointer to the decorated function.
+# @return       The function pointer to the authenticate function.
 def auth_required(func):
     def authenticate(*args, **kwargs):
         try:
@@ -55,6 +58,11 @@ def auth_required(func):
     return authenticate
 
 
+# @brief Verifies the authentication token.
+# This validates the token using firebase's package and our service account signature.
+# @param request.headers    The http headers must be available to retrieve the authentication token.
+# @returns                  The user id.
+# @throws ValueError        If authentication token is not valid.
 def verify_token():
     if 'Authorization' not in request.headers:
         raise ValueError("Token not present")
@@ -68,11 +76,16 @@ def verify_token():
     return uid
 
 
+# @brief Verifies the user is in the database
+# @param uid            The user ID from firebase
+# @throws ValueError    If the user is not present in the database
+#
 def verify_user(uid):
     if not db.verify_user(uid):
         raise ValueError("User does not exist")
 
 
+# @brief Retrieves user recommendations
 @route_bp.route('/user/recs', methods=['GET'])
 @auth_required
 def recommendations(uid):
@@ -80,6 +93,7 @@ def recommendations(uid):
     return jsonify(recs_data.my_recs), 200
 
 
+# @brief Retries a users profile by their id
 @route_bp.route('/user/<string:id>', methods=['GET'])
 @auth_required
 def get_user_by_id(uid, id):
@@ -92,6 +106,8 @@ def get_user_by_id(uid, id):
 # PROFILE
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
+
+# @brief Retrieves the current users profile
 @route_bp.route('/profile', methods=['GET'])
 @auth_required
 def get_profile(uid):
@@ -101,6 +117,7 @@ def get_profile(uid):
         return '{"error":"Profile not found"}', 404
 
 
+# @brief Edits the current users profile
 @route_bp.route('/profile', methods=['POST'])
 @auth_required
 def update_profile(uid):
@@ -108,6 +125,10 @@ def update_profile(uid):
     return response, 200
 
 
+# @brief Creates a new account for a user if it does not already exist
+# Creates a new account with the users firebase token for uid.
+# Client must provide json containing the user 'name' and 'email'
+# @returns  The user id of the new account.
 @route_bp.route('/account', methods=['POST'])
 def create_account():
     try:
@@ -115,7 +136,7 @@ def create_account():
         user = data["new_user"]
 
         uid = verify_token()
-        user_id = db.make_user(user['name'], user['name'], uid)
+        user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
     except Exception as e:
         return 'Account creation failed ' + str(e), 500
@@ -125,6 +146,8 @@ def create_account():
 # MATCHES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
+# @brief Retrieves the current matches of the user.
+# @returns A json formatted list of the users current matches.
 @route_bp.route('/matches', methods=['GET'])
 @auth_required
 def get_matches(uid):
@@ -136,24 +159,28 @@ def get_matches(uid):
         return '{"error":"Internal server error"}', 404
 
 
+# @brief Retrieves a specific matches profile data
 @route_bp.route('/matches/<string:id>', methods=['GET'])
 @auth_required
 def get_matched_user(uid, id):
     return jsonify(match_data.my_match), 200
 
 
+# @brief Unmatches a specific match by their user id
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):
     return "User unmatched", 200
 
 
+# @brief Rates a user negatively
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
     return "Thumbs down!", 200
 
 
+# @brief Rates a user positively
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
@@ -164,12 +191,14 @@ def rate_user_up(uid, id):
 # VOTES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
+# @brief Like a user
 @route_bp.route('/like/<string:id>', methods=['POST'])
 @auth_required
 def like_user(uid, id):
     return "User liked", 200
 
 
+# @brief Pass on a user
 @route_bp.route('/pass/<string:id>', methods=['POST'])
 @auth_required
 def pass_user(uid, id):
