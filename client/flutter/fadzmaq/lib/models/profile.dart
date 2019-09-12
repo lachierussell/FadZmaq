@@ -38,7 +38,9 @@ Future sleep1() {
   return new Future.delayed(const Duration(seconds: 2), () => "2");
 }
 
-class ProfileData {
+
+
+class ProfileData implements Model{
   final int userId;
   final int id;
   final String title;
