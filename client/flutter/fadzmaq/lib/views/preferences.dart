@@ -35,8 +35,15 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileData profile = RequestProvider.of<ProfileData>(context);
-    return Image.network(
-      profile.photo,
+    // return Image.network(
+    //   profile.photo,
+    //   height: 200,
+    //   width: 200,
+    //   fit: BoxFit.contain,
+    // );
+    return FadeInImage.assetNetwork(
+      image: profile.photo,
+      placeholder: 'assets/images/placeholder-person.jpg',
       height: 200,
       width: 200,
       fit: BoxFit.contain,

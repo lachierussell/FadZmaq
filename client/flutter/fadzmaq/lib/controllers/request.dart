@@ -32,7 +32,7 @@ class GetRequest<T> extends StatefulWidget {
 
 /// State for [GetRequest<T>]
 class _GetRequestState<T> extends State<GetRequest<T>> {
-  Future<http.Response> _future;
+  Future _future;
 
   /// [didChangeDependencies] is called after [init], but is then only called once a dependency changes
   /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
@@ -45,10 +45,14 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<http.Response>(
+    return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
+          if (snapshot.data.toString() == "no_server") {
+            String server = AppConfig.of(context).server + widget.url;
+            return Text("no server: " + server);
+          }
           if (snapshot.data.statusCode == 200) {
             return RequestProvider<T>(
               // the fromJson method takes T but checks it against specified types
@@ -60,6 +64,10 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
           } else if (snapshot.data.statusCode == 401) {
             // not sure if this is the best way to do this but it works for now - Jordan
             return LoginScreen();
+          } else {
+            // TODO make this handle better
+            return Text("Error with HTTP request: " +
+                snapshot.data.statusCode.toString());
           }
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
@@ -91,15 +99,21 @@ Future<int> fetchResponseCode(String url) async {
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user
-Future<http.Response> fetchResponse(String url) async {
+Future fetchResponse(String url) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-  final response = await http.get(
-    url,
-    headers: {"Authorization": result.token},
-  );
+  http.Response response;
+  try {
+    response = await http.get(
+      url,
+      headers: {"Authorization": result.token},
+    ).timeout(const Duration(seconds: 10));
+  } on TimeoutException catch (_) {
+    // TODO this is very hacky - but futures returning null are just nulls
+    return "no_server";
+  }
 
   return response;
 
@@ -120,10 +134,10 @@ Future<http.Response> fetchResponse(String url) async {
   // TODO time outs and other errors
 }
 
-/// temp for testing
-Future sleep1() {
-  return new Future.delayed(const Duration(seconds: 2), () => "2");
-}
+// /// temp for testing
+// Future sleep1() {
+//   return new Future.delayed(const Duration(seconds: 2), () => "2");
+// }
 
 /// the inherited widget that encapsulates a model [T]
 /// a model will represent the JSON sent by the server API
