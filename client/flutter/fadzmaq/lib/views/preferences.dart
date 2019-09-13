@@ -1,6 +1,7 @@
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/models.dart';
 import 'package:fadzmaq/models/matches.dart';
+import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/matches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,13 +19,13 @@ class PreferencesTempApp extends StatelessWidget {
   }
 }
 
-/// Test widget that lives below a [GetRequest<T>] model of type [MatchesData]
+/// Test widget that lives below a [GetRequest<T>] model of type [ProfileData]
 class TestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    MatchesData matches = RequestProvider.of<MatchesData>(context);
+    ProfileData profile = RequestProvider.of<ProfileData>(context);
 
-    return Text(matches.matches[0].name);
+    return Text(profile.name);
   }
 }
 
@@ -53,133 +54,129 @@ class UserPreferencesState extends State {
   }
 
   Widget page() {
-    return SingleChildScrollView(
-      // color: Colors.grey,
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/a/a2/Rowan_Atkinson%2C_2011.jpg',
-                      height: 200,
-                      width: 200,
-                      fit: BoxFit.contain,
-                    ),
-                    Text("Rowan Atkinson"),
+    /// the [GetRequest<ProfileData>] for this page
+    /// note [url] is matches and the [builder] creates the below children
+    /// this is a [builder] because [children] are initialised independent to heirachy
+    /// only [builder] waits for the parent to initialise
+    return GetRequest<ProfileData>(
+      url: "profile",
+      builder: (context) {
+        return SingleChildScrollView(
+          // color: Colors.grey,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: <Widget>[
+                        Image.network(
+                          'https://upload.wikimedia.org/wikipedia/commons/a/a2/Rowan_Atkinson%2C_2011.jpg',
+                          height: 200,
+                          width: 200,
+                          fit: BoxFit.contain,
+                        ),
+                        // Text("Rowan Atkinson"),
 
-                    /// the [GetRequest<MatchesData>] for this page
-                    /// note [url] is matches and the [builder] creates the below children
-                    /// this is a [builder] because [children] are initialised independent to heirachy
-                    /// only [builder] waits for the parent to initialise
-                    GetRequest<MatchesData>(
-                      url: "matches",
-                      builder: (context) {
-                        return Row(
-                          children: <Widget>[
-                            Text("test"),
-                            /// here we see [TestWidget], it accesses the 
-                            /// [RequestProvider<T>] created by [GetRequest<T>] 
-                            /// to access the model data
-                            /// 
-                            /// this is all test at the moment, I'll adjust it shortly,
-                            /// but you can hopefully see how its arranged - Jordan
-                            TestWidget(),
-                          ],
+                        /// here we see [TestWidget], it accesses the
+                        /// [RequestProvider<T>] created by [GetRequest<T>]
+                        /// to access the model data
+                        ///
+                        /// this is all test at the moment, I'll adjust it shortly,
+                        /// but you can hopefully see how its arranged - Jordan
+                        TestWidget(),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: () {},
+                      child: Text("View Profile"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: () {},
+                      child: Text("Edit Profile"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MatchesPage()),
                         );
                       },
+                      child: Text("View Matches"),
                     ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RaisedButton(
-                  onPressed: () {},
-                  child: Text("View Profile"),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RaisedButton(
-                  onPressed: () {},
-                  child: Text("Edit Profile"),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RaisedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MatchesPage()),
-                    );
-                  },
-                  child: Text("View Matches"),
-                ),
-              ),
-              Column(
-                children: <Widget>[
-                  Text("Distance: $_roundDist"),
-                  Row(
+                  ),
+                  Column(
                     children: <Widget>[
-                      Text("Distance"),
-                      Expanded(
-                        child: Slider(
-                          min: 10,
-                          max: 200,
-                          // value: 50,
-                          onChanged: (newDist) {
-                            setState(() {
-                              int rounded = (newDist / 5).round() * 5;
-                              _locationDistance = newDist;
-                              _roundDist = rounded;
-                            });
-                          },
-                          // onChangeEnd: (newDist){
-                          //   setState(() {
-                          //     int rounded = (newDist / 5).round() * 5;
-                          //     _locationDistance = rounded as double;
-                          //     _roundDist = rounded;
-                          //   });
-                          // },
-                          value: _locationDistance,
-                        ),
+                      Text("Distance: $_roundDist"),
+                      Row(
+                        children: <Widget>[
+                          Text("Distance"),
+                          Expanded(
+                            child: Slider(
+                              min: 10,
+                              max: 200,
+                              // value: 50,
+                              onChanged: (newDist) {
+                                setState(() {
+                                  int rounded = (newDist / 5).round() * 5;
+                                  _locationDistance = newDist;
+                                  _roundDist = rounded;
+                                });
+                              },
+                              // onChangeEnd: (newDist){
+                              //   setState(() {
+                              //     int rounded = (newDist / 5).round() * 5;
+                              //     _locationDistance = rounded as double;
+                              //     _roundDist = rounded;
+                              //   });
+                              // },
+                              value: _locationDistance,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-              Row(
-                children: <Widget>[
-                  Text("Notifications"),
-                  Switch(
-                    onChanged: (b) {
-                      setState(() => _notificationsBool = b);
-                    },
-                    value: _notificationsBool,
+                  Row(
+                    children: <Widget>[
+                      Text("Notifications"),
+                      Switch(
+                        onChanged: (b) {
+                          setState(() => _notificationsBool = b);
+                        },
+                        value: _notificationsBool,
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: logOut,
+                      child: Text("Log out"),
+                    ),
                   ),
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: RaisedButton(
-                  onPressed: logOut,
-                  child: Text("Log out"),
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 

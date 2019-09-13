@@ -71,7 +71,14 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 /// Only cares about the reponse code
 /// This is used for checking whether a user has logged in
 Future<int> fetchResponseCode(String url) async {
-  http.Response response = await fetchResponse(url);
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseUser user = await auth.currentUser();
+  IdTokenResult result = await user.getIdToken();
+
+  final response = await http.get(
+    url,
+    headers: {"Authorization": result.token},
+  );
   return response.statusCode;
 }
 
@@ -124,8 +131,7 @@ class RequestProvider<T> extends InheritedWidget {
   // a bit more complex than normal because of the way dart handles generics
   static T of<T>(BuildContext context) {
     final type = _typeOf<RequestProvider<T>>();
-    return (context.inheritFromWidgetOfExactType(type) as RequestProvider)
-        .data;
+    return (context.inheritFromWidgetOfExactType(type) as RequestProvider).data;
   }
 
   static _typeOf<T>() => T;
