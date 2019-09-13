@@ -13,6 +13,8 @@ from flask import Flask
 from fadzmaq.database import db
 from fadzmaq.routes import route_bp
 
+auth_app = None
+
 
 # Initialisation of the api
 def create_app(config=None):
@@ -27,5 +29,5 @@ def create_app(config=None):
 
     db.init_app(api)
     api.register_blueprint(route_bp)
-    
+
     return api

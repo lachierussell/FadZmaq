@@ -46,6 +46,10 @@ def connect_db():
     return engine.connect()
 
 
+def hash_id(id):
+    return hashlib.md5(str(id).encode()).hexdigest()
+
+
 # Retrieves profile information for the subject.
 # @param    subject     user_id for the database entry
 # @return   json profile data or raises value error.
@@ -55,7 +59,7 @@ def retrieve_profile(subject):
         '''
         SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
         FROM profile 
-        WHERE user_id = {}
+        WHERE user_id = '{}'
         '''.format(subject)
     )
 
@@ -63,11 +67,10 @@ def retrieve_profile(subject):
         # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': hashlib.md5(str(row['user_id']).encode()).hexdigest(),
+                'user_id': hash_id(row['user_id']),
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
-                'gender': row['gender'],
                 'photo_location': 'DOES NOT EXIST',
                 'contact_details': {
                     'phone': row['phone'],
@@ -100,7 +103,7 @@ def get_hobbies(subject):
             ON profile.user_id = uh.user_id
           JOIN hobbies h
             ON uh.hobby_id = h.hobby_id
-        WHERE profile.user_id = {};
+        WHERE profile.user_id = '{}';
         '''.format(subject)
     )
 
@@ -126,3 +129,70 @@ def get_hobbies(subject):
             'discover': discover
         }
     ]
+
+
+# @brief Gets a users current matches
+# @return A dictionary (JSON based) containing their match information.
+def get_matches(subject):
+    rows = get_db().execute(
+        '''
+        SELECT profile.nickname, profile.user_id FROM profile
+        WHERE profile.user_id IN (
+            SELECT user_a
+            FROM matches
+            WHERE user_a = '{}'
+               OR user_b = '{}'
+        ) OR profile.user_id IN (
+            SELECT user_b
+            FROM matches
+            WHERE user_a = '{}'
+               OR user_b = '{}'
+        ) AND profile.user_id != '{}';
+        '''.format(subject, subject, subject, subject, subject)
+    )
+
+    matches = []
+
+    for row in rows:
+        matches.append({
+            'id': hash_id(row['user_id']),
+            'name': row['nickname'],
+            'photo': 'DOES NOT EXIST'
+        })
+
+    return {
+        "matches": matches
+    }
+
+
+# @brief Verifies the user is in the database
+# @returns True if the user exists
+def verify_user(subject):
+    rows = get_db().execute(
+        '''
+        SELECT COUNT(user_id)
+        FROM profile
+        WHERE user_id = '{}';
+        '''.format(subject)
+    )
+
+    for row in rows:
+        if row['count'] == 1:
+            return True
+    return False
+
+
+# @brief Creates a user in the database
+# @throws IOError if the user already exists or the database insertion fails.
+def make_user(name, email, uid):
+    rows = get_db().execute(
+        '''
+        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id; 
+        '''.format(name, email, uid)
+    )
+    for row in rows:
+        print(str(row['user_id']))
+        return str(row['user_id'])
+    print('IOErro: No Rows')
+    raise IOError
+

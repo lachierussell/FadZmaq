@@ -13,7 +13,7 @@ import pytest
 from fadzmaq import create_app
 from sqlalchemy import create_engine
 import sqlalchemy
-
+import os
 
 @pytest.fixture
 def api_no_db():
@@ -36,9 +36,11 @@ def api(api_no_db):
     # drop all tables - just in case some scripts rely on remnet tables
     teardown_test_db(api_no_db)
 
+
 @pytest.fixture
 def client_no_db(api_no_db):
     return api.test_client()
+
 
 @pytest.fixture
 def client(api):
@@ -49,8 +51,11 @@ def client(api):
 def build_test_db(api):
     engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
 
-    execute_sql(engine, "fadzmaq/database/init.sql")
-    execute_sql(engine, "tests/create_test_user.sql")
+    os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
+    os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
+
+    # execute_sql(engine, "fadzmaq/database/init.sql")
+    # execute_sql(engine, "tests/create_test_user.sql")
     
 
 def teardown_test_db(api):

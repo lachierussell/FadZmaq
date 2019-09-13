@@ -42,7 +42,7 @@ def test_get_close_db(api):
 # We still need to check the data is accurate
 def test_retrieve_profile(api):
     with api.app_context():
-        a = json.loads(db.retrieve_profile(1))
+        a = json.loads(db.retrieve_profile('26ab0db90d72e28ad0ba1e22ee510510'))
         print(json.dumps(a, indent=2))
 
 
@@ -50,4 +50,4 @@ def test_retrieve_profile(api):
 # We still need to check the data is accurate
 def test_get_hobbies(api):
     with api.app_context():
-        db.get_hobbies(1)
+        db.get_hobbies('26ab0db90d72e28ad0ba1e22ee510510')
