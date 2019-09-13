@@ -131,13 +131,15 @@ def update_profile(uid):
 # @returns  The user id of the new account.
 @route_bp.route('/account', methods=['POST'])
 def create_account():
+    data = json.loads(request.get_data())
     try:
-        data = json.loads(request.get_data())
+
         user = data["new_user"]
         uid = verify_token()
         user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
     except Exception as e:
+        print(json.dumps(data, indent=4))
         print('Account creation failed ' + str(e))
         return 'Account creation failed ' + str(e), 500
 
