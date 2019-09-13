@@ -191,5 +191,8 @@ def make_user(name, email, uid):
         '''.format(name, email, uid)
     )
     for row in rows:
+        print(str(row['user_id']))
         return str(row['user_id'])
+    print('IOErro: No Rows')
     raise IOError
+
