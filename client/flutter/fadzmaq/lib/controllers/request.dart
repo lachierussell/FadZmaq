@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -31,7 +32,7 @@ class GetRequest<T> extends StatefulWidget {
 
 /// State for [GetRequest<T>]
 class _GetRequestState<T> extends State<GetRequest<T>> {
-  Future _future;
+  Future<http.Response> _future;
 
   /// [didChangeDependencies] is called after [init], but is then only called once a dependency changes
   /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
@@ -48,13 +49,17 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return RequestProvider<T>(
-            // the fromJson method takes T but checks it against specified types
-            // (dart cannot initialise generic types so we can't use an extended class)
-            // this converts json data into our model class
-            data: fromJson<T>(json.decode(snapshot.data.body)),
-            child: widget.builder(context),
-          );
+          if (snapshot.data.statusCode == 200) {
+            return RequestProvider<T>(
+              // the fromJson method takes T but checks it against specified types
+              // (dart cannot initialise generic types so we can't use an extended class)
+              // this converts json data into our model class
+              data: fromJson<T>(json.decode(snapshot.data.body)),
+              child: widget.builder(context),
+            );
+          } else if (snapshot.data.statusCode == 401) {
+              return LoginScreen();
+          }
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -95,17 +100,21 @@ Future<http.Response> fetchResponse(String url) async {
     headers: {"Authorization": result.token},
   );
 
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON.
-    // TODO remove this, temp for testing
-    await sleep1();
+  return response;
 
-    return response;
-  } else {
-    // If that call was not successful, throw an error.
-    // TODO we need to treat this internally
-    throw Exception('Failed to load post');
-  }
+  // if (response.statusCode == 200) {
+  //   // If the call to the server was successful, parse the JSON.
+  //   // TODO remove this, temp for testing
+  //   await sleep1();
+
+  //   return response;
+  // } else if (response.statusCode == 200){
+
+  // } else {
+  //   // If that call was not successful, throw an error.
+  //   // TODO we need to treat this internally
+  //   throw Exception('Failed to load post');
+  // }
 
   // TODO time outs and other errors
 }

@@ -7,6 +7,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
+import 'package:fadzmaq/views/profilepage.dart';
+import 'package:fadzmaq/views/editprofilepage.dart';
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -97,14 +99,26 @@ class UserPreferencesState extends State {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProfilePage()),
+                        );
+                      },
                       child: Text("View Profile"),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: RaisedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditProfilePage()),
+                        );
+                      },
                       child: Text("Edit Profile"),
                     ),
                   ),

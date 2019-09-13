@@ -4,6 +4,7 @@ import 'package:fadzmaq/views/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:fadzmaq/controllers/request.dart';
 
 class SplashScreen extends StatefulWidget {
 
@@ -14,6 +15,7 @@ class SplashScreen extends StatefulWidget {
 }
 
 class SplashScreenState extends State<SplashScreen> {
+
 
   @override
   void initState() {
@@ -28,11 +30,19 @@ class SplashScreenState extends State<SplashScreen> {
   // }
 
   onDoneLoading() async {
+
+    
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
     if(user != null){
       // var token = await user.getIdToken();
       // printWrapped(token.token);
+
+                          // String url = "matches";
+                          // int code =
+                          //     await fetchResponseCode(config.server + url);
+
+
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => UserPreferencesPage()));
     }else{
       // TODO try for a silent google sign in

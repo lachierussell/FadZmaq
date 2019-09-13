@@ -1,5 +1,6 @@
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/splashscreen.dart';
+import 'package:fadzmaq/views/homepage.dart';
 import 'package:flutter/material.dart';
 
 
@@ -40,5 +41,3 @@ class App extends StatelessWidget {
     );
   }
 }
-
-
