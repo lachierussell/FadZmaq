@@ -18,6 +18,12 @@ Windows: `powershell`
 #	Write-Host "This is a powershell"
 ```
 
+Cross platform: `pseudocode`
+
+```pseudocode
+%   python3 -c "print('hello world')"       
+```
+
 ## Installing pipenv
 
 It is a requirement to run this project that python3.7 is already installed. Pip3 is often installed with python, though you may need to acquire this separately. There are sufficient tutorials online specific to your system. 
@@ -44,8 +50,6 @@ $   pipenv install --dev
 
 This will install all of the dependancies specified in the `Pipfile` and create a new file, `Pipfile.lock`. You should never edit the `Pipfile.lock` file.
 
-
-
 ## Setting up the database
 
 To use the server it is necessary to have an instance of PostgreSQL 9.6. Once you have installed PostgreSQL you can configure the database by running. Be careful: These scripts create the main database under the user postgres. 
@@ -64,8 +68,6 @@ The main database is named fadzmaq and is owned by user postgres
 
 The testing database is named fadzmaq_test and is owned by user test_fadzmaq_admin
 
-
-
 ## Installing firebase
 
 The firebase authentication package will have been installed with during the installation of pipenv. Firebase requires a service account private key to verify the authenticity of the tokens being sent to the server. This is easy to obtain on the firebase console.
@@ -81,8 +83,6 @@ The firebase authentication package will have been installed with during the ins
     ​	*note: The key is not language specific.*
 
 5. Download the key and place it outside of the project directory. Remember (or copy) the path to the key. We will use this for the next step.
-
-    
 
 ## Configuring the server
 
@@ -121,8 +121,8 @@ To run the server, navigate to the server/ directory and run: *Note: This is cro
 
 I have provided an example output below the command so you can be sure it is working.
 
-```sh
-$	pipenv run python fadzmaq.py
+```pseudocode
+%	pipenv run python fadzmaq.py
 
 * Serving Flask app "fadzmaq" (lazy loading)
 * Environment: production
@@ -132,7 +132,46 @@ $	pipenv run python fadzmaq.py
 * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)                                                            
 ```
 
+## Testing the server
 
+A basic unit testing suite is available to check the system is running as expected. This does not confirm the system is working 100% but will usually give a good indication something has gone wrong early. 
 
+To run the tests:
 
+```pseudocode
+%	pipenv run python -m pytest
+
+platform darwin -- Python 3.7.2, pytest-5.1.2, py-1.8.0, pluggy-0.13.0
+rootdir: /Users/lachlanrussell/Developer/UNI/CITS3200-dev/server
+tests/test_api.py ...F.F......                                                                [ 75%]
+tests/test_db.py F.FF                                                                         [100%]
+```
+
+This example output has 5 failed tests.
+
+## Updating the server
+
+When you pull from the git repositories, another developer may have added dependancies into the Pipfile, or modified the database. To make sure this doesn't cause any issues, it is a good idea to update these before running the server.
+
+```pseudocode
+%	pipenv update
+```
+
+Then
+
+```sh
+$	./build_db.sh
+$	./build_test_db.sh
+```
+
+```powershell
+#	./build_db.bat			
+#	./build_test_db.bat
+```
+
+If you ever need to reload the database, this can also be done using psql
+
+```pseudocode
+%	psql -U postgres -d fadzmaq -f fadzmaq/database/init.sql	
+```
 
