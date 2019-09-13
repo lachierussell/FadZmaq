@@ -131,6 +131,7 @@ def update_profile(uid):
 # @returns  The user id of the new account.
 @route_bp.route('/account', methods=['POST'])
 def create_account():
+    print(request.get_data())
     data = json.loads(request.get_data())
     try:
 
