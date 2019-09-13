@@ -2,6 +2,7 @@
 name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
+
 [dev-packages]
 
 [packages]
@@ -9,12 +10,12 @@ flask = "==1.1.1"
 requests = "*"
 gunicorn = "*"
 sqlalchemy = "*"
-alembic = "*"
 pg8000 = "*"
 pytest = "*"
 coverage = "*"
-google = "*"
-google-auth = "*"
+firebase-admin = "*"
+objectpath = "*"
+firebase = "*"
 
 [requires]
 python_version = "3.7"

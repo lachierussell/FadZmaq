@@ -8,10 +8,13 @@
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
-
-from flask import jsonify, request, Flask, Blueprint
-from fadzmaq.api import recs_data, match_data, profile_data
+from flask import jsonify, request, Blueprint
+import fadzmaq
+from fadzmaq.api import recs_data, match_data
 from fadzmaq.database import db
+from firebase_admin import auth
+import json
+
 route_bp = Blueprint("route_bp", __name__)
 
 
@@ -19,65 +22,83 @@ route_bp = Blueprint("route_bp", __name__)
 @route_bp.route('/index')
 def index():
 
-    # conn = db.connect_db()
-    # users = conn.execute("SELECT * FROM primary_user;")
-    # conn.close()
+    response = '''
+        It appears you have come to the wrong place. <br>
+        Please try out our mobile app, fadzmaq. <br>
+        This website is <strong> not </strong> for users.
+    '''
+    return response, 300
 
-    response = {
-        "/user/recs": "Get recommendations",
-        "/user/`id`": "Get user profile",
-        "/profile": "Get your own profile information",
-        "/matches": "Get a list of matches",
-        "/matches/`id`": "Get profile information of a single match"
-    }
-    return jsonify(response), 300
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # USERS
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
+# @brief The auth_required function decorator.
+# This function is responsible for authenticating users.
+# It checks the validity of their token. And makes sure they are recorded in the database.
+# If the user is not authenticated this will return the error as a string, and unauthorized http code.
+# @param func   Function pointer to the decorated function.
+# @return       The function pointer to the authenticate function.
+def auth_required(func):
+    def authenticate(*args, **kwargs):
+        try:
+            uid = verify_token()
+            verify_user(uid=uid)
+            return func(uid=uid, *args, **kwargs)
+        except Exception as e:
+            # Invalid token or user
+            print('Authentication failed:', str(e))
+            uid = '26ab0db90d72e28ad0ba1e22ee510510'
+            return func(uid=uid, *args, **kwargs)
+            # Replace above return with below when in production
+            # return 'Authentication failed: ' + str(e), 401
 
-@route_bp.route('/auth', methods=['POST'])
-def authentication():
-    # (Receive token by HTTPS POST)
-    # TODO: Get actual google token (speak with Seharsh)
-    # TODO: Send json data to client app
-
-    token = request.get_data()
-    token = jwt.decode(token, verify=False)
-    print(token)
-    try:
-        # Verifying the token, if it fails proceed to except block.
-        idinfo = id_token.verify_oauth2_token(token, requests.Request())
-        print(idinfo['name'])
-
-        # TODO: make a database query -- later
-        # Will need to be a query to the database.
-        # if idinfo['aud'] not in ['CLIENT_ID_1', 'CLIENT_ID_2', 'CLIENT_ID_3']:
-        #     raise ValueError('Could not verify audience.')
-
-        if idinfo['iss'] not in ['accounts.google.com', 'https://accounts.google.com']:
-            raise ValueError('Wrong issuer.')
-
-        # ID token is valid. Get the user's Google Account ID from the decoded token.
-        userid = idinfo['sub']
-        return userid
-
-    except ValueError:
-        # Invalid token
-        # TODO: Return unauthorised error code
-        err = 'Invalid token'
-        print(err)
-        return err
+    authenticate.__name__ = func.__name__
+    return authenticate
 
 
+# @brief Verifies the authentication token.
+# This validates the token using firebase's package and our service account signature.
+# @param request.headers    The http headers must be available to retrieve the authentication token.
+# @returns                  The user id.
+# @throws ValueError        If authentication token is not valid.
+def verify_token():
+    if 'Authorization' not in request.headers:
+        raise ValueError("Token not present")
+
+    # Verifying the token, if it fails proceed to except block.
+    token = request.headers['Authorization']
+    print('Attempting to verify token:', token)
+    decoded_token = auth.verify_id_token(token, fadzmaq.auth_app, False)
+    uid = decoded_token['uid']
+    print('Verified, UID:', uid)
+    return uid
+
+
+# @brief Verifies the user is in the database
+# @param uid            The user ID from firebase
+# @throws ValueError    If the user is not present in the database
+#
+def verify_user(uid):
+    if not db.verify_user(uid):
+        raise ValueError("User does not exist")
+
+
+# @brief Retrieves user recommendations
 @route_bp.route('/user/recs', methods=['GET'])
-def recommendations():
+@auth_required
+def recommendations(uid):
+    print(uid)
     return jsonify(recs_data.my_recs), 200
 
 
+# @brief Retries a users profile by their id
 @route_bp.route('/user/<string:id>', methods=['GET'])
-def get_user_by_id(id):
+@auth_required
+def get_user_by_id(uid, id):
+    print(uid)
+    print(id)
     return jsonify(recs_data.my_candiate), 200
 
 
@@ -86,57 +107,82 @@ def get_user_by_id(id):
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 
+# @brief Retrieves the current users profile
 @route_bp.route('/profile', methods=['GET'])
-def get_profile():
-    # TODO: Send to authenticate function and return sub id.
-    # print(request.headers['auth'])
-
-    # TODO: Clean and retrieve inputs.
-    subject = 1  # Temp value.
-
+@auth_required
+def get_profile(uid):
     try:
-        return db.retrieve_profile(subject), 200
-
+        return db.retrieve_profile(uid), 200
     except ValueError:
-        return '{"error":"Profile not found."}', 404
+        return '{"error":"Profile not found"}', 404
 
 
+# @brief Edits the current users profile
 @route_bp.route('/profile', methods=['POST'])
-def update_profile():
-    user = request.form['somedata']
-    response = {
-        "status": user
-    }
-    return jsonify(response), 200
+@auth_required
+def update_profile(uid):
+    response = request.get_data()
+    return response, 200
+
+
+# @brief Creates a new account for a user if it does not already exist
+# Creates a new account with the users firebase token for uid.
+# Client must provide json containing the user 'name' and 'email'
+# @returns  The user id of the new account.
+@route_bp.route('/account', methods=['POST'])
+def create_account(uid):
+    try:
+        data = json.loads(request.get_data())
+        user = data["new_user"]
+        uid = verify_token()
+        user_id = db.make_user(user['name'], user['email'], uid)
+        return user_id
+    except Exception as e:
+        return 'Account creation failed ' + str(e), 500
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # MATCHES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-
+# @brief Retrieves the current matches of the user.
+# @returns A json formatted list of the users current matches.
 @route_bp.route('/matches', methods=['GET'])
-def get_matches():
-    return jsonify(match_data.my_matches), 200
+@auth_required
+def get_matches(uid):
+    # TODO: Get subject from auth
+    print(request.get_data())
+    try:
+        return db.get_matches(uid), 200
+    except ValueError:
+        return '{"error":"Internal server error"}', 404
 
 
+# @brief Retrieves a specific matches profile data
 @route_bp.route('/matches/<string:id>', methods=['GET'])
-def get_matched_user(id):
+@auth_required
+def get_matched_user(uid, id):
     return jsonify(match_data.my_match), 200
 
 
+# @brief Unmatches a specific match by their user id
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
-def unmatch_user(id):
+@auth_required
+def unmatch_user(uid, id):
     return "User unmatched", 200
 
 
+# @brief Rates a user negatively
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
-def rate_user_down(id):
+@auth_required
+def rate_user_down(uid, id):
     return "Thumbs down!", 200
 
 
+# @brief Rates a user positively
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
-def rate_user_up(id):
+@auth_required
+def rate_user_up(uid, id):
     return "Thumbs up!", 200
 
 
@@ -144,12 +190,15 @@ def rate_user_up(id):
 # VOTES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
-
+# @brief Like a user
 @route_bp.route('/like/<string:id>', methods=['POST'])
-def like_user(id):
+@auth_required
+def like_user(uid, id):
     return "User liked", 200
 
 
+# @brief Pass on a user
 @route_bp.route('/pass/<string:id>', methods=['POST'])
-def pass_user(id):
+@auth_required
+def pass_user(uid, id):
     return "User passed", 200
