@@ -224,7 +224,7 @@ def get_match_by_id(uid, id):
                 'user_id': hash_id(row['user_id']),
                 'name': row['nickname'],
                 'age': str(row['age']),
-                'photo_location': row['photo_location'],
+                'photo_location': row['photo'],
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
