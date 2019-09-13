@@ -71,7 +71,7 @@ def retrieve_profile(subject):
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
-                'photo_location': 'DOES NOT EXIST',
+                'photo_location': row['photo'],
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
@@ -136,7 +136,7 @@ def get_hobbies(subject):
 def get_matches(subject):
     rows = get_db().execute(
         '''
-        SELECT profile.nickname, profile.user_id FROM profile
+        SELECT profile.nickname, profile.user_id, profile.photo FROM profile
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
@@ -160,7 +160,8 @@ def get_matches(subject):
         matches.append({
             'id': hash_id(row['user_id']),
             'name': row['nickname'],
-            'photo': 'DOES NOT EXIST'
+            # 'photo': 'DOES NOT EXIST'
+            'photo': row['photo']
         })
 
     return {

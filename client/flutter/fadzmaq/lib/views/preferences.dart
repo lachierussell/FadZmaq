@@ -31,6 +31,19 @@ class TestWidget extends StatelessWidget {
   }
 }
 
+class ProfilePic extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ProfileData profile = RequestProvider.of<ProfileData>(context);
+    return Image.network(
+      profile.photo,
+      height: 200,
+      width: 200,
+      fit: BoxFit.contain,
+    );
+  }
+}
+
 /// stateful because we have the slider and switches to keep track of
 class UserPreferencesPage extends StatefulWidget {
   UserPreferencesState createState() {
@@ -78,12 +91,7 @@ class UserPreferencesState extends State {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: <Widget>[
-                        Image.network(
-                          'https://upload.wikimedia.org/wikipedia/commons/a/a2/Rowan_Atkinson%2C_2011.jpg',
-                          height: 200,
-                          width: 200,
-                          fit: BoxFit.contain,
-                        ),
+                        ProfilePic(),
                         // Text("Rowan Atkinson"),
 
                         /// here we see [TestWidget], it accesses the
