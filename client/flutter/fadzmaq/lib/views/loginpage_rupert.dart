@@ -1,12 +1,12 @@
 import 'package:fadzmaq/main.dart';
 import 'package:flutter/material.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPageRupert extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _LoginPageState();
+  State<StatefulWidget> createState() => new _LoginPageRupertState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageRupertState extends State<LoginPageRupert> {
   String _status = 'no-action';
 
   @override

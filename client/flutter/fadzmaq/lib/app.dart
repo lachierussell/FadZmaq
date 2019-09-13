@@ -1,41 +1,43 @@
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/splashscreen.dart';
+import 'package:fadzmaq/views/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:fadzmaq/pages/homepage.dart';
 
-import 'main.dart';
-import 'pages/homepage.dart';
-import 'pages/loginpage.dart';
-import 'pages/profilepage.dart';
-import 'pages/editprofilepage.dart';
 
-Widget _defaultHome = new LoginPage();
+
+// void main() {
+//   runApp(App());
+// }
 
 class App extends StatelessWidget {
-  // an explicit initialization method to set a default home and processes the
-  // async function authentication.login
-  App();
-  Future init() async{
-    bool _result = await appAuth.login();
-    if (_result) {
-      _defaultHome = new HomePage();
-    }
-  }
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'App',
-        home: _defaultHome,
-        routes: <String, WidgetBuilder>{
-          // Set routes for using the Navigator.
-          '/home': (BuildContext context) => new HomePage(title: "Home"),
-          '/login': (BuildContext context) => new LoginPage(),
-          '/profilepage': (BuildContext context) => new ProfilePage(),
-          '/editprofilepage': (BuildContext context) => new EditProfilePage()
-        }
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
+        primarySwatch: Colors.blue,
+      ),
+      home: HomePage(title: 'Flutter Demo Home Page'),
+      // initialRoute: '/',
+      // routes: {
+      //   // When navigating to the "/" route, build the FirstScreen widget.
+      //   '/': (context) => HomePage(title: "test",),
+
+
+      //   // When navigating to the "/second" route, build the SecondScreen widget.
+      //   // '/login': (context) => LoginScreen(),
+      //   // '/profile': (context) => LoginScreen(),
+      // },
     );
   }
 }
-
-

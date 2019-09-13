@@ -5,11 +5,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:fadzmaq/app_config.dart';
+import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/main.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+class HomePageRupert extends StatefulWidget {
+  HomePageRupert({Key key, this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -23,7 +23,7 @@ class HomePage extends StatefulWidget {
   final String title;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _HomePageRupertState createState() => _HomePageRupertState();
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: new AppBar(
@@ -52,7 +52,7 @@ class HomePage extends StatefulWidget {
 }
 
 
-class _HomePageState extends State<HomePage> {
+class _HomePageRupertState extends State<HomePageRupert> {
   int _counter = 0;
 
   Future<Post> post;
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
 
-    var config = AppConfig.of(context).appConfig;
+    var config = AppConfig.of(context);
 
 
     // This method is rerun every time setState is called, for instance as done
