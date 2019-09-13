@@ -148,9 +148,6 @@ class _ProfilePageState extends State<ProfilePage> {
                             IconButton(
                                 icon: Icon(CupertinoIcons.person_solid),
                                 onPressed: () {
-                                  appAuth.logout().then(
-                                          (_) => Navigator.of(context).pushReplacementNamed('/editprofilepage')
-                                  );
                                 }
                             ),
                             IconButton(
@@ -193,17 +190,11 @@ class _ProfilePageState extends State<ProfilePage> {
               IconButton(
                 icon: Icon(CupertinoIcons.pencil),
                 onPressed: () {
-                  appAuth.logout().then(
-                          (_) => Navigator.of(context).pushReplacementNamed('/editprofilepage')
-                  );
                 }
               ),
               IconButton(
                   icon: Icon(CupertinoIcons.left_chevron),
                   onPressed: () {
-                    appAuth.logout().then(
-                            (_) => Navigator.of(context).pushReplacementNamed('/home')
-                    );
                   }
               ),
             ],

@@ -124,9 +124,6 @@ class _HomePageRupertState extends State<HomePageRupert> {
                 'Profile'
             ),
             onPressed: () {
-              appAuth.logout().then(
-                      (_) => Navigator.of(context).pushReplacementNamed('/profilepage')
-              );
             }
         ),
             /*
@@ -154,9 +151,6 @@ class _HomePageRupertState extends State<HomePageRupert> {
                     'Logout'
                 ),
                 onPressed: () {
-                  appAuth.logout().then(
-                          (_) => Navigator.of(context).pushReplacementNamed('/login')
-                  );
                 }
             )
           ],

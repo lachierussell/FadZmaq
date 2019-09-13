@@ -37,9 +37,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
             IconButton(
             icon: Icon(CupertinoIcons.left_chevron),
               onPressed: () {
-                appAuth.logout().then(
-                        (_) => Navigator.of(context).pushReplacementNamed('/profilepage')
-                );
               }
             ),
           ]
