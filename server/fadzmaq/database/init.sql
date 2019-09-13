@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS profile
     bio      VARCHAR(400) DEFAULT NULL,
     dob      TIMESTAMP    DEFAULT NULL,
     email    VARCHAR(255) UNIQUE NOT NULL,
-    phone    VARCHAR      UNIQUE
+    phone    VARCHAR      UNIQUE,
+    photo    VARCHAR      DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS matches
@@ -71,16 +72,21 @@ CREATE TABLE IF NOT EXISTS user_hobbies
 
 -- Inserting dummy values --
 -- DOB IN USA (month/day/year)
-INSERT INTO profile (bio, nickname, email, dob, phone, user_id)
-VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '4/09/1999', '0423199199', 'b026324c6904b2a9cb4b88d6d61c81d1');
-INSERT INTO profile (bio, nickname, email, dob, phone, user_id)
-VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '4/10/1999', '0423239199', '26ab0db90d72e28ad0ba1e22ee510510');
-INSERT INTO profile (bio, nickname, email, dob, phone, user_id)
-VALUES ('Boating admirer', 'Smith', 'smith@email.com', '5/12/1970', '0413239199', '6d7fce9fee471194aa8b5b6e47267f03');
-INSERT INTO profile (bio, nickname, email, dob, phone, user_id)
-VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', '0404239188', '48a24b70a0b376535542b996af517398');
-INSERT INTO profile (bio, nickname, email, dob, phone, user_id)
-VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/14/1980', '0415239188', '1dcca23355272056f04fe8bf20edfce0');
+INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
+VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '4/09/1999', '0423199199', 'b026324c6904b2a9cb4b88d6d61c81d1',
+ 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/AV0A6306_Sean_Bean.jpg/468px-AV0A6306_Sean_Bean.jpg');
+INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
+VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '4/10/1999', '0423239199', '26ab0db90d72e28ad0ba1e22ee510510',
+ 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Good_Omens_panel_at_NYCC_%2860841%29a.jpg/1024px-Good_Omens_panel_at_NYCC_%2860841%29a.jpg');
+INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
+VALUES ('Boating admirer', 'Smith', 'smith@email.com', '5/12/1970', '0413239199', '6d7fce9fee471194aa8b5b6e47267f03',
+ 'https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg');
+INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
+VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', '0404239188', '48a24b70a0b376535542b996af517398',
+ 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg/800px-Jeffrey_Wright_by_Gage_Skidmore_3.jpg');
+INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
+VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/14/1980', '0415239188', '1dcca23355272056f04fe8bf20edfce0',
+ 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg');
 
 INSERT INTO hobbies (name) VALUES ('Boxing');
 INSERT INTO hobbies (name) VALUES ('Boating');
@@ -95,6 +101,14 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 5, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 3, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 4, 'discover');
+
+-- Test data for matches (John has three, a few others have one with him)
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '6d7fce9fee471194aa8b5b6e47267f03');
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '48a24b70a0b376535542b996af517398');
 
 
 CREATE OR REPLACE FUNCTION match()
