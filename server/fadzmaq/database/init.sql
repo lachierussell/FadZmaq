@@ -81,6 +81,9 @@ INSERT INTO profile (bio, nickname, email, dob, phone, user_id)
 VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', '0404239188', '48a24b70a0b376535542b996af517398');
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id)
 VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/14/1980', '0415239188', '1dcca23355272056f04fe8bf20edfce0');
+INSERT INTO profile (nickname, bio, dob, email, phone, user_id)
+VALUES ('Lachie', 'Archer', '9/14/1990', 'lachie.russell@gmail.com', '04152122188', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+
 
 INSERT INTO hobbies (name) VALUES ('Boxing');
 INSERT INTO hobbies (name) VALUES ('Boating');
@@ -125,12 +128,14 @@ CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
 
 
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '48a24b70a0b376535542b996af517398');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), False, 'b026324c6904b2a9cb4b88d6d61c81d1', '6d7fce9fee471194aa8b5b6e47267f03');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '26ab0db90d72e28ad0ba1e22ee510510');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', 'b026324c6904b2a9cb4b88d6d61c81d1');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '48a24b70a0b376535542b996af517398');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), False, 'b026324c6904b2a9cb4b88d6d61c81d1', '6d7fce9fee471194aa8b5b6e47267f03');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '26ab0db90d72e28ad0ba1e22ee510510');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', 'b026324c6904b2a9cb4b88d6d61c81d1');
+
+INSERT INTO matches (user_a, user_b, time, rating) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);

@@ -193,3 +193,39 @@ def make_user(name, email, uid):
     for row in rows:
         return str(row['user_id'])
     raise IOError
+
+
+# @brief Updates the users hobbies
+# Deletes current hobbies and updates with the new hobbies.
+def update_user_hobbies(uid, request):
+    try:
+        get_db().execute(
+            '''
+            DELETE FROM user_hobbies
+            WHERE user_id = '{}';
+            '''.format(uid)
+        )
+        hobbies = request["hobbies"]
+        for category in hobbies:
+            print(category)
+            for offer in category:
+                print(offer)
+                for hobby in category[offer]:
+                    print(hobby['id'])
+                    get_db().execute(
+                        '''
+                        INSERT INTO user_hobbies (user_id, hobby_id, swap)
+                        VALUES ('{}', {}, '{}');
+                        '''.format(uid, hobby['id'], offer)
+                    )
+
+    except Exception as e:
+        raise IOError(str(e))
+
+
+# @brief updates the users profile in the db.
+def update_profile(uid, request):
+    
+
+
+
