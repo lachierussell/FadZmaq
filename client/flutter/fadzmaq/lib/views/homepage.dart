@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
 
 Future<Post> fetchPost() async {
   final response =
-      await http.get('https://jsonplaceholder.typicode.com/posts/1');
+      await http.get('http://localhost:5000/profile');
 
   if (response.statusCode == 200) {
     // If the call to the server was successful, parse the JSON.

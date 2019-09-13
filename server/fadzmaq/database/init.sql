@@ -120,4 +120,3 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES (1, 4, 'discover');
 --
 -- CREATE TRIGGER body INSTEAD OF INSERT OR UPDATE ON votes
 --     FOR EACH ROW EXECUTE FUNCTION match();
-
