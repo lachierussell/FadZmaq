@@ -11,3 +11,5 @@ htmlcov
 # Config
 fadzmaq/fadzmaq.conf
 
+# Firebase Key
+fadzmaq/fadzmaq1-firebase-adminsdk-*.json
