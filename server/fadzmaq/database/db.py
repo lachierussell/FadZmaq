@@ -204,6 +204,4 @@ def get_match_by_id(uid, id):
         '''.format(uid, id)
     )
 
-    
-
-    pass
+    raise ValueError

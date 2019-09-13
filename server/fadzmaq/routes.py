@@ -137,7 +137,6 @@ def create_account():
         user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
     except Exception as e:
-        print(json.dumps(data, indent=4))
         print('Account creation failed ' + str(e))
         return 'Account creation failed ' + str(e), 500
 
