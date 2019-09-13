@@ -115,8 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             FirebaseUser user = await auth.currentUser();
                             IdTokenResult result = await user.getIdToken();
 
-                            var names = user.displayName;
-                            names.split(" ");
+                            var names = user.displayName.split(" ");
                             String name = names[0];
 
                             // put together our post request for a new account

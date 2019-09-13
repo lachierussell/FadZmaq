@@ -35,7 +35,7 @@ class App extends StatelessWidget {
 
 
         // When navigating to the "/second" route, build the SecondScreen widget.
-        // '/login': (context) => LoginScreen(),
+        '/login': (context) => LoginScreen(),
         // '/profile': (context) => LoginScreen(),
       },
     );
