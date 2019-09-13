@@ -27,17 +27,17 @@ class App extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(title: 'Flutter Demo Home Page'),
-      // initialRoute: '/',
-      // routes: {
-      //   // When navigating to the "/" route, build the FirstScreen widget.
-      //   '/': (context) => HomePage(title: "test",),
+      // home: HomePage(title: 'Flutter Demo Home Page'),
+      initialRoute: '/',
+      routes: {
+        // When navigating to the "/" route, build the FirstScreen widget.
+        '/': (context) => SplashScreen(),
 
 
-      //   // When navigating to the "/second" route, build the SecondScreen widget.
-      //   // '/login': (context) => LoginScreen(),
-      //   // '/profile': (context) => LoginScreen(),
-      // },
+        // When navigating to the "/second" route, build the SecondScreen widget.
+        // '/login': (context) => LoginScreen(),
+        // '/profile': (context) => LoginScreen(),
+      },
     );
   }
 }

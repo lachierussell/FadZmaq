@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 
-Future<User> test;
+// Future<User> test;
 
 
 
@@ -203,22 +203,22 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
   }
-  Future<User> fetchPost() async {
-    final response =
-    await http.get('http://localhost:5000/profile');
-    if (response.statusCode == 200) {
-      // If the call to the server was successful, parse the JSON.
-      return User.fromJson(json.decode(response.body));
-    } else {
-      // If that call was not successful, throw an error.
-      throw Exception('Failed to load post');
-    }
-  }
+  // Future<User> fetchPost() async {
+  //   final response =
+  //   await http.get('http://localhost:5000/profile');
+  //   if (response.statusCode == 200) {
+  //     // If the call to the server was successful, parse the JSON.
+  //     return User.fromJson(json.decode(response.body));
+  //   } else {
+  //     // If that call was not successful, throw an error.
+  //     throw Exception('Failed to load post');
+  //   }
+  // }
 
   @override
   void initState(){
     super.initState();
-    test = fetchPost();
+    // test = fetchPost();
   }
 //  class User {
 //  final String nickname;
