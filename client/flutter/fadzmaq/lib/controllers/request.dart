@@ -58,7 +58,8 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
               child: widget.builder(context),
             );
           } else if (snapshot.data.statusCode == 401) {
-              return LoginScreen();
+            // not sure if this is the best way to do this but it works for now - Jordan
+            return LoginScreen();
           }
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");

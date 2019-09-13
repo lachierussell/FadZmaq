@@ -96,6 +96,14 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 3, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 4, 'discover');
 
+-- Test data for matches (John has three, a few others have one with him)
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '6d7fce9fee471194aa8b5b6e47267f03');
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '48a24b70a0b376535542b996af517398');
+
 
 CREATE OR REPLACE FUNCTION match()
     RETURNS TRIGGER

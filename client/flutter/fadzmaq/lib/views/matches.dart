@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/models/matches.dart';
 import 'dart:math';
 
 class MatchesTempApp extends StatelessWidget {
@@ -16,27 +18,47 @@ class MatchesTempApp extends StatelessWidget {
 class MatchesPage extends StatelessWidget {
   const MatchesPage([Key key]) : super(key: key);
 
+  
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Matches'),
-        ),
-        body: ListView.builder(
-          itemCount: _matchedProfiles.length,
-          // itemExtent: 100,
-          itemBuilder: _listItemBuilder,
-          // physics: BouncingScrollPhysics(),
-        ));
+      appBar: AppBar(
+        title: Text('Matches'),
+      ),
+      body: GetRequest<MatchesData>(
+        url: "matches",
+        builder: (context) {
+          return MatchesList();
+        },
+      ),
+    );
   }
+}
 
+class MatchesList extends StatelessWidget {
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    MatchesData matchesData = RequestProvider.of<MatchesData>(context);
+    print(matchesData.toString());
+    print(matchesData.matches.toString());
+
+    return ListView.builder(
+      // itemCount: _matchedProfiles.length,
+      itemCount: matchesData.matches.length,
+      itemBuilder: _listItemBuilder,
+    );
+  }
 
   Widget _listItemBuilder(BuildContext context, int index) {
-    return _listItem(context, _matchedProfiles[index]);
+    MatchesData matchesData = RequestProvider.of<MatchesData>(context);
+    return _listItem(context, matchesData.matches[index]);
   }
 
-  Widget _listItem(BuildContext context, MatchedProfile profile) {
+  Widget _listItem(BuildContext context, MatchProfileData profile) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -46,7 +68,7 @@ class MatchesPage extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
               child: Image.network(
-                profile.imageURL,
+                profile.photo,
                 height: 80,
                 width: 80,
                 fit: BoxFit.cover,
@@ -66,7 +88,7 @@ class MatchesPage extends StatelessWidget {
     );
   }
 
-  Widget getMatchText(BuildContext context, MatchedProfile profile) {
+  Widget getMatchText(BuildContext context, MatchProfileData profile) {
     return new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -80,19 +102,22 @@ class MatchesPage extends StatelessWidget {
     );
   }
 
-  Widget getHobbies(BuildContext context, MatchedProfile profile) {
-    List<Widget> list = new List<Widget>();
-    for (Hobby hobby in profile.hobbies) {
-      list.add(getHobbyChip(context, hobby));
-    }
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: new Wrap(
-        spacing: 4,
-        runSpacing: 4,
-        children: list,
-      ),
-    );
+  Widget getHobbies(BuildContext context, MatchProfileData profile) {
+
+    return Text("to be done");
+
+    // List<Widget> list = new List<Widget>();
+    // for (Hobby hobby in profile.hobbies) {
+    //   list.add(getHobbyChip(context, hobby));
+    // }
+    // return Padding(
+    //   padding: const EdgeInsets.only(top: 8),
+    //   child: new Wrap(
+    //     spacing: 4,
+    //     runSpacing: 4,
+    //     children: list,
+    //   ),
+    // );
   }
 
   Widget getHobbyChip(BuildContext context, Hobby hobby) {
@@ -105,15 +130,12 @@ class MatchesPage extends StatelessWidget {
       child: Container(
         color: hobby.color,
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
-          // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
-          child: new Text(hobby.name, style: hobbyStyle)
-        ),
+            padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+            // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
+            child: new Text(hobby.name, style: hobbyStyle)),
       ),
     );
   }
-
-
 }
 
 final TextStyle nameStyle = TextStyle(
