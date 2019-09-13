@@ -130,7 +130,7 @@ def update_profile(uid):
 # Client must provide json containing the user 'name' and 'email'
 # @returns  The user id of the new account.
 @route_bp.route('/account', methods=['POST'])
-def create_account(uid):
+def create_account():
     try:
         data = json.loads(request.get_data())
         user = data["new_user"]
