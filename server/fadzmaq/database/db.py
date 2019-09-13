@@ -196,3 +196,14 @@ def make_user(name, email, uid):
     print('IOErro: No Rows')
     raise IOError
 
+
+# @brief Gets a match by id
+def get_match_by_id(uid, id):
+    rows = get_db().execute(
+        '''
+        '''.format(uid, id)
+    )
+
+    
+
+    pass
