@@ -22,7 +22,7 @@ def init_app(app):
 
 
 def get_engine():
-    if'db_engine' not in g:
+    if 'db_engine' not in g:
         g.db_engine = create_engine(current_app.config['DATABASE_URI'])
         # g.db_engine = create_engine(db_conf.DATABASE_URI)
     return g.db_engine
@@ -143,14 +143,14 @@ def get_matches(subject):
             WHERE user_a = '26ab0db90d72e28ad0ba1e22ee510510'
                OR user_b = '26ab0db90d72e28ad0ba1e22ee510510'
         )
-		AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510'
-		OR profile.user_id IN (
+        AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510'
+        OR profile.user_id IN (
             SELECT user_b
             FROM matches
             WHERE user_a = '26ab0db90d72e28ad0ba1e22ee510510'
                OR user_b = '26ab0db90d72e28ad0ba1e22ee510510'
         )
-		AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510';
+        AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510';
         '''.format(subject, subject, subject, subject, subject)
     )
 
@@ -199,4 +199,3 @@ def make_user(name, email, uid):
         return str(row['user_id'])
     print('IOErro: No Rows')
     raise IOError
-
