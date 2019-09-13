@@ -122,16 +122,23 @@ def get_profile(uid):
 @auth_required
 def update_profile(uid):
     response = json.loads(request.get_data())
-    db.update_profile(uid, response)
+    # db.update_profile(uid, response)
     return response, 200
 
 
+# @brief Route for updating user profiles.
 @route_bp.route('/profile/hobbies', methods=['POST'])
 @auth_required
 def update_hobbies(uid):
     response = json.loads(request.get_data())
     db.update_user_hobbies(uid, response)
     return response, 200
+
+
+# @brief Route for retrieving all current hobbies available.
+@route_bp.route('/hobbies', methods=['GET'])
+def get_hobbies():
+    return jsonify(db.get_hobby_list()), 200
 
 
 # @brief Creates a new account for a user if it does not already exist

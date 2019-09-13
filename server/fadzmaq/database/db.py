@@ -223,9 +223,35 @@ def update_user_hobbies(uid, request):
         raise IOError(str(e))
 
 
-# @brief updates the users profile in the db.
-def update_profile(uid, request):
-    
+# @brief Retrieves the full list of hobbies from the db.
+def get_hobby_list():
+    try:
+        rows = get_db().execute(
+            '''
+            SELECT * FROM hobbies;
+            '''
+        )
+
+        hobbies = []
+        for row in rows:
+            hobby = {
+                "id": row['hobby_id'],
+                "name": row["name"],
+            }
+            hobbies.append(hobby)
+
+        hobbies_list = {
+            'hobby_list': hobbies
+        }
+        return hobbies_list
+
+    except Exception as e:
+        raise IOError(str(e))
 
 
-
+# # @brief updates the users profile in the db.
+# def update_profile(uid, request):
+#
+#
+#
+#
