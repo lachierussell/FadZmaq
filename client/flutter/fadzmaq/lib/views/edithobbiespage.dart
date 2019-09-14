@@ -55,7 +55,7 @@ class EditHobby extends StatefulWidget {
 List<FormBuilderFieldOption> function(var x) {
   List<FormBuilderFieldOption> list = [];
   for(var item  in x) {
-    list.add(FormBuilderFieldOption(value: item));
+    list.add(FormBuilderFieldOption(value: item.name));
   }
   return list;
 }
@@ -73,14 +73,16 @@ class _EditHobbyPageState extends State<EditHobby> {
   @override
   Widget build(BuildContext context) {
     var x = ["Surfing", "Summer"];
-    List<FormBuilderFieldOption> y = function(x);
+    // List<FormBuilderFieldOption> y = function(x);
     HobbyData hb = RequestProvider.of<HobbyData>(context);
-    print(hb);
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Choose hobbies to discover"),
-      ),
-      body: Padding(
+    List<FormBuilderFieldOption> y = function(hb.hobbies);
+    // print(hb);
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text("Choose hobbies to discover"),
+    //   ),
+    //   body: 
+     return Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
@@ -98,13 +100,15 @@ class _EditHobbyPageState extends State<EditHobby> {
 
                     FormBuilderCheckboxList(
                       decoration: InputDecoration(
-                          labelText: "Hobbies"),
+                      labelText: "Hobbies"),
                       attribute: "languages",
+
+                      // TODO make this use the hobbies we're looking for
+                      // probably use another getRequest for now, but it should be smoother
+                      // maybe some storage of the hobby list on the app so we're only requesting the user hobbies
                       initialValue: ["Surfing"],
                       leadingInput: true,
-                      options:
-                        y
-                      ,
+                      options: y,
                       onChanged: _onChanged,
                     ),
 
@@ -139,7 +143,7 @@ class _EditHobbyPageState extends State<EditHobby> {
             ],
           ),
         ),
-      ),
+      // ),
     );
   }
 }
