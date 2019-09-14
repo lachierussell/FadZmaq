@@ -94,18 +94,7 @@ class _EditHobbyPageState extends State<EditHobbyPage> {
                   SizedBox(
                     width: 20,
                   ),
-                  Expanded(
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        "Reset",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        _fbKey.currentState.reset();
-                      },
-                    ),
-                  ),
+
                 ],
               ),
             ],

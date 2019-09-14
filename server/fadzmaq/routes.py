@@ -122,6 +122,7 @@ def get_profile(uid):
 @auth_required
 def update_profile(uid):
     response = request.get_data()
+    db.update_profile(request,uid)
     return response, 200
 
 
