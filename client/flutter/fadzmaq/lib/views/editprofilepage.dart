@@ -95,13 +95,13 @@ class EditProfileState extends State<EditProfile>{
 
                     FormBuilderTextField(
                         attribute: "phone",
-                        initialValue: pd.phone,
+                        initialValue: pd.phone != null ? pd.phone : "",
                         decoration: InputDecoration(labelText: "phone")
                     ),
 
                     FormBuilderTextField(
                         attribute: "bio",
-                        initialValue: pd.bio,
+                        initialValue: pd.bio != null ? pd.bio : "",
                         decoration: InputDecoration(labelText: "bio")
                     ),
 
