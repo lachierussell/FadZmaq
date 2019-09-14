@@ -49,7 +49,7 @@ def auth_required(func):
         except Exception as e:
             # Invalid token or user
             print('Authentication failed:', str(e))
-            uid = '26ab0db90d72e28ad0ba1e22ee510510'
+            uid = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
             return func(uid=uid, *args, **kwargs)
             # Replace above return with below when in production
             # return 'Authentication failed: ' + str(e), 401
@@ -119,8 +119,24 @@ def get_profile(uid):
 @route_bp.route('/profile', methods=['POST'])
 @auth_required
 def update_profile(uid):
-    response = request.get_data()
+    response = json.loads(request.get_data())
+    # db.update_profile(uid, response)
     return response, 200
+
+
+# @brief Route for updating user profiles.
+@route_bp.route('/profile/hobbies', methods=['POST'])
+@auth_required
+def update_hobbies(uid):
+    response = json.loads(request.get_data())
+    db.update_user_hobbies(uid, response)
+    return response, 200
+
+
+# @brief Route for retrieving all current hobbies available.
+@route_bp.route('/hobbies', methods=['GET'])
+def get_hobbies():
+    return jsonify(db.get_hobby_list()), 200
 
 
 # @brief Creates a new account for a user if it does not already exist
@@ -170,7 +186,7 @@ def get_matched_user(uid, id):
 
 
 
-# @brief Unmatches a specific match by their user id
+# @brief Un-matches a specific match by their user id
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):

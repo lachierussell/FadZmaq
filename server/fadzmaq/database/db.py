@@ -241,3 +241,63 @@ def get_match_by_id(uid, id):
         }
         return json.dumps(profile)
     raise ValueError
+# @brief Updates the users hobbies
+# Deletes current hobbies and updates with the new hobbies.
+def update_user_hobbies(uid, request):
+    try:
+        get_db().execute(
+            '''
+            DELETE FROM user_hobbies
+            WHERE user_id = '{}';
+            '''.format(uid)
+        )
+        hobbies = request["hobbies"]
+        for category in hobbies:
+            print(category)
+            for offer in category:
+                print(offer)
+                for hobby in category[offer]:
+                    print(hobby['id'])
+                    get_db().execute(
+                        '''
+                        INSERT INTO user_hobbies (user_id, hobby_id, swap)
+                        VALUES ('{}', {}, '{}');
+                        '''.format(uid, hobby['id'], offer)
+                    )
+
+    except Exception as e:
+        raise IOError(str(e))
+
+
+# @brief Retrieves the full list of hobbies from the db.
+def get_hobby_list():
+    try:
+        rows = get_db().execute(
+            '''
+            SELECT * FROM hobbies;
+            '''
+        )
+
+        hobbies = []
+        for row in rows:
+            hobby = {
+                "id": row['hobby_id'],
+                "name": row["name"],
+            }
+            hobbies.append(hobby)
+
+        hobbies_list = {
+            'hobby_list': hobbies
+        }
+        return hobbies_list
+
+    except Exception as e:
+        raise IOError(str(e))
+
+
+# # @brief updates the users profile in the db.
+# def update_profile(uid, request):
+#
+#
+#
+#
