@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io';
 import 'package:fadzmaq/models/models.dart';
 
 /// Takes a type [T], [url] and [builder] and creates an [RequestProvider<T>] of that type
@@ -40,6 +41,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   void didChangeDependencies() {
     String server = AppConfig.of(context).server + widget.url;
     _future = fetchResponse(server);
+
     super.didChangeDependencies();
   }
 
@@ -49,9 +51,8 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if (snapshot.data.toString() == "no_server") {
-            String server = AppConfig.of(context).server + widget.url;
-            return Text("no server: " + server);
+          if(snapshot.data is Exception){
+            return Center(child: Text(snapshot.data.toString()));
           }
           if (snapshot.data.statusCode == 200) {
             return RequestProvider<T>(
@@ -76,7 +77,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
         // By default, show a loading spinner.
         // We can pipe something else in here later if we wish,
         // or make our own default
-        return CircularProgressIndicator();
+        return Center(child: CircularProgressIndicator());
       },
     );
   }
@@ -104,34 +105,14 @@ Future fetchResponse(String url) async {
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-  http.Response response;
   try {
-    response = await http.get(
+    return await http.get(
       url,
       headers: {"Authorization": result.token},
-    ).timeout(const Duration(seconds: 10));
-  } on TimeoutException catch (_) {
-    // TODO this is very hacky - but futures returning null are just nulls
-    return "no_server";
+    );
+  } catch (e) {
+    return e;
   }
-
-  return response;
-
-  // if (response.statusCode == 200) {
-  //   // If the call to the server was successful, parse the JSON.
-  //   // TODO remove this, temp for testing
-  //   await sleep1();
-
-  //   return response;
-  // } else if (response.statusCode == 200){
-
-  // } else {
-  //   // If that call was not successful, throw an error.
-  //   // TODO we need to treat this internally
-  //   throw Exception('Failed to load post');
-  // }
-
-  // TODO time outs and other errors
 }
 
 // /// temp for testing
