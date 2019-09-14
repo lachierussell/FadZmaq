@@ -57,8 +57,8 @@ def build_test_db(api):
     os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
     os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
 
-    # execute_sql(engine, "fadzmaq/database/init.sql")
-    # execute_sql(engine, "tests/create_test_user.sql")
+    execute_sql(engine, "fadzmaq/database/init.sql")
+    execute_sql(engine, "tests/create_test_user.sql")
     
 
 def teardown_test_db(api):
