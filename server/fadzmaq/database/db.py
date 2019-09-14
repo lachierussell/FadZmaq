@@ -67,7 +67,7 @@ def retrieve_profile(subject):
         # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': hash_id(row['user_id']),
+                'user_id': row['user_id'],
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
@@ -158,7 +158,7 @@ def get_matches(subject):
 
     for row in rows:
         matches.append({
-            'id': hash_id(row['user_id']),
+            'id': row['user_id'],
             'name': row['nickname'],
             # 'photo': 'DOES NOT EXIST'
             'photo': row['photo']
@@ -222,7 +222,7 @@ def get_match_by_id(uid, id):
     for row in rows:
         profile = {
             'profile': {
-                'user_id': hash_id(row['user_id']),
+                'user_id': row['user_id'],
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'photo_location': row['photo'],

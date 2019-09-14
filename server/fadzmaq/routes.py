@@ -180,10 +180,9 @@ def get_matches(uid):
 def get_matched_user(uid, id):
     try:
         response = db.get_match_by_id(uid, id)
-        return jsonify(response), 200
+        return response, 200
     except ValueError as e:
         return 'Failed: ' + str(e), 400
-
 
 
 # @brief Un-matches a specific match by their user id
