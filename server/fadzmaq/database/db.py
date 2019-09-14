@@ -140,18 +140,18 @@ def get_matches(subject):
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
-            WHERE user_a = '26ab0db90d72e28ad0ba1e22ee510510'
-               OR user_b = '26ab0db90d72e28ad0ba1e22ee510510'
+            WHERE user_a = '{}'
+               OR user_b = '{}'
         )
-        AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510'
+        AND profile.user_id != '{}'
         OR profile.user_id IN (
             SELECT user_b
             FROM matches
-            WHERE user_a = '26ab0db90d72e28ad0ba1e22ee510510'
-               OR user_b = '26ab0db90d72e28ad0ba1e22ee510510'
+            WHERE user_a = '{}'
+               OR user_b = '{}'
         )
-        AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510';
-        '''.format(subject, subject, subject, subject, subject)
+        AND profile.user_id != '{}';
+        '''.format(subject, subject, subject, subject, subject, subject)
     )
 
     matches = []
