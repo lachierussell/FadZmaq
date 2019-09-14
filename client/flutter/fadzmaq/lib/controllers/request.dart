@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -44,17 +45,30 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<http.Response>(
+    return FutureBuilder(
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return RequestProvider<T>(
-            // the fromJson method takes T but checks it against specified types
-            // (dart cannot initialise generic types so we can't use an extended class)
-            // this converts json data into our model class
-            data: fromJson<T>(json.decode(snapshot.data.body)),
-            child: widget.builder(context),
-          );
+          if (snapshot.data.toString() == "no_server") {
+            String server = AppConfig.of(context).server + widget.url;
+            return Text("no server: " + server);
+          }
+          if (snapshot.data.statusCode == 200) {
+            return RequestProvider<T>(
+              // the fromJson method takes T but checks it against specified types
+              // (dart cannot initialise generic types so we can't use an extended class)
+              // this converts json data into our model class
+              data: fromJson<T>(json.decode(snapshot.data.body)),
+              child: widget.builder(context),
+            );
+          } else if (snapshot.data.statusCode == 401) {
+            // not sure if this is the best way to do this but it works for now - Jordan
+            return LoginScreen();
+          } else {
+            // TODO make this handle better
+            return Text("Error with HTTP request: " +
+                snapshot.data.statusCode.toString());
+          }
         } else if (snapshot.hasError) {
           return Text("${snapshot.error}");
         }
@@ -71,14 +85,6 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 /// Only cares about the reponse code
 /// This is used for checking whether a user has logged in
 Future<int> fetchResponseCode(String url) async {
-  http.Response response = await fetchResponse(url);
-  return response.statusCode;
-}
-
-/// returns a [http.Response] for a given [url]
-/// async operation which includes authorisation headers for
-/// the current user
-Future<http.Response> fetchResponse(String url) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
@@ -87,26 +93,51 @@ Future<http.Response> fetchResponse(String url) async {
     url,
     headers: {"Authorization": result.token},
   );
+  return response.statusCode;
+}
 
-  if (response.statusCode == 200) {
-    // If the call to the server was successful, parse the JSON.
-    // TODO remove this, temp for testing
-    await sleep1();
+/// returns a [http.Response] for a given [url]
+/// async operation which includes authorisation headers for
+/// the current user
+Future fetchResponse(String url) async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseUser user = await auth.currentUser();
+  IdTokenResult result = await user.getIdToken();
 
-    return response;
-  } else {
-    // If that call was not successful, throw an error.
-    // TODO we need to treat this internally
-    throw Exception('Failed to load post');
+  http.Response response;
+  try {
+    response = await http.get(
+      url,
+      headers: {"Authorization": result.token},
+    ).timeout(const Duration(seconds: 10));
+  } on TimeoutException catch (_) {
+    // TODO this is very hacky - but futures returning null are just nulls
+    return "no_server";
   }
+
+  return response;
+
+  // if (response.statusCode == 200) {
+  //   // If the call to the server was successful, parse the JSON.
+  //   // TODO remove this, temp for testing
+  //   await sleep1();
+
+  //   return response;
+  // } else if (response.statusCode == 200){
+
+  // } else {
+  //   // If that call was not successful, throw an error.
+  //   // TODO we need to treat this internally
+  //   throw Exception('Failed to load post');
+  // }
 
   // TODO time outs and other errors
 }
 
-/// temp for testing
-Future sleep1() {
-  return new Future.delayed(const Duration(seconds: 2), () => "2");
-}
+// /// temp for testing
+// Future sleep1() {
+//   return new Future.delayed(const Duration(seconds: 2), () => "2");
+// }
 
 /// the inherited widget that encapsulates a model [T]
 /// a model will represent the JSON sent by the server API
@@ -124,8 +155,7 @@ class RequestProvider<T> extends InheritedWidget {
   // a bit more complex than normal because of the way dart handles generics
   static T of<T>(BuildContext context) {
     final type = _typeOf<RequestProvider<T>>();
-    return (context.inheritFromWidgetOfExactType(type) as RequestProvider)
-        .data;
+    return (context.inheritFromWidgetOfExactType(type) as RequestProvider).data;
   }
 
   static _typeOf<T>() => T;

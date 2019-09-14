@@ -1,9 +1,10 @@
 class ProfileData {
   final String userId;
   final String name;
-  final int age;
+  final String photo;
+  // final int age;
 
-  ProfileData({this.userId, this.name, this.age});
+  ProfileData({this.userId, this.name, this.photo});
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
     var profile = json['profile'];
@@ -11,7 +12,8 @@ class ProfileData {
     return ProfileData(
       userId: profile['user_id'],
       name: profile['name'],
-      age: int.parse(profile['age']),
+      photo: profile['photo_location'],
+      // age: int.parse(profile['age']),
     );
   }
 }

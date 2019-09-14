@@ -22,7 +22,7 @@ def init_app(app):
 
 
 def get_engine():
-    if'db_engine' not in g:
+    if 'db_engine' not in g:
         g.db_engine = create_engine(current_app.config['DATABASE_URI'])
         # g.db_engine = create_engine(db_conf.DATABASE_URI)
     return g.db_engine
@@ -71,7 +71,7 @@ def retrieve_profile(subject):
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
-                'photo_location': 'DOES NOT EXIST',
+                'photo_location': row['photo'],
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
@@ -136,18 +136,21 @@ def get_hobbies(subject):
 def get_matches(subject):
     rows = get_db().execute(
         '''
-        SELECT profile.nickname, profile.user_id FROM profile
+        SELECT profile.nickname, profile.user_id, profile.photo FROM profile
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
-            WHERE user_a = '{}'
-               OR user_b = '{}'
-        ) OR profile.user_id IN (
+            WHERE user_a = '26ab0db90d72e28ad0ba1e22ee510510'
+               OR user_b = '26ab0db90d72e28ad0ba1e22ee510510'
+        )
+        AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510'
+        OR profile.user_id IN (
             SELECT user_b
             FROM matches
-            WHERE user_a = '{}'
-               OR user_b = '{}'
-        ) AND profile.user_id != '{}';
+            WHERE user_a = '26ab0db90d72e28ad0ba1e22ee510510'
+               OR user_b = '26ab0db90d72e28ad0ba1e22ee510510'
+        )
+        AND profile.user_id != '26ab0db90d72e28ad0ba1e22ee510510';
         '''.format(subject, subject, subject, subject, subject)
     )
 
@@ -157,7 +160,8 @@ def get_matches(subject):
         matches.append({
             'id': hash_id(row['user_id']),
             'name': row['nickname'],
-            'photo': 'DOES NOT EXIST'
+            # 'photo': 'DOES NOT EXIST'
+            'photo': row['photo']
         })
 
     return {
@@ -191,7 +195,9 @@ def make_user(name, email, uid):
         '''.format(name, email, uid)
     )
     for row in rows:
+        print(str(row['user_id']))
         return str(row['user_id'])
+    print('IOErro: No Rows')
     raise IOError
 
 
