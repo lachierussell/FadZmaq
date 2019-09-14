@@ -20,7 +20,10 @@ DROP TABLE IF EXISTS hobbies;
 DROP TABLE IF EXISTS profile;
 DROP TABLE IF EXISTS primary_user;
 DROP TYPE IF EXISTS HOBBY_SWAP;
-DROP FUNCTION IF EXISTS match;
+
+-- TODO reinstate this in sprint 3
+-- DROP FUNCTION IF EXISTS match;
+
 DROP TRIGGER IF EXISTS make_match ON votes;
 
 
@@ -114,32 +117,34 @@ VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
 INSERT INTO matches (user_a, user_b)
 VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '48a24b70a0b376535542b996af517398');
 
+-- Exluding this for now so we can have testing up for this sprint
 
-CREATE OR REPLACE FUNCTION match()
-    RETURNS TRIGGER
-    LANGUAGE plpgsql
-    AS
-$make_match$
-BEGIN
-    IF (
-        SELECT v.user_from
-        FROM votes v
-        WHERE NEW.vote
-          AND v.vote
-          AND v.user_to = new.user_from
-          AND new.user_to = v.user_from
-    ) THEN
-        INSERT INTO matches (user_a, user_b, time, rating)
-          VALUES (NEW.user_from, NEW.user_to, now(), null);
-        DELETE FROM votes WHERE user_to = NEW.user_from;
-        RETURN NULL;
-    END IF;
-    RETURN NEW;
-END;
-$make_match$;
+-- TODO reinstate this in sprint 3
+-- CREATE OR REPLACE FUNCTION match()
+--     RETURNS TRIGGER
+--     LANGUAGE plpgsql
+--     AS
+-- $make_match$
+-- BEGIN
+--     IF (
+--         SELECT v.user_from
+--         FROM votes v
+--         WHERE NEW.vote
+--           AND v.vote
+--           AND v.user_to = new.user_from
+--           AND new.user_to = v.user_from
+--     ) THEN
+--         INSERT INTO matches (user_a, user_b, time, rating)
+--           VALUES (NEW.user_from, NEW.user_to, now(), null);
+--         DELETE FROM votes WHERE user_to = NEW.user_from;
+--         RETURN NULL;
+--     END IF;
+--     RETURN NEW;
+-- END;
+-- $make_match$;
 
-CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
-    FOR EACH ROW EXECUTE FUNCTION match();
+-- CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
+--     FOR EACH ROW EXECUTE FUNCTION match();
 
 
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510');
