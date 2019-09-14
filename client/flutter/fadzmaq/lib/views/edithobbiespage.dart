@@ -10,12 +10,20 @@ import 'package:flutter/cupertino.dart';
 
 
 
-class EditProfilePage extends StatefulWidget {
+class EditHobbyPage extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => new _EditProfilePageState();
+  State<StatefulWidget> createState() => new _EditHobbyPageState();
 }
 
-class _EditProfilePageState extends State<EditProfilePage> {
+List<FormBuilderFieldOption> function(var x) {
+  List<FormBuilderFieldOption> list = [];
+  for(var item  in x) {
+    list.add(FormBuilderFieldOption(value: item));
+  }
+  return list;
+}
+
+class _EditHobbyPageState extends State<EditHobbyPage> {
   var data;
   bool autoValidate = true;
   bool readOnly = false;
@@ -28,19 +36,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    String list = '{"nickname":"Thiren", "bio":"", "dob":"13/05/1999", "gender":"Male", "email":"22257963@student.uwa.edu.au", "phone":"0449570630"}';
-    var jsoncode = json.decode(list);
+    var x = ["Surfing", "Swimming"];
     return Scaffold(
       appBar: AppBar(
-        title: Text("Edit Profile"),
-          actions: <Widget>[
-            IconButton(
-            icon: Icon(CupertinoIcons.left_chevron),
-              onPressed: () {
-              }
-            ),
-          ]
-        ),
+        title: Text("Choose hobbies to discover"),
+      ),
       body: Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -56,55 +56,17 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
-                    FormBuilderDateTimePicker(
-                      attribute: "date",
-                      initialValue: DateTime.parse("1999-05-13 00:00:00.000") ,
-                      inputType: InputType.date,
-                      format: DateFormat("dd-MM-yyyy"),
-                      decoration:
-                      InputDecoration(labelText: "Date of Birth"),
-                    ),
-                    FormBuilderDropdown(
-                      attribute: "gender",
+
+                    FormBuilderCheckboxList(
                       decoration: InputDecoration(
-                        labelText: "Gender",
-                        /*border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                        ),*/
-                      ),
-                      // readOnly: true,
-                      initialValue: jsoncode['gender'],
-                      hint: Text('Select Gender'),
-                      validators: [FormBuilderValidators.required()],
-                      items: ['Male', 'Female', 'Other']
-                          .map((gender) => DropdownMenuItem(
-                        value: gender,
-                        child: Text('$gender'),
-                      ))
-                          .toList(),
-                    ),
-                    FormBuilderTextField(
-                        attribute: "nickname",
-                        initialValue: jsoncode['nickname'],
-                        decoration: InputDecoration(labelText: "Nickname")
-                    ),
-
-                    FormBuilderTextField(
-                        attribute: "email",
-                        initialValue: jsoncode['email'],
-                        decoration: InputDecoration(labelText: "email")
-                    ),
-
-                    FormBuilderTextField(
-                        attribute: "phone",
-                        initialValue: jsoncode['phone'],
-                        decoration: InputDecoration(labelText: "phone")
-                    ),
-
-                    FormBuilderTextField(
-                        attribute: "bio",
-                        initialValue: jsoncode['bio'],
-                        decoration: InputDecoration(labelText: "bio")
+                          labelText: "Hobbies"),
+                      attribute: "languages",
+                      initialValue: ["Surfing"],
+                      leadingInput: true,
+                      options:
+                      function(x)
+                      ,
+                      onChanged: _onChanged,
                     ),
 
                   ],

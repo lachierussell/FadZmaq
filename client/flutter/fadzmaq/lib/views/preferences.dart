@@ -2,6 +2,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/models.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
+import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/matches.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,7 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MatchesPage()),
+                              builder: (context) => EditHobbyPage()),
                         );
                       },
                       child: Text("Choose hobbies that you want to discover"),
@@ -170,7 +171,7 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => MatchesPage()),
+                              builder: (context) => EditHobbyPage()),
                         );
                       },
                       child: Text("Choose hobbies that you want to share"),
