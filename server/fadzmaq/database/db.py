@@ -74,7 +74,7 @@ def retrieve_profile(subject):
                 'photo_location': row['photo'],
                 'phone': row['phone'],
                 'email': row['email'],
-                'name': row['bio']
+                'bio': row['bio']
             }
         }
         return json.dumps(profile)
