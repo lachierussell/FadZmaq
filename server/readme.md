@@ -1,5 +1,5 @@
 ## Setup
-.To run the server you will need postgres installed
+To run the server you will need postgres installed
 - Build the databse and test database from the scripts, you will need to enter your postgres password.
 This will create a fadzmaq and fadzmaq_test database in postgres
 - Tests should work correctly at this stage, but to run the server proper you will need to enter the fadzmaq database 

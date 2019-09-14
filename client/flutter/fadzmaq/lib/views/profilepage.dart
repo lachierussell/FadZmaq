@@ -41,16 +41,49 @@ class ProfilePage extends StatelessWidget {
 
 }
 
+// todo make this a proper reuseable widget
+class ProfilePic extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    ProfileData profile = RequestProvider.of<ProfileData>(context);
+    // return Image.network(
+    //   profile.photo,
+    //   height: 200,
+    //   width: 200,
+    //   fit: BoxFit.contain,
+    // );
+
+    if (profile.photo != null) {
+      return FadeInImage.assetNetwork(
+        image: profile.photo,
+        placeholder: 'assets/images/placeholder-person.jpg',
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/placeholder-person.jpg',
+        fit: BoxFit.cover,
+      );
+    }
+  }
+}
+
 
 class ProfilePageState extends StatelessWidget {
-  String _status = 'no-action';
+  // String _status = 'no-action';
 
   @override
   Widget build(BuildContext context){
     ProfileData pd = RequestProvider.of<ProfileData>(context);
     final Color color1 = Color(0xffCCFC6D);
     final Color color2 = Color(0xff2ACDDF);
-    final String image = 'assets/images/glenn.jpg';
+
+    // putting these up here in case of nulls
+    // right now just putting dash instead of the value
+    final String profile_age = pd.age != null ? pd.age : "-";
+    final String profile_name = pd.age !=null ? pd.name : "-";
+
+    // final String image = 'assets/images/glenn.jpg';
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -79,14 +112,15 @@ class ProfilePageState extends StatelessWidget {
                         margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0, bottom: 0.0),
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(30.0),
-                            child: Image.asset(image,fit: BoxFit.cover,
-                            )),
+                            // child: Image.asset(image,fit: BoxFit.cover,),
+                            child: ProfilePic(),
+                        ),
                       ),
                     ],
                   ),
                 ),
                 //SizedBox(height: 15.0),
-                Text(pd.name + " - " + pd.age, style: TextStyle(
+                Text(profile_name + " - " + profile_age, style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16.0,
                     height: 10.0
