@@ -121,9 +121,8 @@ def get_profile(uid):
 @route_bp.route('/profile', methods=['POST'])
 @auth_required
 def update_profile(uid):
-
-    response = request.get_data()
-    db.update_profile(request,uid)
+    response = json.loads(request.get_data())
+    # db.update_profile(uid, response)
     return response, 200
 
 

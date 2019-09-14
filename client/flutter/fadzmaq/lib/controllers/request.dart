@@ -97,22 +97,6 @@ Future<int> fetchResponseCode(String url) async {
   return response.statusCode;
 }
 
-Future post(String url, var Json) async {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseUser user = await auth.currentUser();
-  IdTokenResult result = await user.getIdToken();
-
-
-
-    http.post(
-      url,
-      headers: {"Authorization": result.token},
-      body: Json
-    );
-
-
-
-}
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user
