@@ -121,8 +121,24 @@ def get_profile(uid):
 @route_bp.route('/profile', methods=['POST'])
 @auth_required
 def update_profile(uid):
-    response = request.get_data()
+    response = json.loads(request.get_data())
+    # db.update_profile(uid, response)
     return response, 200
+
+
+# @brief Route for updating user profiles.
+@route_bp.route('/profile/hobbies', methods=['POST'])
+@auth_required
+def update_hobbies(uid):
+    response = json.loads(request.get_data())
+    db.update_user_hobbies(uid, response)
+    return response, 200
+
+
+# @brief Route for retrieving all current hobbies available.
+@route_bp.route('/hobbies', methods=['GET'])
+def get_hobbies():
+    return jsonify(db.get_hobby_list()), 200
 
 
 # @brief Creates a new account for a user if it does not already exist
@@ -166,10 +182,14 @@ def get_matches(uid):
 @route_bp.route('/matches/<string:id>', methods=['GET'])
 @auth_required
 def get_matched_user(uid, id):
-    return jsonify(match_data.my_match), 200
+    try:
+        response = db.get_match_by_id(uid, id)
+        return response, 200
+    except ValueError as e:
+        return 'Failed: ' + str(e), 400
 
 
-# @brief Unmatches a specific match by their user id
+# @brief Un-matches a specific match by their user id
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):

@@ -67,7 +67,7 @@ def retrieve_profile(subject):
         # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': hash_id(row['user_id']),
+                'user_id': row['user_id'],
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
@@ -158,7 +158,7 @@ def get_matches(subject):
 
     for row in rows:
         matches.append({
-            'id': hash_id(row['user_id']),
+            'id': row['user_id'],
             'name': row['nickname'],
             # 'photo': 'DOES NOT EXIST'
             'photo': row['photo']
@@ -199,3 +199,108 @@ def make_user(name, email, uid):
         return str(row['user_id'])
     print('IOErro: No Rows')
     raise IOError
+
+
+# @brief Gets a match by id
+def get_match_by_id(uid, id):
+    print(uid, id)
+    rows = get_db().execute(
+        '''
+        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        FROM profile
+            WHERE user_id = '{}'
+            AND user_id IN (
+                SELECT user_id FROM matches
+                WHERE user_a = '{}'
+                        AND user_b = '{}'
+                    OR user_b = '{}'
+                        AND user_a = '{}'
+        );
+        '''.format(id, uid, id, uid, id)
+    )
+
+    for row in rows:
+        profile = {
+            'profile': {
+                'user_id': row['user_id'],
+                'name': row['nickname'],
+                'age': str(row['age']),
+                'photo_location': row['photo'],
+                'contact_details': {
+                    'phone': row['phone'],
+                    'email': row['email']
+                },
+                'profile_fields': [
+                    {
+                        'id': 1,
+                        'name': 'About me',
+                        'display_value': row['bio']
+                    }
+                ],
+                'hobbies': get_hobbies(id)
+            }
+        }
+        return json.dumps(profile)
+    raise ValueError("Did not find row")
+
+
+# @brief Updates the users hobbies
+# Deletes current hobbies and updates with the new hobbies.
+def update_user_hobbies(uid, request):
+    try:
+        get_db().execute(
+            '''
+            DELETE FROM user_hobbies
+            WHERE user_id = '{}';
+            '''.format(uid)
+        )
+        hobbies = request["hobbies"]
+        for category in hobbies:
+            print(category)
+            for offer in category:
+                print(offer)
+                for hobby in category[offer]:
+                    print(hobby['id'])
+                    get_db().execute(
+                        '''
+                        INSERT INTO user_hobbies (user_id, hobby_id, swap)
+                        VALUES ('{}', {}, '{}');
+                        '''.format(uid, hobby['id'], offer)
+                    )
+
+    except Exception as e:
+        raise IOError(str(e))
+
+
+# @brief Retrieves the full list of hobbies from the db.
+def get_hobby_list():
+    try:
+        rows = get_db().execute(
+            '''
+            SELECT * FROM hobbies;
+            '''
+        )
+
+        hobbies = []
+        for row in rows:
+            hobby = {
+                "id": row['hobby_id'],
+                "name": row["name"],
+            }
+            hobbies.append(hobby)
+
+        hobbies_list = {
+            'hobby_list': hobbies
+        }
+        return hobbies_list
+
+    except Exception as e:
+        raise IOError(str(e))
+
+
+# # @brief updates the users profile in the db.
+# def update_profile(uid, request):
+#
+#
+#
+#
