@@ -41,13 +41,23 @@ class ProfilePic extends StatelessWidget {
     //   width: 200,
     //   fit: BoxFit.contain,
     // );
-    return FadeInImage.assetNetwork(
-      image: profile.photo,
-      placeholder: 'assets/images/placeholder-person.jpg',
-      height: 200,
-      width: 200,
-      fit: BoxFit.contain,
-    );
+
+    if (profile.photo != null) {
+      return FadeInImage.assetNetwork(
+        image: profile.photo,
+        placeholder: 'assets/images/placeholder-person.jpg',
+        height: 200,
+        width: 200,
+        fit: BoxFit.contain,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/placeholder-person.jpg',
+        height: 200,
+        width: 200,
+        fit: BoxFit.contain,
+      );
+    }
   }
 }
 
