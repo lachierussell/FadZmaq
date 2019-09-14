@@ -89,7 +89,7 @@ def verify_user(uid):
 @route_bp.route('/user/recs', methods=['GET'])
 @auth_required
 def recommendations(uid):
-    print(uid)
+    print("next sprint! uid {}".format(uid))
     return jsonify(recs_data.my_recs), 200
 
 
@@ -97,15 +97,13 @@ def recommendations(uid):
 @route_bp.route('/user/<string:id>', methods=['GET'])
 @auth_required
 def get_user_by_id(uid, id):
-    print(uid)
-    print(id)
+    print("next sprint! uid {}, id {}".format(uid, id))
     return jsonify(recs_data.my_candiate), 200
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # PROFILE
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-
 
 # @brief Retrieves the current users profile
 @route_bp.route('/profile', methods=['GET'])
@@ -121,9 +119,25 @@ def get_profile(uid):
 @route_bp.route('/profile', methods=['POST'])
 @auth_required
 def update_profile(uid):
+
     response = request.get_data()
     db.update_profile(request,uid)
     return response, 200
+
+
+# @brief Route for updating user profiles.
+@route_bp.route('/profile/hobbies', methods=['POST'])
+@auth_required
+def update_hobbies(uid):
+    response = json.loads(request.get_data())
+    db.update_user_hobbies(uid, response)
+    return response, 200
+
+
+# @brief Route for retrieving all current hobbies available.
+@route_bp.route('/hobbies', methods=['GET'])
+def get_hobbies():
+    return jsonify(db.get_hobby_list()), 200
 
 
 # @brief Creates a new account for a user if it does not already exist
@@ -133,15 +147,13 @@ def update_profile(uid):
 @route_bp.route('/account', methods=['POST'])
 def create_account():
     print(request.get_data())
-    data = json.loads(request.get_data())
     try:
-
+        data = json.loads(request.get_data())
         user = data["new_user"]
         uid = verify_token()
         user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
     except Exception as e:
-        print(json.dumps(data, indent=4))
         print('Account creation failed ' + str(e))
         return 'Account creation failed ' + str(e), 500
 
@@ -167,10 +179,14 @@ def get_matches(uid):
 @route_bp.route('/matches/<string:id>', methods=['GET'])
 @auth_required
 def get_matched_user(uid, id):
-    return jsonify(match_data.my_match), 200
+    try:
+        response = db.get_match_by_id(uid, id)
+        return response, 200
+    except ValueError as e:
+        return 'Failed: ' + str(e), 400
 
 
-# @brief Unmatches a specific match by their user id
+# @brief Un-matches a specific match by their user id
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):
