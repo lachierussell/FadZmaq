@@ -85,7 +85,7 @@ INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Boxing champion', 'Judy', 'judy@email.com', '3/10/1980', '0404239188', '48a24b70a0b376535542b996af517398',
  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg/800px-Jeffrey_Wright_by_Gage_Skidmore_3.jpg');
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
-VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/14/1980', '0415239188', '1dcca23355272056f04fe8bf20edfce0',
+VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '9/15/1980', '0415239188', '1dcca23355272056f04fe8bf20edfce0',
  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg');
 
 INSERT INTO hobbies (name) VALUES ('Boxing');

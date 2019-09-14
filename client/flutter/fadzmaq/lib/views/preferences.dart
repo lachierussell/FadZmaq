@@ -150,6 +150,32 @@ class UserPreferencesState extends State {
                       child: Text("View Matches"),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MatchesPage()),
+                        );
+                      },
+                      child: Text("Choose hobbies that you want to discover"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MatchesPage()),
+                        );
+                      },
+                      child: Text("Choose hobbies that you want to share"),
+                    ),
+                  ),
                   Column(
                     children: <Widget>[
                       Text("Distance: $_roundDist"),
