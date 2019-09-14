@@ -89,7 +89,7 @@ def verify_user(uid):
 @route_bp.route('/user/recs', methods=['GET'])
 @auth_required
 def recommendations(uid):
-    print("next sprint! uid {}".format(uid))
+    print(uid)
     return jsonify(recs_data.my_recs), 200
 
 
@@ -97,13 +97,15 @@ def recommendations(uid):
 @route_bp.route('/user/<string:id>', methods=['GET'])
 @auth_required
 def get_user_by_id(uid, id):
-    print("next sprint! uid {}, id {}".format(uid, id))
+    print(uid)
+    print(id)
     return jsonify(recs_data.my_candiate), 200
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # PROFILE
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
 
 # @brief Retrieves the current users profile
 @route_bp.route('/profile', methods=['GET'])
@@ -147,13 +149,15 @@ def get_hobbies():
 @route_bp.route('/account', methods=['POST'])
 def create_account():
     print(request.get_data())
+    data = json.loads(request.get_data())
     try:
-        data = json.loads(request.get_data())
+
         user = data["new_user"]
         uid = verify_token()
         user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
     except Exception as e:
+        print(json.dumps(data, indent=4))
         print('Account creation failed ' + str(e))
         return 'Account creation failed ' + str(e), 500
 

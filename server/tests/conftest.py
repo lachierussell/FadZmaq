@@ -54,8 +54,8 @@ def build_test_db(api):
     #os.system('PGPASSWORD=test_admin_pass psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
     #os.system('PGPASSWORD=test_admin_pass psql psql -q -U test_fadzmaq_admin -d fadzmaq_test -f tests/create_test_user.sql')
 
-    # os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
-    # os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
+    #os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
+    #os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
 
     execute_sql(engine, "fadzmaq/database/init.sql")
     execute_sql(engine, "tests/create_test_user.sql")
