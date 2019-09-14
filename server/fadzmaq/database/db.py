@@ -49,6 +49,12 @@ def connect_db():
 def hash_id(id):
     return hashlib.md5(str(id).encode()).hexdigest()
 
+def update_profile(subject, uid):
+    rows = get_db().execute(
+        '''
+		UPDATE profile set nickname = '{}', bio ='{}', email ='{}', phone ='{}' where user_id = '{}'
+        '''.format(subject.values['nickname'], subject.values['bio'], subject.values['email'], subject.values['phone'], uid)
+    )
 
 # Retrieves profile information for the subject.
 # @param    subject     user_id for the database entry
@@ -72,18 +78,9 @@ def retrieve_profile(subject):
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
-                'contact_details': {
-                    'phone': row['phone'],
-                    'email': row['email']
-                },
-                'profile_fields': [
-                    {
-                        'id': 1,
-                        'name': 'About me',
-                        'display_value': row['bio']
-                    }
-                ],
-                'hobbies': get_hobbies(subject)
+                'phone': row['phone'],
+                'email': row['email'],
+                'bio': row['bio']
             }
         }
         return json.dumps(profile)
