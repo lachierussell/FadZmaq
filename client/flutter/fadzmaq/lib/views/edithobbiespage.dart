@@ -33,7 +33,7 @@ class EditHobbyPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Choose hobbies that you want to discover'),
       ),
-      body: GetRequest<HobbyData>(
+      body: GetRequest<HobbyListData>(
         url: "hobbies",
         builder: (context) {
           return new EditHobby();
@@ -70,10 +70,12 @@ class _EditHobbyPageState extends State<EditHobby> {
   GlobalKey<FormFieldState>();
 
   ValueChanged _onChanged = (val) => print(val);
-
   @override
   Widget build(BuildContext context) {
-    var x = ["Surfing", "Swimming"];
+    var x = ["Surfing", "Summer"];
+    List<FormBuilderFieldOption> y = function(x);
+    HobbyData hb = RequestProvider.of<HobbyData>(context);
+    print(hb);
     return Scaffold(
       appBar: AppBar(
         title: Text("Choose hobbies to discover"),
@@ -101,7 +103,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                       initialValue: ["Surfing"],
                       leadingInput: true,
                       options:
-                      function(x)
+                        y
                       ,
                       onChanged: _onChanged,
                     ),

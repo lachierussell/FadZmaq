@@ -1,5 +1,5 @@
 class HobbyData {
-  List<HobbyData> hobbies;
+  List<HobbyListData> hobbies;
 
   HobbyData({this.hobbies});
 
@@ -9,8 +9,8 @@ class HobbyData {
 
 HobbyData _hobbiesFromJson(Map<String, dynamic> json) {
   var hobbiesJson = json['hobby_list'] as List;
-  List<HobbyData> hobbies = hobbiesJson != null
-      ? hobbiesJson.map((i) => HobbyData.fromJson(i)).toList()
+  List<HobbyListData> hobbies = hobbiesJson != null
+      ? hobbiesJson.map((i) => HobbyListData.fromJson(i)).toList()
       : null;
 
   return HobbyData(
