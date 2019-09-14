@@ -72,18 +72,9 @@ def retrieve_profile(subject):
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
-                'contact_details': {
-                    'phone': row['phone'],
-                    'email': row['email']
-                },
-                'profile_fields': [
-                    {
-                        'id': 1,
-                        'name': 'About me',
-                        'display_value': row['bio']
-                    }
-                ],
-                'hobbies': get_hobbies(subject)
+                'phone': row['phone'],
+                'email': row['email'],
+                'name': row['bio']
             }
         }
         return json.dumps(profile)
