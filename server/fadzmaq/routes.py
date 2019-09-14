@@ -49,7 +49,7 @@ def auth_required(func):
         except Exception as e:
             # Invalid token or user
             print('Authentication failed:', str(e))
-            uid = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
+            uid = '26ab0db90d72e28ad0ba1e22ee510510'
             return func(uid=uid, *args, **kwargs)
             # Replace above return with below when in production
             # return 'Authentication failed: ' + str(e), 401
@@ -181,8 +181,8 @@ def get_matched_user(uid, id):
     try:
         response = db.get_match_by_id(uid, id)
         return jsonify(response), 200
-    except ValueError:
-        return 'Failed', 400
+    except ValueError as e:
+        return 'Failed: ' + str(e), 400
 
 
 

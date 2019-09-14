@@ -203,6 +203,7 @@ def make_user(name, email, uid):
 
 # @brief Gets a match by id
 def get_match_by_id(uid, id):
+    print(uid, id)
     rows = get_db().execute(
         '''
         SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
@@ -240,7 +241,9 @@ def get_match_by_id(uid, id):
             }
         }
         return json.dumps(profile)
-    raise ValueError
+    raise ValueError("Did not find row")
+
+
 # @brief Updates the users hobbies
 # Deletes current hobbies and updates with the new hobbies.
 def update_user_hobbies(uid, request):
