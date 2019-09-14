@@ -7,10 +7,47 @@ import 'package:intl/intl.dart';
 import 'package:fadzmaq/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fadzmaq/models/hobbies.dart';
+import 'package:fadzmaq/controllers/request.dart';
+
+class HobbyTempApp extends StatelessWidget {
+  const HobbyTempApp();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const EditHobbyPage(),
+    );
+  }
+}
 
 
 
-class EditHobbyPage extends StatefulWidget {
+
+class EditHobbyPage extends StatelessWidget {
+  const EditHobbyPage({Key key}) : super(key : key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Choose hobbies that you want to discover'),
+      ),
+      body: GetRequest<HobbyData>(
+        url: "hobbies",
+        builder: (context) {
+          return new EditHobby();
+        },
+      ),
+    );
+  }
+}
+
+
+
+class EditHobby extends StatefulWidget {
+  const EditHobby({Key key}) : super(key : key);
+
   @override
   State<StatefulWidget> createState() => new _EditHobbyPageState();
 }
@@ -23,7 +60,7 @@ List<FormBuilderFieldOption> function(var x) {
   return list;
 }
 
-class _EditHobbyPageState extends State<EditHobbyPage> {
+class _EditHobbyPageState extends State<EditHobby> {
   var data;
   bool autoValidate = true;
   bool readOnly = false;
