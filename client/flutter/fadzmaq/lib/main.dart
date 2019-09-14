@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 // entry point to load default config for local testing
 void main() {
   var configuredApp = AppConfig(
+    // this is default for android
     appConfig: ConfigResourceEmulator(),
     child: App(),
   );
