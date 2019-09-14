@@ -67,7 +67,7 @@ def retrieve_profile(subject):
         # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': hash_id(row['user_id']),
+                'user_id': row['user_id'],
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
@@ -158,7 +158,7 @@ def get_matches(subject):
 
     for row in rows:
         matches.append({
-            'id': hash_id(row['user_id']),
+            'id': row['user_id'],
             'name': row['nickname'],
             # 'photo': 'DOES NOT EXIST'
             'photo': row['photo']
@@ -199,6 +199,49 @@ def make_user(name, email, uid):
         return str(row['user_id'])
     print('IOErro: No Rows')
     raise IOError
+
+
+# @brief Gets a match by id
+def get_match_by_id(uid, id):
+    print(uid, id)
+    rows = get_db().execute(
+        '''
+        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        FROM profile
+            WHERE user_id = '{}'
+            AND user_id IN (
+                SELECT user_id FROM matches
+                WHERE user_a = '{}'
+                        AND user_b = '{}'
+                    OR user_b = '{}'
+                        AND user_a = '{}'
+        );
+        '''.format(id, uid, id, uid, id)
+    )
+
+    for row in rows:
+        profile = {
+            'profile': {
+                'user_id': row['user_id'],
+                'name': row['nickname'],
+                'age': str(row['age']),
+                'photo_location': row['photo'],
+                'contact_details': {
+                    'phone': row['phone'],
+                    'email': row['email']
+                },
+                'profile_fields': [
+                    {
+                        'id': 1,
+                        'name': 'About me',
+                        'display_value': row['bio']
+                    }
+                ],
+                'hobbies': get_hobbies(id)
+            }
+        }
+        return json.dumps(profile)
+    raise ValueError("Did not find row")
 
 
 # @brief Updates the users hobbies
