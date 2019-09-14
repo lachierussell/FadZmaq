@@ -19,7 +19,7 @@ HobbyData _hobbiesFromJson(Map<String, dynamic> json) {
 }
 
 class HobbyListData {
-  final String id;
+  final int id;
   final String name;
 
   HobbyListData({this.id, this.name});

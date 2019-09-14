@@ -33,7 +33,7 @@ class EditHobbyPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Choose hobbies that you want to discover'),
       ),
-      body: GetRequest<HobbyListData>(
+      body: GetRequest<HobbyData>(
         url: "hobbies",
         builder: (context) {
           return new EditHobby();
