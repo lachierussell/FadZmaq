@@ -1,54 +1,21 @@
 import 'dart:convert';
-import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/views/preferences.dart';
+
 import 'package:flutter/gestures.dart';
-import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:fadzmaq/main.dart';
 import 'package:flutter/material.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:flutter/cupertino.dart';
 
-class ProfileTempApp extends StatelessWidget {
-  const ProfileTempApp();
 
+
+class EditProfilePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const EditProfilePage(),
-    );
-  }
+  State<StatefulWidget> createState() => new _EditProfilePageState();
 }
 
-class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({Key key}) : super(key : key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Edit Profile'),
-      ),
-      body: GetRequest<ProfileData>(
-        url: "profile",
-        builder: (context) {
-          return new EditProfile();
-        },
-      ),
-    );
-  }
-}
-
-class EditProfile extends StatefulWidget {
-  const EditProfile({Key key}) : super(key : key);
-
-  @override
-  State<StatefulWidget> createState() => new EditProfileState();
-}
-
-class EditProfileState extends State<EditProfile>{
+class _EditProfilePageState extends State<EditProfilePage> {
   var data;
   bool autoValidate = true;
   bool readOnly = false;
@@ -61,9 +28,19 @@ class EditProfileState extends State<EditProfile>{
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    String list = '{"nickname":"Thiren", "bio":"", "dob":"13/05/1999", "gender":"Male", "email":"22257963@student.uwa.edu.au", "phone":"0449570630"}';
+    var jsoncode = json.decode(list);
     return Scaffold(
-
+      appBar: AppBar(
+        title: Text("Edit Profile"),
+          actions: <Widget>[
+            IconButton(
+            icon: Icon(CupertinoIcons.left_chevron),
+              onPressed: () {
+              }
+            ),
+          ]
+        ),
       body: Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -79,29 +56,54 @@ class EditProfileState extends State<EditProfile>{
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
-
-
+                    FormBuilderDateTimePicker(
+                      attribute: "date",
+                      initialValue: DateTime.parse("1999-05-13 00:00:00.000") ,
+                      inputType: InputType.date,
+                      format: DateFormat("dd-MM-yyyy"),
+                      decoration:
+                      InputDecoration(labelText: "Date of Birth"),
+                    ),
+                    FormBuilderDropdown(
+                      attribute: "gender",
+                      decoration: InputDecoration(
+                        labelText: "Gender",
+                        /*border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),*/
+                      ),
+                      // readOnly: true,
+                      initialValue: jsoncode['gender'],
+                      hint: Text('Select Gender'),
+                      validators: [FormBuilderValidators.required()],
+                      items: ['Male', 'Female', 'Other']
+                          .map((gender) => DropdownMenuItem(
+                        value: gender,
+                        child: Text('$gender'),
+                      ))
+                          .toList(),
+                    ),
                     FormBuilderTextField(
                         attribute: "nickname",
-                        initialValue: pd.name,
+                        initialValue: jsoncode['nickname'],
                         decoration: InputDecoration(labelText: "Nickname")
                     ),
 
                     FormBuilderTextField(
                         attribute: "email",
-                        initialValue: pd.email,
+                        initialValue: jsoncode['email'],
                         decoration: InputDecoration(labelText: "email")
                     ),
 
                     FormBuilderTextField(
                         attribute: "phone",
-                        initialValue: pd.phone,
+                        initialValue: jsoncode['phone'],
                         decoration: InputDecoration(labelText: "phone")
                     ),
 
                     FormBuilderTextField(
                         attribute: "bio",
-                        initialValue: pd.bio,
+                        initialValue: jsoncode['bio'],
                         decoration: InputDecoration(labelText: "bio")
                     ),
 
@@ -120,12 +122,6 @@ class EditProfileState extends State<EditProfile>{
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post("http://10.0.2.2:5000/profile",_fbKey.currentState.value );
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserPreferencesPage()),
-                          );
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");
@@ -136,7 +132,18 @@ class EditProfileState extends State<EditProfile>{
                   SizedBox(
                     width: 20,
                   ),
-
+                  Expanded(
+                    child: MaterialButton(
+                      color: Theme.of(context).accentColor,
+                      child: Text(
+                        "Reset",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      onPressed: () {
+                        _fbKey.currentState.reset();
+                      },
+                    ),
+                  ),
                 ],
               ),
             ],
