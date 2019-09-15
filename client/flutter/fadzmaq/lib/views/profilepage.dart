@@ -7,8 +7,6 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -22,6 +20,7 @@ class ProfileTempApp extends StatelessWidget {
 }
 
 class ProfilePage extends StatelessWidget {
+
   final String url;
 
   const ProfilePage({Key key, this.url}) : super(key: key);
@@ -47,14 +46,25 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileData profile = RequestProvider.of<ProfileData>(context);
+    // return Image.network(
+    //   profile.photo,
+    //   height: 200,
+    //   width: 200,
+    //   fit: BoxFit.contain,
+    // );
 
-    return CachedNetworkImage(
-      imageUrl: profile.photo,
-      fit: BoxFit.cover,
-      // placeholder: (context, url) => new CircularProgressIndicator(),
-      errorWidget: (context, url, error) => new Icon(Icons.error),
-      
-    );
+    if (profile.photo != null) {
+      return FadeInImage.assetNetwork(
+        image: profile.photo,
+        placeholder: 'assets/images/placeholder-person.jpg',
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/placeholder-person.jpg',
+        fit: BoxFit.cover,
+      );
+    }
   }
 }
 
@@ -69,7 +79,7 @@ class ProfilePageState extends StatelessWidget {
 
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
-    // final String profileAge = pd.age != null ? pd.age : "-";
+    final String profileAge = pd.age != null ? pd.age : "-";
     final String profileName = pd.age != null ? pd.name : "-";
 
     String hobbiesRaw = "";
@@ -78,7 +88,7 @@ class ProfilePageState extends StatelessWidget {
 
     if (pd.hobbyContainers != null) {
       for (HobbyContainer hc in pd.hobbyContainers) {
-        hobbiesRaw += "--" + hc.container + "--\n";
+        hobbiesRaw += "--" + hc.container +"--\n";
         if (hc.hobbies != null) {
           for (HobbyData h in hc.hobbies) {
             hobbiesRaw += h.name + "\n";
@@ -90,7 +100,7 @@ class ProfilePageState extends StatelessWidget {
     // final String image = 'assets/images/glenn.jpg';
     return Scaffold(
       body: SingleChildScrollView(
-        child: Stack(
+              child: Stack(
           children: <Widget>[
             Container(
               height: 240,
@@ -109,27 +119,24 @@ class ProfilePageState extends StatelessWidget {
                 children: <Widget>[
                   // SizedBox(height: 20.0),
                   // Expanded(
-                  // child: Stack(
-                  // children: <Widget>[
-                  Container(
-                    // height: double.infinity,
-                    margin: const EdgeInsets.only(
-                        left: 40.0, right: 40.0, top: 5.0, bottom: 0.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30.0),
-                      // child: Image.asset(image,fit: BoxFit.cover,),
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: ProfilePic(),
-                      ),
-                    ),
-                  ),
-                  // ],
-                  // ),
+                    // child: Stack(
+                      // children: <Widget>[
+                        Container(
+                          // height: double.infinity,
+                          margin: const EdgeInsets.only(
+                              left: 40.0, right: 40.0, top: 5.0, bottom: 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30.0),
+                            // child: Image.asset(image,fit: BoxFit.cover,),
+                            child: ProfilePic(),
+                          ),
+                        ),
+                      // ],
+                    // ),
                   // ),
                   //SizedBox(height: 15.0),
                   Text(
-                    profileName,
+                    profileName + " - " + profileAge,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16.0,
