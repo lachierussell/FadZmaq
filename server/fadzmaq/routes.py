@@ -158,10 +158,12 @@ def create_account():
         uid = verify_token()
         user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
-    except Exception as e:
-        print(json.dumps(data, indent=4))
+    except ValueError as e:
         print('Account creation failed ' + str(e))
         return 'Account creation failed ' + str(e), 500
+    except Exception as e:
+        print("Authentication failed: " + str(e))
+        return "Authentication failed: " + str(e), 401
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
