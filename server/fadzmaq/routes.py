@@ -131,7 +131,9 @@ def update_profile(uid):
 @route_bp.route('/profile/hobbies', methods=['POST'])
 @auth_required
 def update_hobbies(uid):
+
     response = json.loads(request.get_data())
+    print(response)
     db.update_user_hobbies(uid, response)
     return response, 200
 

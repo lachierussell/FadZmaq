@@ -120,7 +120,7 @@ class EditProfileState extends State<EditProfile>{
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post("http://10.0.2.2:5000/profile",_fbKey.currentState.value );
+                          post("http://10.0.2.2:5000/profile",json.encode(_fbKey.currentState.value ));
                           Navigator.push(
                             context,
                             MaterialPageRoute(
