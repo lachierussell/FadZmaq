@@ -12,7 +12,6 @@
 # @author Jordan Russell        [email]
 
 import hashlib
-import json
 from flask import current_app, g
 from sqlalchemy import create_engine
 
@@ -83,10 +82,6 @@ def retrieve_profile(subject):
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
-<<<<<<< HEAD
-=======
-                'bio': row['bio'],
->>>>>>> cleanup-s
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
