@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/models.dart';
 import 'package:fadzmaq/models/matches.dart';
@@ -44,10 +46,12 @@ class ProfilePic extends StatelessWidget {
     //   fit: BoxFit.contain,
     // );
 
+
     if (profile.photo != null) {
-      return FadeInImage.assetNetwork(
+      return FadeInImage.memoryNetwork(
         image: profile.photo,
-        placeholder: 'assets/images/placeholder-person.jpg',
+        placeholder: Uint8List(512 * 512),
+        fadeOutDuration: Duration(milliseconds: 10),
         height: 200,
         width: 200,
         fit: BoxFit.cover,
@@ -132,7 +136,8 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage(url: "profile")),
+                              builder: (context) =>
+                                  ProfilePage(url: "profile")),
                         );
                       },
                       child: Text("View Profile"),
