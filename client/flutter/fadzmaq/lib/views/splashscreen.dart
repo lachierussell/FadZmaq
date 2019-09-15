@@ -62,7 +62,7 @@ class SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.orangeAccent,
+      color: Theme.of(context).accentColor,
       child: Center(
           child: Icon(
         Icons.swap_horizontal_circle,

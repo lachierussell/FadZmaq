@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
     ConfigResource config = AppConfig.of(context);
 
     return Scaffold(
-        backgroundColor: Colors.orangeAccent,
+        // backgroundColor: Theme.of(context).accentColor,
         // appBar: AppBar(
         //   title: Text("Login"),
         // ),
