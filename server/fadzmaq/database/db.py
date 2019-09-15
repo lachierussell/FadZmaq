@@ -270,11 +270,8 @@ def update_user_hobbies(uid, request):
                     VALUES ('{}', {}, '{}');
                     '''.format(uid, hobby['id'], category['container'])
                 )
-    except Exception as e:
-
-
-
-
+     except Exception as e:
+        raise IOError(str(e))
 # @brief Retrieves the full list of hobbies from the db.
 def get_hobby_list():
     try:

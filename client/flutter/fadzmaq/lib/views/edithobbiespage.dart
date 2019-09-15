@@ -17,15 +17,17 @@ class HobbyTempApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const EditHobbyPage(),
+      home: const EditHobbyPage2(),
     );
   }
 }
 
 Map<String, int> hobbies;
+bool finalIsShare;
 
 class EditHobbyPage2 extends StatelessWidget {
-  const EditHobbyPage2({Key key}) : super(key : key);
+  final bool isShare;
+  const EditHobbyPage2({Key key, this.isShare}) : super(key : key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +36,7 @@ class EditHobbyPage2 extends StatelessWidget {
       body: GetRequest<ProfileData>(
         url: "profile",
         builder: (context) {
+          finalIsShare = isShare;
           return new EditHobbyPage();
         },
       ),
@@ -46,7 +49,6 @@ class EditHobbyPage2 extends StatelessWidget {
 
 class EditHobbyPage extends StatelessWidget {
   const EditHobbyPage({Key key}) : super(key : key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,9 +96,20 @@ List<Map> deriveResult(var x) {
 
 Map compileJson(var x) {
   Map map = {
-    'hobbies': [{'container': 'share', "hobbies": deriveResult(x) }
+    'hobbies': [{'container': discoverOrShare() , "hobbies": deriveResult(x) }
   ]};
+  print(map);
   return map;
+}
+
+String discoverOrShare() {
+  if(finalIsShare) {
+    return "share";
+  }
+
+  else {
+    return "discover";
+  }
 }
 
 class _EditHobbyPageState extends State<EditHobby> {
@@ -112,6 +125,22 @@ class _EditHobbyPageState extends State<EditHobby> {
   @override
   Widget build(BuildContext context) {
     AllHobbiesData hb = RequestProvider.of<AllHobbiesData>(context);
+    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    List<String> hobbies = List();
+    print("here");
+    print(pd.hobbyContainers);
+    if (pd.hobbyContainers != null) {
+      for (HobbyContainer hc in pd.hobbyContainers) {
+        if(hc.container == discoverOrShare())
+        if (hc.hobbies != null) {
+          for (HobbyData h in hc.hobbies) {
+           hobbies.add(h.name);
+          }
+        }
+      }
+    }
+
+    print(hobbies);
     List<FormBuilderFieldOption> y = function(hb.hobbies);
 
      return Padding(
@@ -138,7 +167,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                       // TODO make this use the hobbies we're looking for
                       // probably use another getRequest for now, but it should be smoother
                       // maybe some storage of the hobby list on the app so we're only requesting the user hobbies
-                      initialValue: ["Surfing"],
+                      initialValue: hobbies,
                       leadingInput: true,
                       options: y,
                       onChanged: _onChanged,
