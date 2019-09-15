@@ -1,4 +1,5 @@
 import 'package:fadzmaq/main.dart';
+import 'package:fadzmaq/models/hobbies.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
@@ -75,8 +76,22 @@ class ProfilePageState extends StatelessWidget {
 
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
-    final String profile_age = pd.age != null ? pd.age : "-";
-    final String profile_name = pd.age != null ? pd.name : "-";
+    final String profileAge = pd.age != null ? pd.age : "-";
+    final String profileName = pd.age != null ? pd.name : "-";
+
+    String hobbiesRaw = "";
+
+    print(pd.hobbyContainers.toString());
+
+    if (pd.hobbyContainers != null) {
+      for (HobbyContainer hc in pd.hobbyContainers) {
+        if (hc.hobbies != null) {
+          for (HobbyData h in hc.hobbies) {
+            hobbiesRaw += "-" + h.name + "\n";
+          }
+        }
+      }
+    }
 
     // final String image = 'assets/images/glenn.jpg';
     return Scaffold(
@@ -116,7 +131,7 @@ class ProfilePageState extends StatelessWidget {
                 ),
                 //SizedBox(height: 15.0),
                 Text(
-                  profile_name + " - " + profile_age,
+                  profileName + " - " + profileAge,
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,

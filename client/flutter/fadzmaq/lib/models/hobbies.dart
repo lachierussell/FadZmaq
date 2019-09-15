@@ -14,7 +14,7 @@ AllHobbiesData _hobbiesFromJson(Map<String, dynamic> json) {
       : null;
 
   return AllHobbiesData(
-    hobbies : hobbies,
+    hobbies: hobbies,
   );
 }
 
@@ -32,24 +32,27 @@ class HobbyData {
   }
 }
 
-
-
 class HobbyContainer {
+  String container;
   List<HobbyData> hobbies;
 
-  HobbyContainer({this.hobbies});
+  HobbyContainer({
+    this.hobbies,
+    this.container,
+  });
 
   factory HobbyContainer.fromJson(Map<String, dynamic> json) =>
       _hobbyContainerFromJson(json);
 }
 
 HobbyContainer _hobbyContainerFromJson(Map<String, dynamic> json) {
-  var hobbiesJson = json['hobby_list'] as List;
+  var hobbiesJson = json['hobbies'] as List;
   List<HobbyData> hobbies = hobbiesJson != null
       ? hobbiesJson.map((i) => HobbyData.fromJson(i)).toList()
       : null;
 
   return HobbyContainer(
-    hobbies : hobbies,
+    container: json['container'],
+    hobbies: hobbies,
   );
 }
