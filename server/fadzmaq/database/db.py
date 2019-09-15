@@ -83,6 +83,10 @@ def retrieve_profile(subject):
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
+<<<<<<< HEAD
+=======
+                'bio': row['bio'],
+>>>>>>> cleanup-s
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
@@ -97,7 +101,7 @@ def retrieve_profile(subject):
                 'hobbies': get_hobbies(subject)
             }
         }
-        return json.dumps(profile)
+        return profile
     raise ValueError
 
 
@@ -253,7 +257,7 @@ def get_match_by_id(uid, id):
                 'hobbies': get_hobbies(id)
             }
         }
-        return json.dumps(profile)
+        return profile
     raise ValueError("Did not find row")
 
 
