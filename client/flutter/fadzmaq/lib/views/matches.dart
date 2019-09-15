@@ -5,6 +5,8 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'dart:math';
 
+import 'package:flutter/services.dart';
+
 class MatchesTempApp extends StatelessWidget {
   const MatchesTempApp();
 
@@ -13,6 +15,39 @@ class MatchesTempApp extends StatelessWidget {
     return MaterialApp(
       home: const MatchesPage(),
     );
+  }
+}
+
+// TODO unify this
+class ProfilePic extends StatelessWidget {
+  final String url;
+
+  ProfilePic({
+    this.url,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    print(url);
+
+    // TODO this will fail on an image 404
+    // flutter is dumb so this is hard to fix
+    if (url != null && url != "") {
+      return FadeInImage.assetNetwork(
+        image: url,
+        placeholder: 'assets/images/placeholder-person.jpg',
+        height: 80,
+        width: 80,
+        fit: BoxFit.cover,
+      );
+    } else {
+      return Image.asset(
+        'assets/images/placeholder-person.jpg',
+        height: 80,
+        width: 80,
+        fit: BoxFit.cover,
+      );
+    }
   }
 }
 
@@ -77,13 +112,14 @@ class MatchesList extends StatelessWidget {
                 //   width: 80,
                 //   fit: BoxFit.cover,
                 // ),
-                child: FadeInImage.assetNetwork(
-                  image: profile.photo,
-                  placeholder: 'assets/images/placeholder-person.jpg',
-                  height: 80,
-                  width: 80,
-                  fit: BoxFit.cover,
-                ),
+                // child: FadeInImage.assetNetwork(
+                //   image: profile.photo,
+                //   placeholder: 'assets/images/placeholder-person.jpg',
+                //   height: 80,
+                //   width: 80,
+                //   fit: BoxFit.cover,
+                // ),
+                child: ProfilePic(url: profile.photo),
               ),
             ),
             Expanded(

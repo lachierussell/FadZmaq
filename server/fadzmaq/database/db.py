@@ -12,7 +12,6 @@
 # @author Jordan Russell        [email]
 
 import hashlib
-import json
 from flask import current_app, g
 from sqlalchemy import create_engine
 
@@ -83,9 +82,6 @@ def retrieve_profile(subject):
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
-                'phone': row['phone'],
-                'email': row['email'],
-                'bio': row['bio'],
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
@@ -100,7 +96,7 @@ def retrieve_profile(subject):
                 'hobbies': get_hobbies(subject)
             }
         }
-        return json.dumps(profile)
+        return profile
     raise ValueError
 
 
@@ -137,10 +133,12 @@ def get_hobbies(subject):
 
     return [
         {
-            'share': share
+            'container': 'share',
+            'hobbies': share
         },
         {
-            'discover': discover
+            'container': 'discover',
+            'hobbies': discover
         }
     ]
 
@@ -254,7 +252,7 @@ def get_match_by_id(uid, id):
                 'hobbies': get_hobbies(id)
             }
         }
-        return json.dumps(profile)
+        return profile
     raise ValueError("Did not find row")
 
 
@@ -271,16 +269,15 @@ def update_user_hobbies(uid, request):
         hobbies = request["hobbies"]
         for category in hobbies:
             print(category)
-            for offer in category:
-                print(offer)
-                for hobby in category[offer]:
-                    print(hobby['id'])
-                    get_db().execute(
-                        '''
-                        INSERT INTO user_hobbies (user_id, hobby_id, swap)
-                        VALUES ('{}', {}, '{}');
-                        '''.format(uid, hobby['id'], offer)
-                    )
+            print(category['container'])
+            for hobby in category['hobbies']:
+                print(hobby['id'])
+                get_db().execute(
+                    '''
+                    INSERT INTO user_hobbies (user_id, hobby_id, swap)
+                    VALUES ('{}', {}, '{}');
+                    '''.format(uid, hobby['id'], category['container'])
+                )
 
     except Exception as e:
         raise IOError(str(e))

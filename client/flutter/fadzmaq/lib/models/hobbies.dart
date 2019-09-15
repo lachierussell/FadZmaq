@@ -1,33 +1,58 @@
-class HobbyData {
-  List<HobbyListData> hobbies;
+class AllHobbiesData {
+  List<HobbyData> hobbies;
 
-  HobbyData({this.hobbies});
+  AllHobbiesData({this.hobbies});
 
-  factory HobbyData.fromJson(Map<String, dynamic> json) =>
+  factory AllHobbiesData.fromJson(Map<String, dynamic> json) =>
       _hobbiesFromJson(json);
 }
 
-HobbyData _hobbiesFromJson(Map<String, dynamic> json) {
+AllHobbiesData _hobbiesFromJson(Map<String, dynamic> json) {
   var hobbiesJson = json['hobby_list'] as List;
-  List<HobbyListData> hobbies = hobbiesJson != null
-      ? hobbiesJson.map((i) => HobbyListData.fromJson(i)).toList()
+  List<HobbyData> hobbies = hobbiesJson != null
+      ? hobbiesJson.map((i) => HobbyData.fromJson(i)).toList()
       : null;
 
-  return HobbyData(
-    hobbies : hobbies,
+  return AllHobbiesData(
+    hobbies: hobbies,
   );
 }
 
-class HobbyListData {
+class HobbyData {
   final int id;
   final String name;
 
-  HobbyListData({this.id, this.name});
+  HobbyData({this.id, this.name});
 
-  factory HobbyListData.fromJson(Map<String, dynamic> json) {
-    return HobbyListData(
+  factory HobbyData.fromJson(Map<String, dynamic> json) {
+    return HobbyData(
       id: json['id'],
       name: json['name'],
     );
   }
+}
+
+class HobbyContainer {
+  String container;
+  List<HobbyData> hobbies;
+
+  HobbyContainer({
+    this.hobbies,
+    this.container,
+  });
+
+  factory HobbyContainer.fromJson(Map<String, dynamic> json) =>
+      _hobbyContainerFromJson(json);
+}
+
+HobbyContainer _hobbyContainerFromJson(Map<String, dynamic> json) {
+  var hobbiesJson = json['hobbies'] as List;
+  List<HobbyData> hobbies = hobbiesJson != null
+      ? hobbiesJson.map((i) => HobbyData.fromJson(i)).toList()
+      : null;
+
+  return HobbyContainer(
+    container: json['container'],
+    hobbies: hobbies,
+  );
 }

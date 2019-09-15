@@ -102,15 +102,23 @@ VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'Lachie', 'Mountain biker but wanting to
         '04152122188', 'https://www.russell-systems.cc/other/48a825f8953a416e22525ac737975ee2785c3088448f665df3f0e13c4955241e.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
-VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'Jordan', 'Add your bio here:', '1990-05-13', 'jordashrussell@gmail.com',
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'Jordan', 'Jordan has a background in graphic design and user experience. He ' ||
+                                                  'will help with how the app looks, feels and overall use.',
+        '1990-05-13', 'jordashrussell@gmail.com',
         '0400100300', 'https://www.russell-systems.cc/other/f75c35fbefffb759903f4de04fbc168eccaea0619b1f3611a2ee6f2872b397c7.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
-VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'Seharsh', 'Add your bio here:', '1998-04-24', 'seharshs05@gmail.com',
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'Seharsh', 'Seharsh has developed a number of mobile apps and has the most' ||
+                                                   ' front end experience of the team.  His experience puts him in ' ||
+                                                   'the position to help with technical and design decisions relating ' ||
+                                                   'to the mobile platform.'
+                                                   , '1998-04-24', 'seharshs05@gmail.com',
         '0400100400', 'https://www.russell-systems.cc/other/3ef06fabbfa1be08fcd50dded3450258e357e08e8d75f0aa544ca69e7808ff3b.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
-VALUES ('HJtnPGdccnbqsR1V0hWSJe9AWFx1', 'Thiren', 'Add your bio here:', '1998-09-8', '22239906@student.uwa.edu.au',
+VALUES ('HJtnPGdccnbqsR1V0hWSJe9AWFx1', 'Thiren', 'Thiren is the primary contact point for the team, he will organise' ||
+                                                  ' our meetings keep track of a technical queries and responses on ' ||
+                                                  'behalf of the team.', '1998-09-8', '22239906@student.uwa.edu.au',
         '0400100500', 'https://www.russell-systems.cc/other/ceac483c49a4b8c2c03e4eb3b7e213b8746b996bb7dd30468e0ea6044710a648.jpg');
 
 -- INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)

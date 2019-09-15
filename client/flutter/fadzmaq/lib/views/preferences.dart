@@ -49,14 +49,14 @@ class ProfilePic extends StatelessWidget {
         placeholder: 'assets/images/placeholder-person.jpg',
         height: 200,
         width: 200,
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,
       );
     } else {
       return Image.asset(
         'assets/images/placeholder-person.jpg',
         height: 200,
         width: 200,
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,
       );
     }
   }

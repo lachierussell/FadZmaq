@@ -10,7 +10,7 @@
 
 from flask import jsonify, request, Blueprint
 import fadzmaq
-from fadzmaq.api import recs_data, match_data
+from fadzmaq.api import recs_data
 from fadzmaq.database import db
 from firebase_admin import auth
 import json
@@ -21,13 +21,12 @@ route_bp = Blueprint("route_bp", __name__)
 @route_bp.route('/')
 @route_bp.route('/index')
 def index():
-
     response = '''
         It appears you have come to the wrong place. <br>
         Please try out our mobile app, fadzmaq. <br>
         This website is <strong> not </strong> for users.
     '''
-    return response, 300
+    return response, 308
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -90,7 +89,7 @@ def verify_user(uid):
 @auth_required
 def recommendations(uid):
     print(uid)
-    return jsonify(recs_data.my_recs), 200
+    return jsonify(recs_data.my_recs), 501
 
 
 # @brief Retries a users profile by their id
@@ -99,7 +98,7 @@ def recommendations(uid):
 def get_user_by_id(uid, id):
     print(uid)
     print(id)
-    return jsonify(recs_data.my_candiate), 200
+    return jsonify(recs_data.my_candiate), 501
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -112,28 +111,33 @@ def get_user_by_id(uid, id):
 @auth_required
 def get_profile(uid):
     try:
-        return db.retrieve_profile(uid), 200
+        return jsonify(db.retrieve_profile(uid)), 200
     except ValueError:
-        return '{"error":"Profile not found"}', 404
+        return 'Profile not found', 204
 
 
 # @brief Edits the current users profile
+# TODO: USE JSON
 @route_bp.route('/profile', methods=['POST'])
 @auth_required
 def update_profile(uid):
-
-    response = request.get_data()
-    db.update_profile(request, uid)
-    return response, 200
+    try:
+        db.update_profile(request, uid)
+        return get_profile()
+    except Exception as e:
+        return "Profile edit failed " + str(e), 500
 
 
 # @brief Route for updating user profiles.
 @route_bp.route('/profile/hobbies', methods=['POST'])
 @auth_required
 def update_hobbies(uid):
-    response = json.loads(request.get_data())
-    db.update_user_hobbies(uid, response)
-    return response, 200
+    try:
+        request_data = json.loads(request.get_data())
+        db.update_user_hobbies(uid, request_data)
+        return "Success", 200
+    except IOError as e:
+        return "Update hobbies failed " + str(e), 500
 
 
 # @brief Route for retrieving all current hobbies available.
@@ -148,18 +152,18 @@ def get_hobbies():
 # @returns  The user id of the new account.
 @route_bp.route('/account', methods=['POST'])
 def create_account():
-    print(request.get_data())
-    data = json.loads(request.get_data())
     try:
-
+        data = json.loads(request.get_data())
         user = data["new_user"]
         uid = verify_token()
         user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
-    except Exception as e:
-        print(json.dumps(data, indent=4))
+    except ValueError as e:
         print('Account creation failed ' + str(e))
         return 'Account creation failed ' + str(e), 500
+    except Exception as e:
+        print("Authentication failed: " + str(e))
+        return "Authentication failed: " + str(e), 401
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -171,12 +175,10 @@ def create_account():
 @route_bp.route('/matches', methods=['GET'])
 @auth_required
 def get_matches(uid):
-    # TODO: Get subject from auth
-    print(request.get_data())
     try:
-        return db.get_matches(uid), 200
-    except ValueError:
-        return '{"error":"Internal server error"}', 404
+        return jsonify(db.get_matches(uid)), 200
+    except ValueError as e:
+        return 'Failed:' + str(e), 204
 
 
 # @brief Retrieves a specific matches profile data
@@ -184,31 +186,30 @@ def get_matches(uid):
 @auth_required
 def get_matched_user(uid, id):
     try:
-        response = db.get_match_by_id(uid, id)
-        return response, 200
+        return jsonify(db.get_match_by_id(uid, id)), 200
     except ValueError as e:
-        return 'Failed: ' + str(e), 400
+        return 'Failed: ' + str(e), 403
 
 
 # @brief Un-matches a specific match by their user id
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):
-    return "User unmatched", 200
+    return "User unmatched", 501
 
 
 # @brief Rates a user negatively
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
-    return "Thumbs down!", 200
+    return "Thumbs down!", 501
 
 
 # @brief Rates a user positively
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
-    return "Thumbs up!", 200
+    return "Thumbs up!", 501
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -219,11 +220,11 @@ def rate_user_up(uid, id):
 @route_bp.route('/like/<string:id>', methods=['POST'])
 @auth_required
 def like_user(uid, id):
-    return "User liked", 200
+    return "User liked", 501
 
 
 # @brief Pass on a user
 @route_bp.route('/pass/<string:id>', methods=['POST'])
 @auth_required
 def pass_user(uid, id):
-    return "User passed", 200
+    return "User passed", 501
