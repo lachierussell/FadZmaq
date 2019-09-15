@@ -111,7 +111,7 @@ def get_user_by_id(uid, id):
 @auth_required
 def get_profile(uid):
     try:
-        return db.retrieve_profile(uid), 200
+        return jsonify(db.retrieve_profile(uid)), 200
     except ValueError:
         return 'Profile not found', 204
 
@@ -123,7 +123,7 @@ def get_profile(uid):
 def update_profile(uid):
     try:
         db.update_profile(request, uid)
-        return get_profile
+        return get_profile()
     except Exception as e:
         return "Profile edit failed " + str(e), 500
 
@@ -133,8 +133,8 @@ def update_profile(uid):
 @auth_required
 def update_hobbies(uid):
     try:
-        response = json.loads(request.get_data())
-        db.update_user_hobbies(uid, response)
+        request_data = json.loads(request.get_data())
+        db.update_user_hobbies(uid, request_data)
         return "Success", 200
     except IOError as e:
         return "Update hobbies failed " + str(e), 500
@@ -176,7 +176,7 @@ def create_account():
 @auth_required
 def get_matches(uid):
     try:
-        return db.get_matches(uid), 200
+        return jsonify(db.get_matches(uid)), 200
     except ValueError as e:
         return 'Failed:' + str(e), 204
 
@@ -186,8 +186,7 @@ def get_matches(uid):
 @auth_required
 def get_matched_user(uid, id):
     try:
-        response = db.get_match_by_id(uid, id)
-        return response, 200
+        return jsonify(db.get_match_by_id(uid, id)), 200
     except ValueError as e:
         return 'Failed: ' + str(e), 403
 

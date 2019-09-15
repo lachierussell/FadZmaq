@@ -98,7 +98,7 @@ def retrieve_profile(subject):
                 'hobbies': get_hobbies(subject)
             }
         }
-        return json.dumps(profile)
+        return profile
     raise ValueError
 
 
@@ -254,7 +254,7 @@ def get_match_by_id(uid, id):
                 'hobbies': get_hobbies(id)
             }
         }
-        return json.dumps(profile)
+        return profile
     raise ValueError("Did not find row")
 
 
