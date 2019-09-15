@@ -1,3 +1,5 @@
+
+import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -154,10 +156,16 @@ class MatchesList extends StatelessWidget {
     // return Text("to be done");
 
     List<Widget> list = new List<Widget>();
-    List<Hobby> hobsTemp = getRandomHobbies(2);
-    // for (Hobby hobby in profile.hobbies) {
-    for (Hobby hobby in hobsTemp) {
-      list.add(getHobbyChip(context, hobby));
+    // print(profile.hobbyContainers.toString());
+    if (profile.hobbyContainers != null) {
+      for (HobbyContainer hc in profile.hobbyContainers) {
+        print(hc.container.toString());
+        if (hc.container == "matched") {
+          for (HobbyData hobby in hc.hobbies) {
+            list.add(getHobbyChip(context, hobby));
+          }
+        }
+      }
     }
     return Padding(
       padding: const EdgeInsets.only(top: 8),
@@ -169,7 +177,7 @@ class MatchesList extends StatelessWidget {
     );
   }
 
-  Widget getHobbyChip(BuildContext context, Hobby hobby) {
+  Widget getHobbyChip(BuildContext context, HobbyData hobby) {
     // return Chip(
     //   label: Text(hobby.name),
     //   backgroundColor: hobby.color,
@@ -177,7 +185,7 @@ class MatchesList extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(32)),
       child: Container(
-        color: hobby.color,
+        color: Color(0xfff2f2f2),
         child: Padding(
             padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
             // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
@@ -204,11 +212,11 @@ final TextStyle hobbyStyle = TextStyle(
 //   final List<Hobby> hobbies;
 // }
 
-class Hobby {
-  const Hobby({this.name, this.color});
-  final String name;
-  final Color color;
-}
+// class Hobby {
+//   const Hobby({this.name, this.color});
+//   final String name;
+//   final Color color;
+// }
 
 // List<MatchedProfile> _matchedProfiles = <MatchedProfile>[
 //   _david,
@@ -234,27 +242,27 @@ class Hobby {
 //   _rooney,
 // ];
 
-final List<Hobby> _hobbies = <Hobby>[
-  Hobby(name: "Hiking", color: Color(0xfffbb4ae)),
-  Hobby(name: "Canoeing", color: Color(0xffb3cde3)),
-  Hobby(name: "Fencing", color: Color(0xffccebc5)),
-  Hobby(name: "Fishing", color: Color(0xffdecbe4)),
-  Hobby(name: "Boxing", color: Color(0xfffed9a6)),
-  Hobby(name: "Marathons", color: Color(0xffffffcc)),
-  Hobby(name: "Archery", color: Color(0xffe5d8bd)),
-  Hobby(name: "Fencing", color: Color(0xfffddaec)),
-  Hobby(name: "Sailing", color: Color(0xfff2f2f2)),
-];
+// final List<Hobby> _hobbies = <Hobby>[
+//   Hobby(name: "Hiking", color: Color(0xfffbb4ae)),
+//   Hobby(name: "Canoeing", color: Color(0xffb3cde3)),
+//   Hobby(name: "Fencing", color: Color(0xffccebc5)),
+//   Hobby(name: "Fishing", color: Color(0xffdecbe4)),
+//   Hobby(name: "Boxing", color: Color(0xfffed9a6)),
+//   Hobby(name: "Marathons", color: Color(0xffffffcc)),
+//   Hobby(name: "Archery", color: Color(0xffe5d8bd)),
+//   Hobby(name: "Fencing", color: Color(0xfffddaec)),
+//   Hobby(name: "Sailing", color: Color(0xfff2f2f2)),
+// ];
 
-List<Hobby> getRandomHobbies(int n) {
-  List<Hobby> list = new List<Hobby>();
-  var rng = new Random();
-  for (int i = 0; i < n; i++) {
-    var hob = _hobbies[rng.nextInt(_hobbies.length)];
-    if (!list.contains(hob)) list.add(hob);
-  }
-  return list;
-}
+// List<Hobby> getRandomHobbies(int n) {
+//   List<Hobby> list = new List<Hobby>();
+//   var rng = new Random();
+//   for (int i = 0; i < n; i++) {
+//     var hob = _hobbies[rng.nextInt(_hobbies.length)];
+//     if (!list.contains(hob)) list.add(hob);
+//   }
+//   return list;
+// }
 
 // MatchedProfile _sean = MatchedProfile(
 //     name: "Sean Bean",
