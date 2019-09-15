@@ -14,8 +14,8 @@ T fromJson<T>(Map<String, dynamic> json) {
   if (T == MatchesData) {
     return MatchesData.fromJson(json) as T;
   }
-  if (T == HobbyData) {
-    return HobbyData.fromJson(json) as T;
+  if (T == AllHobbiesData) {
+    return AllHobbiesData.fromJson(json) as T;
   }
   throw UnimplementedError();
 }
