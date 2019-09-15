@@ -10,7 +10,7 @@
 
 from flask import jsonify, request, Blueprint
 import fadzmaq
-from fadzmaq.api import recs_data, match_data
+from fadzmaq.api import recs_data
 from fadzmaq.database import db
 from firebase_admin import auth
 import json
