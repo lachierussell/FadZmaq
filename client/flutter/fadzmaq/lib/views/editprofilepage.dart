@@ -11,6 +11,7 @@ import 'package:fadzmaq/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fadzmaq/models/app_config.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -63,6 +64,8 @@ class EditProfileState extends State<EditProfile>{
   @override
   Widget build(BuildContext context) {
     ProfileData pd = RequestProvider.of<ProfileData>(context);
+    String server = AppConfig.of(context).server;
+
     return Scaffold(
 
       body: Padding(
@@ -121,7 +124,7 @@ class EditProfileState extends State<EditProfile>{
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post(AppConfig.of(context).server + "profile",_fbKey.currentState.value );
+                          post( server + "profile",_fbKey.currentState.value );
                           Navigator.push(
                             context,
                             MaterialPageRoute(
