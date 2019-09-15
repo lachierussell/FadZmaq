@@ -66,6 +66,7 @@ class SplashScreenState extends State<SplashScreen> {
       child: Center(
           child: Icon(
         Icons.swap_horizontal_circle,
+        color: Colors.white,
         size: 221,
       )
           // child: CircularProgressIndicator(
