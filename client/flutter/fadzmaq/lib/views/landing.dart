@@ -16,8 +16,8 @@ class LandingPage extends StatelessWidget {
               children: [
                 new TabBar(
                   tabs: [
-                    new Tab(icon: new Icon(Icons.directions_car)),
-                    new Tab(icon: new Icon(Icons.directions_transit)),
+                    new Tab(icon: new Icon(Icons.settings)),
+                    new Tab(icon: new Icon(Icons.people)),
                   ],
                 ),
               ],
