@@ -137,10 +137,12 @@ def get_hobbies(subject):
 
     return [
         {
-            'share': share
+            'container': 'share',
+            'hobbies': share
         },
         {
-            'discover': discover
+            'container': 'discover',
+            'hobbies': discover
         }
     ]
 
@@ -271,16 +273,15 @@ def update_user_hobbies(uid, request):
         hobbies = request["hobbies"]
         for category in hobbies:
             print(category)
-            for offer in category:
-                print(offer)
-                for hobby in category[offer]:
-                    print(hobby['id'])
-                    get_db().execute(
-                        '''
-                        INSERT INTO user_hobbies (user_id, hobby_id, swap)
-                        VALUES ('{}', {}, '{}');
-                        '''.format(uid, hobby['id'], offer)
-                    )
+            print(category['container'])
+            for hobby in category['hobbies']:
+                print(hobby['id'])
+                get_db().execute(
+                    '''
+                    INSERT INTO user_hobbies (user_id, hobby_id, swap)
+                    VALUES ('{}', {}, '{}');
+                    '''.format(uid, hobby['id'], category['container'])
+                )
 
     except Exception as e:
         raise IOError(str(e))

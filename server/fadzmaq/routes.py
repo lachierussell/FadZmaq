@@ -21,13 +21,12 @@ route_bp = Blueprint("route_bp", __name__)
 @route_bp.route('/')
 @route_bp.route('/index')
 def index():
-
     response = '''
         It appears you have come to the wrong place. <br>
         Please try out our mobile app, fadzmaq. <br>
         This website is <strong> not </strong> for users.
     '''
-    return response, 300
+    return response, 308
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -114,26 +113,31 @@ def get_profile(uid):
     try:
         return db.retrieve_profile(uid), 200
     except ValueError:
-        return '{"error":"Profile not found"}', 404
+        return 'Profile not found', 204
 
 
 # @brief Edits the current users profile
+# TODO: USE JSON
 @route_bp.route('/profile', methods=['POST'])
 @auth_required
 def update_profile(uid):
-
-    response = request.get_data()
-    db.update_profile(request, uid)
-    return response, 200
+    try:
+        db.update_profile(request, uid)
+        return get_profile
+    except Exception as e:
+        return "Profile edit failed " + str(e), 500
 
 
 # @brief Route for updating user profiles.
 @route_bp.route('/profile/hobbies', methods=['POST'])
 @auth_required
 def update_hobbies(uid):
-    response = json.loads(request.get_data())
-    db.update_user_hobbies(uid, response)
-    return response, 200
+    try:
+        response = json.loads(request.get_data())
+        db.update_user_hobbies(uid, response)
+        return "Success", 200
+    except IOError as e:
+        return "Update hobbies failed " + str(e), 500
 
 
 # @brief Route for retrieving all current hobbies available.
@@ -148,10 +152,8 @@ def get_hobbies():
 # @returns  The user id of the new account.
 @route_bp.route('/account', methods=['POST'])
 def create_account():
-    print(request.get_data())
-    data = json.loads(request.get_data())
     try:
-
+        data = json.loads(request.get_data())
         user = data["new_user"]
         uid = verify_token()
         user_id = db.make_user(user['name'], user['email'], uid)

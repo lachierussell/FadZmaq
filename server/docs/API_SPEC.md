@@ -16,9 +16,9 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 | /user/`id`/`photo`        | Get user photo (Alternate domain)         | GET    | 200     | 504                 |
 | **PROFILE**               |                                           |        |         |                     |
 | /profile                  | Get your own profile data.                | GET    | 200     | 401 / 204           |
-| /profile                  | Update profile data                       | POST   | 200     | 401                 |
-| /profile/ping             | Set location                              | POST   |         | **504**             |
-| /profile/hobbies          | Update a users hobbies                    | POST   | 200     | 401 / 204           |
+| /profile                  | Update profile data                       | POST   | 200     | 401, 500            |
+| /profile/ping             | Set location                              | POST   |         | **501**             |
+| /profile/hobbies          | Update a users hobbies                    | POST   | 200     | 401 / 500           |
 | **Hobbies**               |                                           |        |         |                     |
 | /hobbies                  | A list of all available hobbies to choose | GET    | 200     | 500                 |
 | **MATCHES**               |                                           |        |         |                     |
