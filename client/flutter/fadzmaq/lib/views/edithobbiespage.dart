@@ -1,7 +1,8 @@
 import 'dart:convert';
-
+import 'package:fadzmaq/views/preferences.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:fadzmaq/main.dart';
@@ -17,6 +18,25 @@ class HobbyTempApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const EditHobbyPage(),
+    );
+  }
+}
+
+Map<String, int> hobbies;
+
+class EditHobbyPage2 extends StatelessWidget {
+  const EditHobbyPage2({Key key}) : super(key : key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+
+      body: GetRequest<ProfileData>(
+        url: "profile",
+        builder: (context) {
+          return new EditHobbyPage();
+        },
+      ),
     );
   }
 }
@@ -53,11 +73,30 @@ class EditHobby extends StatefulWidget {
 }
 
 List<FormBuilderFieldOption> function(var x) {
+  hobbies = new Map();
   List<FormBuilderFieldOption> list = [];
   for(var item  in x) {
     list.add(FormBuilderFieldOption(value: item.name));
+    hobbies[item.name] = item.id;
   }
   return list;
+}
+
+List<Map> deriveResult(var x) {
+  List<Map> ret = List();
+  List<String> y = x["languages"];
+  for(var z in y) {
+    ret.add({"id" : hobbies[z], "name" : z});
+  }
+  return ret;
+}
+
+
+Map compileJson(var x) {
+  Map map = {
+    'hobbies': [{'container': 'share', "hobbies": deriveResult(x) }
+  ]};
+  return map;
 }
 
 class _EditHobbyPageState extends State<EditHobby> {
@@ -72,16 +111,9 @@ class _EditHobbyPageState extends State<EditHobby> {
   ValueChanged _onChanged = (val) => print(val);
   @override
   Widget build(BuildContext context) {
-    var x = ["Surfing", "Summer"];
-    // List<FormBuilderFieldOption> y = function(x);
     AllHobbiesData hb = RequestProvider.of<AllHobbiesData>(context);
     List<FormBuilderFieldOption> y = function(hb.hobbies);
-    // print(hb);
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text("Choose hobbies to discover"),
-    //   ),
-    //   body: 
+
      return Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -127,6 +159,12 @@ class _EditHobbyPageState extends State<EditHobby> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
+                          post("http://10.0.2.2:5000/profile/hobbies", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserPreferencesPage()),
+                          );
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");

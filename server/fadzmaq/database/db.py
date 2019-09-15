@@ -251,7 +251,7 @@ def get_match_by_id(uid, id):
 # @brief Updates the users hobbies
 # Deletes current hobbies and updates with the new hobbies.
 def update_user_hobbies(uid, request):
-    try:
+     try:
         get_db().execute(
             '''
             DELETE FROM user_hobbies
@@ -270,9 +270,9 @@ def update_user_hobbies(uid, request):
                     VALUES ('{}', {}, '{}');
                     '''.format(uid, hobby['id'], category['container'])
                 )
-
     except Exception as e:
-        raise IOError(str(e))
+
+
 
 
 # @brief Retrieves the full list of hobbies from the db.

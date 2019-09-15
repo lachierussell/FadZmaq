@@ -140,6 +140,7 @@ def update_hobbies(uid):
         return "Update hobbies failed " + str(e), 500
 
 
+
 # @brief Route for retrieving all current hobbies available.
 @route_bp.route('/hobbies', methods=['GET'])
 def get_hobbies():
