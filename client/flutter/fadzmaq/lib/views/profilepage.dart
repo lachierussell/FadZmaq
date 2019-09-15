@@ -85,9 +85,10 @@ class ProfilePageState extends StatelessWidget {
 
     if (pd.hobbyContainers != null) {
       for (HobbyContainer hc in pd.hobbyContainers) {
+        hobbiesRaw += "--" + hc.container +"--\n";
         if (hc.hobbies != null) {
           for (HobbyData h in hc.hobbies) {
-            hobbiesRaw += "-" + h.name + "\n";
+            hobbiesRaw += h.name + "\n";
           }
         }
       }
@@ -95,140 +96,149 @@ class ProfilePageState extends StatelessWidget {
 
     // final String image = 'assets/images/glenn.jpg';
     return Scaffold(
-      body: Stack(
-        children: <Widget>[
-          Container(
-            height: 240,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(50.0),
-                    bottomRight: Radius.circular(50.0)),
-                gradient: LinearGradient(
-                    colors: [color1, color2],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight)),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 80),
-            child: Column(
-              children: <Widget>[
-                SizedBox(height: 20.0),
-                Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      Container(
-                        height: double.infinity,
-                        margin: const EdgeInsets.only(
-                            left: 40.0, right: 40.0, top: 5.0, bottom: 0.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(30.0),
-                          // child: Image.asset(image,fit: BoxFit.cover,),
-                          child: ProfilePic(),
+      body: SingleChildScrollView(
+              child: Stack(
+          children: <Widget>[
+            Container(
+              height: 240,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(50.0),
+                      bottomRight: Radius.circular(50.0)),
+                  gradient: LinearGradient(
+                      colors: [color1, color2],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight)),
+            ),
+            Container(
+              // margin: const EdgeInsets.only(top: 80),
+              child: Column(
+                children: <Widget>[
+                  // SizedBox(height: 20.0),
+                  // Expanded(
+                    // child: Stack(
+                      // children: <Widget>[
+                        Container(
+                          // height: double.infinity,
+                          margin: const EdgeInsets.only(
+                              left: 40.0, right: 40.0, top: 5.0, bottom: 0.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(30.0),
+                            // child: Image.asset(image,fit: BoxFit.cover,),
+                            child: ProfilePic(),
+                          ),
                         ),
-                      ),
-                    ],
+                      // ],
+                    // ),
+                  // ),
+                  //SizedBox(height: 15.0),
+                  Text(
+                    profileName + " - " + profileAge,
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                        height: 10.0),
                   ),
-                ),
-                //SizedBox(height: 15.0),
-                Text(
-                  profileName + " - " + profileAge,
-                  style: TextStyle(
+                  Text(
+                    hobbiesRaw,
+                    style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
-                      height: 10.0),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.location_on,
-                      size: 16.0,
-                      color: Colors.grey,
                     ),
-                    Text(
-                      "Perth, Western Australia, Australia",
-                      style: TextStyle(color: Colors.grey.shade600),
-                    )
-                  ],
-                ),
-                SizedBox(height: 5.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    IconButton(
-                      color: Colors.grey,
-                      icon: Icon(CupertinoIcons.photo_camera),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      color: Colors.grey,
-                      icon: Icon(CupertinoIcons.fullscreen),
-                      onPressed: () {},
-                    ),
-                    IconButton(
-                      color: Colors.grey.shade600,
-                      icon: Icon(CupertinoIcons.game_controller),
-                      onPressed: () {},
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.0),
-                Container(
-                  child: Stack(
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 5.0, horizontal: 16.0),
-                        margin: const EdgeInsets.only(
-                            top: 30, left: 20.0, right: 20.0, bottom: 20.0),
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [color1, color2],
-                            ),
-                            borderRadius: BorderRadius.circular(30.0)),
-                        child: Row(
-                          children: <Widget>[
-                            IconButton(
-                                icon: Icon(CupertinoIcons.person_solid),
-                                onPressed: () {}),
-                            IconButton(
-                              color: Colors.white,
-                              icon: Icon(Icons.location_on),
-                              onPressed: () {},
-                            ),
-                            Spacer(),
-                            IconButton(
-                              color: Colors.white,
-                              icon: Icon(Icons.add),
-                              onPressed: () {},
-                            ),
-                            IconButton(
-                              color: Colors.white,
-                              icon: Icon(Icons.message),
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
+                      Icon(
+                        Icons.location_on,
+                        size: 16.0,
+                        color: Colors.grey,
                       ),
-                      Center(
-                        child: FloatingActionButton(
-                          child: Icon(
-                            Icons.favorite,
-                            color: Colors.pink,
-                          ),
-                          backgroundColor: Colors.white,
-                          onPressed: () {},
-                        ),
+                      Text(
+                        "Perth, Western Australia, Australia",
+                        style: TextStyle(color: Colors.grey.shade600),
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 5.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      IconButton(
+                        color: Colors.grey,
+                        icon: Icon(CupertinoIcons.photo_camera),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        color: Colors.grey,
+                        icon: Icon(CupertinoIcons.fullscreen),
+                        onPressed: () {},
+                      ),
+                      IconButton(
+                        color: Colors.grey.shade600,
+                        icon: Icon(CupertinoIcons.game_controller),
+                        onPressed: () {},
                       ),
                     ],
                   ),
-                )
-              ],
+                  SizedBox(height: 10.0),
+                  Container(
+                    child: Stack(
+                      children: <Widget>[
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 16.0),
+                          margin: const EdgeInsets.only(
+                              top: 30, left: 20.0, right: 20.0, bottom: 20.0),
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [color1, color2],
+                              ),
+                              borderRadius: BorderRadius.circular(30.0)),
+                          child: Row(
+                            children: <Widget>[
+                              IconButton(
+                                  icon: Icon(CupertinoIcons.person_solid),
+                                  onPressed: () {}),
+                              IconButton(
+                                color: Colors.white,
+                                icon: Icon(Icons.location_on),
+                                onPressed: () {},
+                              ),
+                              Spacer(),
+                              IconButton(
+                                color: Colors.white,
+                                icon: Icon(Icons.add),
+                                onPressed: () {},
+                              ),
+                              IconButton(
+                                color: Colors.white,
+                                icon: Icon(Icons.message),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                        ),
+                        Center(
+                          child: FloatingActionButton(
+                            child: Icon(
+                              Icons.favorite,
+                              color: Colors.pink,
+                            ),
+                            backgroundColor: Colors.white,
+                            onPressed: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

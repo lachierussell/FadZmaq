@@ -83,9 +83,6 @@ def retrieve_profile(subject):
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
-                'phone': row['phone'],
-                'email': row['email'],
-                'bio': row['bio'],
                 'contact_details': {
                     'phone': row['phone'],
                     'email': row['email']
