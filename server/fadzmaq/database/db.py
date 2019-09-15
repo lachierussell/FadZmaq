@@ -73,14 +73,23 @@ def retrieve_profile(subject):
         # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': row['user_id'],
+                'user_id': hash_id(row['user_id']),
                 'name': row['nickname'],
                 'age': str(row['age']),
                 'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
-                'phone': row['phone'],
-                'email': row['email'],
-                'bio': row['bio']
+                'contact_details': {
+                    'phone': row['phone'],
+                    'email': row['email']
+                },
+                'profile_fields': [
+                    {
+                        'id': 1,
+                        'name': 'About me',
+                        'display_value': row['bio']
+                    }
+                ],
+                'hobbies': get_hobbies(subject)
             }
         }
         return json.dumps(profile)
