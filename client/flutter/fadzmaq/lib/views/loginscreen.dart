@@ -1,4 +1,5 @@
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/views/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -141,9 +142,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           // go to main page (perferences at the moment)
                           if (code == 200) {
                             Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        UserPreferencesPage()));
+                              MaterialPageRoute(
+                                // builder: (context) => UserPreferencesPage(),
+                                builder: (context) => LandingPage(),
+                              ),
+                            );
                           }
 
                           // TODO error check here

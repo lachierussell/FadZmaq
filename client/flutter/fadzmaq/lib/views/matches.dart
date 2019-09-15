@@ -56,17 +56,23 @@ class MatchesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Matches'),
-      ),
-      body: GetRequest<MatchesData>(
+    return GetRequest<MatchesData>(
         url: "matches",
         builder: (context) {
           return MatchesList();
-        },
-      ),
-    );
+        });
+
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text('Matches'),
+    //   ),
+    //   body: GetRequest<MatchesData>(
+    //     url: "matches",
+    //     builder: (context) {
+    //       return MatchesList();
+    //     },
+    //   ),
+    // );
   }
 }
 
