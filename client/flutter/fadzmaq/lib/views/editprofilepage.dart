@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/preferences.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
@@ -10,6 +11,7 @@ import 'package:fadzmaq/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fadzmaq/models/app_config.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -23,7 +25,7 @@ class ProfileTempApp extends StatelessWidget {
 }
 
 class EditProfilePage extends StatelessWidget {
-  const EditProfilePage({Key key}) : super(key : key);
+  const EditProfilePage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,28 +44,52 @@ class EditProfilePage extends StatelessWidget {
 }
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({Key key}) : super(key : key);
+  const EditProfile({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new EditProfileState();
 }
 
-class EditProfileState extends State<EditProfile>{
+String bioFromPD(ProfileData pd) {
+  if (pd != null && pd.profileFields != null) {
+    for (ProfileField pf in pd.profileFields) {
+      if (pf.id == 1) {
+        if (pf.displayValue != null) {
+          return pf.displayValue;
+        } else {
+          return "";
+        }
+      }
+    }
+  }
+  return "";
+}
+
+class EditProfileState extends State<EditProfile> {
   var data;
   bool autoValidate = true;
   bool readOnly = false;
   bool showSegmentedControl = true;
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormFieldState> _specifyTextFieldKey =
-  GlobalKey<FormFieldState>();
+      GlobalKey<FormFieldState>();
 
   ValueChanged _onChanged = (val) => print(val);
 
   @override
   Widget build(BuildContext context) {
     ProfileData pd = RequestProvider.of<ProfileData>(context);
-    return Scaffold(
+    String server = AppConfig.of(context).server;
 
+    // check for id 1 (about me) and grab the display value
+    String bio = bioFromPD(pd);
+
+    final String contact_phone =
+        pd.contactDetails.phone != null ? pd.contactDetails.phone : "";
+    String contact_email =
+        pd.contactDetails.email != null ? pd.contactDetails.email : "";
+
+    return Scaffold(
       body: Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -79,32 +105,22 @@ class EditProfileState extends State<EditProfile>{
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
-
-
                     FormBuilderTextField(
                         attribute: "nickname",
                         initialValue: pd.name,
-                        decoration: InputDecoration(labelText: "Nickname")
-                    ),
-
+                        decoration: InputDecoration(labelText: "Nickname")),
                     FormBuilderTextField(
                         attribute: "email",
-                        initialValue: pd.email,
-                        decoration: InputDecoration(labelText: "email")
-                    ),
-
+                        initialValue: contact_email,
+                        decoration: InputDecoration(labelText: "email")),
                     FormBuilderTextField(
                         attribute: "phone",
-                        initialValue: pd.phone,
-                        decoration: InputDecoration(labelText: "phone")
-                    ),
-
+                        initialValue: contact_phone,
+                        decoration: InputDecoration(labelText: "phone")),
                     FormBuilderTextField(
                         attribute: "bio",
-                        initialValue: pd.bio,
-                        decoration: InputDecoration(labelText: "bio")
-                    ),
-
+                        initialValue: bio,
+                        decoration: InputDecoration(labelText: "bio")),
                   ],
                 ),
               ),
@@ -120,7 +136,7 @@ class EditProfileState extends State<EditProfile>{
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post("http://10.0.2.2:5000/profile",_fbKey.currentState.value );
+                          post(server + "profile", _fbKey.currentState.value);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -136,7 +152,6 @@ class EditProfileState extends State<EditProfile>{
                   SizedBox(
                     width: 20,
                   ),
-
                 ],
               ),
             ],
@@ -146,4 +161,3 @@ class EditProfileState extends State<EditProfile>{
     );
   }
 }
-

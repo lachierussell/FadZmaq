@@ -10,6 +10,7 @@ import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -49,14 +50,14 @@ class ProfilePic extends StatelessWidget {
         placeholder: 'assets/images/placeholder-person.jpg',
         height: 200,
         width: 200,
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,
       );
     } else {
       return Image.asset(
         'assets/images/placeholder-person.jpg',
         height: 200,
         width: 200,
-        fit: BoxFit.contain,
+        fit: BoxFit.cover,
       );
     }
   }
@@ -129,7 +130,7 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage()),
+                              builder: (context) => ProfilePage(url: "profile")),
                         );
                       },
                       child: Text("View Profile"),
@@ -246,10 +247,12 @@ class UserPreferencesState extends State {
     );
   }
 
-  // temp living here, to be moved to auth(?)
+  // TODO temp living here, to be moved to auth(?)
   void logOut() async {
-    // TODO log out of google account as well
     await FirebaseAuth.instance.signOut();
+    GoogleSignIn _googleSignIn = GoogleSignIn();
+    _googleSignIn.signOut();
+
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
   }
