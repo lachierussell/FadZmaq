@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS hobbies
     name     VARCHAR(64) NOT NULL
 );
 
-CREATE TYPE HOBBY_SWAP AS ENUM ('share', 'discover');
+CREATE TYPE HOBBY_SWAP AS ENUM ('share', 'discover', 'matched');
 
 CREATE TABLE IF NOT EXISTS user_hobbies
 (
