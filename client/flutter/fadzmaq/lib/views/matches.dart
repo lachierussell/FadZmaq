@@ -7,8 +7,8 @@ import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'dart:math';
-
 import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MatchesTempApp extends StatelessWidget {
   const MatchesTempApp();
@@ -33,25 +33,16 @@ class ProfilePic extends StatelessWidget {
   Widget build(BuildContext context) {
     print(url);
 
-    // TODO this will fail on an image 404
-    // flutter is dumb so this is hard to fix
-    if (url != null && url != "") {
-      return FadeInImage.memoryNetwork(
-        image: url,
-        placeholder: Uint8List(512 * 512),
-        fadeOutDuration: Duration(milliseconds: 10),
-        height: 80,
-        width: 80,
+    return SizedBox(
+      height: 80,
+      width: 80,
+      child: CachedNetworkImage(
+        imageUrl: url,
         fit: BoxFit.cover,
-      );
-    } else {
-      return Image.asset(
-        'assets/images/placeholder-person.jpg',
-        height: 80,
-        width: 80,
-        fit: BoxFit.cover,
-      );
-    }
+        // placeholder: (context, url) => new CircularProgressIndicator(),
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+      ),
+    );
   }
 }
 

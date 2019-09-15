@@ -8,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -46,27 +47,14 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileData profile = RequestProvider.of<ProfileData>(context);
-    // return Image.network(
-    //   profile.photo,
-    //   height: 200,
-    //   width: 200,
-    //   fit: BoxFit.contain,
-    // );
 
-
-    if (profile.photo != null) {
-      return FadeInImage.memoryNetwork(
-        image: profile.photo,
-        placeholder: Uint8List(512 * 512),
-        fadeOutDuration: Duration(milliseconds: 10),
-        fit: BoxFit.cover,
-      );
-    } else {
-      return Image.asset(
-        'assets/images/placeholder-person.jpg',
-        fit: BoxFit.cover,
-      );
-    }
+    return CachedNetworkImage(
+      imageUrl: profile.photo,
+      fit: BoxFit.cover,
+      // placeholder: (context, url) => new CircularProgressIndicator(),
+      errorWidget: (context, url, error) => new Icon(Icons.error),
+      
+    );
   }
 }
 
