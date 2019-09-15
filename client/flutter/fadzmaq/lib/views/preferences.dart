@@ -79,12 +79,14 @@ class UserPreferencesState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Preferences'),
-      ),
-      body: page(),
-    );
+    return page();
+
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text('Preferences'),
+    //   ),
+    //   body: page(),
+    // );
   }
 
   Widget page() {
