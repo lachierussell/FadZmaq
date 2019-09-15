@@ -20,7 +20,10 @@ class ProfileTempApp extends StatelessWidget {
 }
 
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key key}) : super(key: key);
+
+  final String url;
+
+  const ProfilePage({Key key, this.url}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class ProfilePage extends StatelessWidget {
         title: Text('My Profile'),
       ),
       body: GetRequest<ProfileData>(
-        url: "profile",
+        url: url,
         builder: (context) {
           return ProfilePageState();
         },
