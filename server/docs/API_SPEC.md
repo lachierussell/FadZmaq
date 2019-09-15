@@ -58,18 +58,25 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
             }
         ],
         "hobbies": [
-            {
-                "share": [
-                    {
-                        "id": 3,
-                        "name": "Rock Climbing"
-                    }
-                ]
-            },
-            {
-                "discover": []
-            }
-        ]
+             {
+                 "container": "share",
+                 "hobbies": [
+                     {
+                         "id": 3,
+                         "name": "Rock Climbing"
+                     }
+                 ]
+             },
+             {
+                 "container": "discover",
+                 "hobbies": [
+                     {
+                         "id": 1,
+                         "name": "Boxing"
+                     }
+                 ]
+             }
+         ]
     }
 }
 ```
@@ -119,31 +126,25 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
             }
         ],
         "hobbies": [
-            {
-                "share": [
-                    {
-                        "id": 2,
-                        "name": "Boating"
-                    },
-                    {
-                        "id": 3,
-                        "name": "Rock Climbing"
-                    },
-                    {
-                        "id": 5,
-                        "name": "Golf"
-                    }
-                ]
-            },
-            {
-                "discover": [
-                    {
-                        "id": 4,
-                        "name": "Hiking"
-                    }
-                ]
-            }
-        ]
+             {
+                 "container": "share",
+                 "hobbies": [
+                     {
+                         "id": 3,
+                         "name": "Rock Climbing"
+                     }
+                 ]
+             },
+             {
+                 "container": "discover",
+                 "hobbies": [
+                     {
+                         "id": 1,
+                         "name": "Boxing"
+                     }
+                 ]
+             }
+         ]
     }
 }
 ```
@@ -217,25 +218,27 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 ```json
 // POST 
 {
- "hobbies": [
+     "hobbies": [
          {
-             "share": [
+             "container": "share",
+             "hobbies": [
                  {
-                     "id": 33,
-                     "name": "Boxing"
+                     "id": 3,
+                     "name": "Rock Climbing"
                  }
              ]
          },
          {
-             "discover": [
+             "container": "discover",
+             "hobbies": [
                  {
-                     "id": 99,
-                     "name": "Netball"
+                     "id": 1,
+                     "name": "Boxing"
                  }
              ]
          }
      ]
- }
+}
 // Receive
 // A users current hobbies
 ```
