@@ -89,7 +89,7 @@ def verify_user(uid):
 @auth_required
 def recommendations(uid):
     print(uid)
-    return jsonify(recs_data.my_recs), 200
+    return jsonify(recs_data.my_recs), 501
 
 
 # @brief Retries a users profile by their id
@@ -98,7 +98,7 @@ def recommendations(uid):
 def get_user_by_id(uid, id):
     print(uid)
     print(id)
-    return jsonify(recs_data.my_candiate), 200
+    return jsonify(recs_data.my_candiate), 501
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -173,12 +173,10 @@ def create_account():
 @route_bp.route('/matches', methods=['GET'])
 @auth_required
 def get_matches(uid):
-    # TODO: Get subject from auth
-    print(request.get_data())
     try:
         return db.get_matches(uid), 200
-    except ValueError:
-        return '{"error":"Internal server error"}', 404
+    except ValueError as e:
+        return 'Failed:' + str(e), 204
 
 
 # @brief Retrieves a specific matches profile data
@@ -189,28 +187,28 @@ def get_matched_user(uid, id):
         response = db.get_match_by_id(uid, id)
         return response, 200
     except ValueError as e:
-        return 'Failed: ' + str(e), 400
+        return 'Failed: ' + str(e), 403
 
 
 # @brief Un-matches a specific match by their user id
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):
-    return "User unmatched", 200
+    return "User unmatched", 501
 
 
 # @brief Rates a user negatively
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
-    return "Thumbs down!", 200
+    return "Thumbs down!", 501
 
 
 # @brief Rates a user positively
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
-    return "Thumbs up!", 200
+    return "Thumbs up!", 501
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -221,11 +219,11 @@ def rate_user_up(uid, id):
 @route_bp.route('/like/<string:id>', methods=['POST'])
 @auth_required
 def like_user(uid, id):
-    return "User liked", 200
+    return "User liked", 501
 
 
 # @brief Pass on a user
 @route_bp.route('/pass/<string:id>', methods=['POST'])
 @auth_required
 def pass_user(uid, id):
-    return "User passed", 200
+    return "User passed", 501
