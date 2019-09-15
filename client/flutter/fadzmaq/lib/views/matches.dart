@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -35,9 +36,10 @@ class ProfilePic extends StatelessWidget {
     // TODO this will fail on an image 404
     // flutter is dumb so this is hard to fix
     if (url != null && url != "") {
-      return FadeInImage.assetNetwork(
+      return FadeInImage.memoryNetwork(
         image: url,
-        placeholder: 'assets/images/placeholder-person.jpg',
+        placeholder: Uint8List(512 * 512),
+        fadeOutDuration: Duration(milliseconds: 10),
         height: 80,
         width: 80,
         fit: BoxFit.cover,
@@ -96,7 +98,8 @@ class MatchesList extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage(url: "matches/" + profile.id)),
+          MaterialPageRoute(
+              builder: (context) => ProfilePage(url: "matches/" + profile.id)),
         );
       },
       behavior: HitTestBehavior.opaque,
