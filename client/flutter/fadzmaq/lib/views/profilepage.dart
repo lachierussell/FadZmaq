@@ -18,11 +18,8 @@ class ProfileTempApp extends StatelessWidget {
   }
 }
 
-
-
 class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key key}) : super(key : key);
-
+  const ProfilePage({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,6 @@ class ProfilePage extends StatelessWidget {
       ),
     );
   }
-
 }
 
 // todo make this a proper reuseable widget
@@ -68,12 +64,11 @@ class ProfilePic extends StatelessWidget {
   }
 }
 
-
 class ProfilePageState extends StatelessWidget {
   // String _status = 'no-action';
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     ProfileData pd = RequestProvider.of<ProfileData>(context);
     final Color color1 = Color(0xffCCFC6D);
     final Color color2 = Color(0xff2ACDDF);
@@ -81,7 +76,7 @@ class ProfilePageState extends StatelessWidget {
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
     final String profile_age = pd.age != null ? pd.age : "-";
-    final String profile_name = pd.age !=null ? pd.name : "-";
+    final String profile_name = pd.age != null ? pd.name : "-";
 
     // final String image = 'assets/images/glenn.jpg';
     return Scaffold(
@@ -90,47 +85,56 @@ class ProfilePageState extends StatelessWidget {
           Container(
             height: 240,
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(bottomLeft: Radius.circular(50.0), bottomRight: Radius.circular(50.0)),
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(50.0),
+                    bottomRight: Radius.circular(50.0)),
                 gradient: LinearGradient(
-                    colors: [color1,color2],
+                    colors: [color1, color2],
                     begin: Alignment.topLeft,
-                    end: Alignment.bottomRight
-                )
-            ),
+                    end: Alignment.bottomRight)),
           ),
           Container(
             margin: const EdgeInsets.only(top: 80),
             child: Column(
               children: <Widget>[
-
                 SizedBox(height: 20.0),
                 Expanded(
                   child: Stack(
                     children: <Widget>[
                       Container(
                         height: double.infinity,
-                        margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 5.0, bottom: 0.0),
+                        margin: const EdgeInsets.only(
+                            left: 40.0, right: 40.0, top: 5.0, bottom: 0.0),
                         child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30.0),
-                            // child: Image.asset(image,fit: BoxFit.cover,),
-                            child: ProfilePic(),
+                          borderRadius: BorderRadius.circular(30.0),
+                          // child: Image.asset(image,fit: BoxFit.cover,),
+                          child: ProfilePic(),
                         ),
                       ),
                     ],
                   ),
                 ),
                 //SizedBox(height: 15.0),
-                Text(profile_name + " - " + profile_age, style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0,
-                    height: 10.0
-                ),),
+                Text(
+                  profile_name + " - " + profile_age,
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                      height: 10.0),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Icon(Icons.location_on, size: 16.0, color: Colors.grey,),
-                    Text("Perth, Western Australia, Australia", style: TextStyle(color: Colors.grey.shade600),)
+                    Icon(
+                      Icons.location_on,
+                      size: 16.0,
+                      color: Colors.grey,
+                    ),
+                    Text(
+                      "Perth, Western Australia, Australia",
+                      style: TextStyle(color: Colors.grey.shade600),
+                    )
                   ],
                 ),
                 SizedBox(height: 5.0),
@@ -141,17 +145,17 @@ class ProfilePageState extends StatelessWidget {
                     IconButton(
                       color: Colors.grey,
                       icon: Icon(CupertinoIcons.photo_camera),
-                      onPressed: (){},
+                      onPressed: () {},
                     ),
                     IconButton(
                       color: Colors.grey,
                       icon: Icon(CupertinoIcons.fullscreen),
-                      onPressed: (){},
+                      onPressed: () {},
                     ),
                     IconButton(
                       color: Colors.grey.shade600,
                       icon: Icon(CupertinoIcons.game_controller),
-                      onPressed: (){},
+                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -160,45 +164,47 @@ class ProfilePageState extends StatelessWidget {
                   child: Stack(
                     children: <Widget>[
                       Container(
-                        padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
-                        margin: const EdgeInsets.only(top: 30 ,left: 20.0, right: 20.0,bottom: 20.0),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 5.0, horizontal: 16.0),
+                        margin: const EdgeInsets.only(
+                            top: 30, left: 20.0, right: 20.0, bottom: 20.0),
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
-                              colors: [color1,color2],
+                              colors: [color1, color2],
                             ),
-                            borderRadius: BorderRadius.circular(30.0)
-                        ),
+                            borderRadius: BorderRadius.circular(30.0)),
                         child: Row(
                           children: <Widget>[
                             IconButton(
                                 icon: Icon(CupertinoIcons.person_solid),
-                                onPressed: () {
-                                }
-                            ),
+                                onPressed: () {}),
                             IconButton(
                               color: Colors.white,
                               icon: Icon(Icons.location_on),
-                              onPressed: (){},
+                              onPressed: () {},
                             ),
                             Spacer(),
                             IconButton(
                               color: Colors.white,
                               icon: Icon(Icons.add),
-                              onPressed: (){},
+                              onPressed: () {},
                             ),
                             IconButton(
                               color: Colors.white,
                               icon: Icon(Icons.message),
-                              onPressed: (){},
+                              onPressed: () {},
                             ),
                           ],
                         ),
                       ),
                       Center(
                         child: FloatingActionButton(
-                          child: Icon(Icons.favorite, color: Colors.pink,),
+                          child: Icon(
+                            Icons.favorite,
+                            color: Colors.pink,
+                          ),
                           backgroundColor: Colors.white,
-                          onPressed: (){},
+                          onPressed: () {},
                         ),
                       ),
                     ],
@@ -207,13 +213,8 @@ class ProfilePageState extends StatelessWidget {
               ],
             ),
           ),
-
-
         ],
       ),
     );
   }
-
-
-
 }
