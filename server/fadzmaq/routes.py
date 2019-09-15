@@ -123,7 +123,7 @@ def get_profile(uid):
 def update_profile(uid):
 
     response = request.get_data()
-    db.update_profile(request,uid)
+    db.update_profile(request, uid)
     return response, 200
 
 

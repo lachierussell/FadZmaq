@@ -49,12 +49,17 @@ def connect_db():
 def hash_id(id):
     return hashlib.md5(str(id).encode()).hexdigest()
 
+
 def update_profile(subject, uid):
     rows = get_db().execute(
         '''
-		UPDATE profile set nickname = '{}', bio ='{}', email ='{}', phone ='{}' where user_id = '{}'
-        '''.format(subject.values['nickname'], subject.values['bio'], subject.values['email'], subject.values['phone'], uid)
+        UPDATE profile 
+        SET nickname='{}', bio='{}', email='{}', phone='{}' 
+        WHERE user_id='{}';
+        '''.format(subject.values['nickname'], subject.values['bio'], subject.values['email'], subject.values['phone'],
+                   uid)
     )
+
 
 # Retrieves profile information for the subject.
 # @param    subject     user_id for the database entry
@@ -293,11 +298,3 @@ def get_hobby_list():
 
     except Exception as e:
         raise IOError(str(e))
-
-
-# # @brief updates the users profile in the db.
-# def update_profile(uid, request):
-#
-#
-#
-#
