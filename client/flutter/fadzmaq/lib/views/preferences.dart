@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/models.dart';
 import 'package:fadzmaq/models/matches.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -36,29 +40,16 @@ class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileData profile = RequestProvider.of<ProfileData>(context);
-    // return Image.network(
-    //   profile.photo,
-    //   height: 200,
-    //   width: 200,
-    //   fit: BoxFit.contain,
-    // );
-
-    if (profile.photo != null) {
-      return FadeInImage.assetNetwork(
-        image: profile.photo,
-        placeholder: 'assets/images/placeholder-person.jpg',
-        height: 200,
-        width: 200,
-        fit: BoxFit.contain,
-      );
-    } else {
-      return Image.asset(
-        'assets/images/placeholder-person.jpg',
-        height: 200,
-        width: 200,
-        fit: BoxFit.contain,
-      );
-    }
+    return SizedBox(
+      height: 200,
+      width: 200,
+      child: CachedNetworkImage(
+        imageUrl: profile.photo,
+        fit: BoxFit.cover,
+        // placeholder: (context, url) => new CircularProgressIndicator(),
+        errorWidget: (context, url, error) => new Icon(Icons.error),
+      ),
+    );
   }
 }
 
@@ -129,7 +120,8 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => ProfilePage()),
+                              builder: (context) =>
+                                  ProfilePage(url: "profile")),
                         );
                       },
                       child: Text("View Profile"),
@@ -246,10 +238,12 @@ class UserPreferencesState extends State {
     );
   }
 
-  // temp living here, to be moved to auth(?)
+  // TODO temp living here, to be moved to auth(?)
   void logOut() async {
-    // TODO log out of google account as well
     await FirebaseAuth.instance.signOut();
+    GoogleSignIn _googleSignIn = GoogleSignIn();
+    _googleSignIn.signOut();
+
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
   }

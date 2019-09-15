@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS hobbies
     name     VARCHAR(64) NOT NULL
 );
 
-CREATE TYPE HOBBY_SWAP AS ENUM ('share', 'discover');
+CREATE TYPE HOBBY_SWAP AS ENUM ('share', 'discover', 'matched');
 
 CREATE TABLE IF NOT EXISTS user_hobbies
 (
@@ -78,23 +78,52 @@ CREATE TABLE IF NOT EXISTS user_hobbies
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '1999-09-04', '0423199199', 'b026324c6904b2a9cb4b88d6d61c81d1',
  'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/AV0A6306_Sean_Bean.jpg/468px-AV0A6306_Sean_Bean.jpg');
+
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '1999-10-4', '0423239199', '26ab0db90d72e28ad0ba1e22ee510510',
  'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Good_Omens_panel_at_NYCC_%2860841%29a.jpg/1024px-Good_Omens_panel_at_NYCC_%2860841%29a.jpg');
+
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Boating admirer', 'Smith', 'smith@email.com', '1970-12-5', '0413239199', '6d7fce9fee471194aa8b5b6e47267f03',
- 'https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg');
+ 'https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2' ||
+ '_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg');
+
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Boxing champion', 'Judy', 'judy@email.com', '1980-10-3', '0404239188', '48a24b70a0b376535542b996af517398',
  'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg/800px-Jeffrey_Wright_by_Gage_Skidmore_3.jpg');
+
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
-
 VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '1980-09-14', '0415239188', '1dcca23355272056f04fe8bf20edfce0',
-
  'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg');
- INSERT INTO profile (nickname, bio, dob, email, phone, user_id, photo)
-VALUES ('Lachie', 'Archer', '1990-09-14', 'lachie.russell@gmail.com', '04152122188', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1',
-'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Pedro_Pascal_by_Gage_Skidmore.jpg/800px-Pedro_Pascal_by_Gage_Skidmore.jpg');
+
+-- Inserting user data for ourselves --
+INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'Lachie', 'Mountain biker but wanting to try out rock climbing!', '1999-09-14', 'lachie.russell@gmail.com',
+        '04152122188', 'https://www.russell-systems.cc/other/48a825f8953a416e22525ac737975ee2785c3088448f665df3f0e13c4955241e.jpg');
+
+INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'Jordan', 'Jordan has a background in graphic design and user experience. He ' ||
+                                                  'will help with how the app looks, feels and overall use.',
+        '1990-05-13', 'jordashrussell@gmail.com',
+        '0400100300', 'https://www.russell-systems.cc/other/f75c35fbefffb759903f4de04fbc168eccaea0619b1f3611a2ee6f2872b397c7.jpg');
+
+INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'Seharsh', 'Seharsh has developed a number of mobile apps and has the most' ||
+                                                   ' front end experience of the team.  His experience puts him in ' ||
+                                                   'the position to help with technical and design decisions relating ' ||
+                                                   'to the mobile platform.'
+                                                   , '1998-04-24', 'seharshs05@gmail.com',
+        '0400100400', 'https://www.russell-systems.cc/other/3ef06fabbfa1be08fcd50dded3450258e357e08e8d75f0aa544ca69e7808ff3b.jpg');
+
+INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
+VALUES ('HJtnPGdccnbqsR1V0hWSJe9AWFx1', 'Thiren', 'Thiren is the primary contact point for the team, he will organise' ||
+                                                  ' our meetings keep track of a technical queries and responses on ' ||
+                                                  'behalf of the team.', '1998-09-8', '22239906@student.uwa.edu.au',
+        '0400100500', 'https://www.russell-systems.cc/other/ceac483c49a4b8c2c03e4eb3b7e213b8746b996bb7dd30468e0ea6044710a648.jpg');
+
+-- INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
+-- VALUES ('', 'Rupert', 'Add your bio here:', '02/16/1998', '22239906@student.uwa.edu.au',
+--         '0400100600', 'https://www.russell-systems.cc/other/ceac483c49a4b8c2c03e4eb3b7e213b8746b996bb7dd30468e0ea6044710a648.jpg');
 
 
 INSERT INTO hobbies (name) VALUES ('Boxing');
@@ -118,6 +147,82 @@ INSERT INTO matches (user_a, user_b)
 VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
 INSERT INTO matches (user_a, user_b)
 VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '48a24b70a0b376535542b996af517398');
+
+--------------------------------------------
+--  ----------------------------------------
+--  USER DATA FOR THE TEAM
+--  ----------------------------------------
+--------------------------------------------
+
+-- Lachie
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'OQezYUwFC2P2JOP81nicQR4qZRB3', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
+
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 2, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 3, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'discover');
+
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 6, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'share');
+
+-- Jordan
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
+
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 6, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 3, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 4, 'discover');
+
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 7, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 6, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'share');
+
+-- Seharsh
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'OQezYUwFC2P2JOP81nicQR4qZRB3', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
+
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 1, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 6, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 3, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 4, 'discover');
+
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 1, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 6, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 2, 'share');
+
+
+
+
 
 -- Exluding this for now so we can have testing up for this sprint
 
@@ -149,7 +254,7 @@ VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '48a24b70a0b376535542b996af517398');
 --     FOR EACH ROW EXECUTE FUNCTION match();
 
 
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510');
+-- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510');
 -- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
 -- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
 -- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '48a24b70a0b376535542b996af517398');
@@ -159,5 +264,3 @@ INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b02632
 -- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03');
 -- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
 -- INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', 'b026324c6904b2a9cb4b88d6d61c81d1');
-
-INSERT INTO matches (user_a, user_b, time, rating) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
