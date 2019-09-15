@@ -94,7 +94,7 @@ class MatchesList extends StatelessWidget {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => ProfilePage()),
+          MaterialPageRoute(builder: (context) => ProfilePage(url: "matches/" + profile.id)),
         );
       },
       behavior: HitTestBehavior.opaque,
