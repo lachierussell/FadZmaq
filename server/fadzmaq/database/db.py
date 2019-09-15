@@ -126,10 +126,7 @@ def build_hobby_data(rows):
     discover = []
     matched = []
 
-    print('new person')
-
     for row in rows:
-        print(row['name'])
         data = {
             'id': row['hobby_id'],
             'name': row['name']
@@ -248,7 +245,7 @@ def get_match_by_id(uid, id):
         );
         '''.format(id, uid, id, uid, id)
     )
-    return build_profile_data()
+    return build_profile_data(rows)
 
 
 # @brief Updates the users hobbies
