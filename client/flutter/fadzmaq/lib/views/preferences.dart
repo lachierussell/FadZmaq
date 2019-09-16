@@ -79,12 +79,14 @@ class UserPreferencesState extends State {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Preferences'),
-      ),
-      body: page(),
-    );
+    return page();
+
+    // return Scaffold(
+    //   appBar: AppBar(
+    //     title: Text('Preferences'),
+    //   ),
+    //   body: page(),
+    // );
   }
 
   Widget page() {
@@ -149,19 +151,19 @@ class UserPreferencesState extends State {
                       child: Text("Edit Profile"),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MatchesPage()),
-                        );
-                      },
-                      child: Text("View Matches"),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: RaisedButton(
+                  //     onPressed: () {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(
+                  //             builder: (context) => MatchesPage()),
+                  //       );
+                  //     },
+                  //     child: Text("View Matches"),
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: RaisedButton(

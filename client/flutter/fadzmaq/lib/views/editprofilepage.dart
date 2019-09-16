@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/preferences.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
@@ -140,7 +141,9 @@ class EditProfileState extends State<EditProfile> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => UserPreferencesPage()),
+                                // builder: (context) => UserPreferencesPage()),
+                                //TODO this should probably just return to last page through nav?
+                                builder: (context) => LandingPage()),
                           );
                         } else {
                           print(_fbKey.currentState.value);
