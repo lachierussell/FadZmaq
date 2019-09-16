@@ -52,21 +52,35 @@ def hash_id(id):
 def update_profile(subject, uid):
     rows = get_db().execute(
         '''
-        UPDATE profile 
-        SET nickname='{}', bio='{}', email='{}', phone='{}' 
+        UPDATE profile
+        SET nickname='{}', bio='{}', email='{}', phone='{}'
         WHERE user_id='{}';
         '''.format(subject.values['nickname'], subject.values['bio'], subject.values['email'], subject.values['phone'],
                    uid)
     )
 
 
-def build_profile_data(rows):
+# Retrieves profile information for the subject.
+# @param    subject     user_id for the database entry
+# @return   json profile data or raises value error.
+def retrieve_profile(subject):
+    # Retrieves user info.
+    rows = get_db().execute(
+        '''
+        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
+        FROM profile
+        WHERE user_id = '{}'
+        '''.format(subject)
+    )
+
     for row in rows:
+        # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': row['user_id'],
+                'user_id': hash_id(row['user_id']),
                 'name': row['nickname'],
                 'age': str(row['age']),
+                'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
                 'contact_details': {
                     'phone': row['phone'],
@@ -79,27 +93,11 @@ def build_profile_data(rows):
                         'display_value': row['bio']
                     }
                 ],
-                'hobbies': get_hobbies(row['user_id'])
+                'hobbies': get_hobbies(subject)
             }
         }
         return profile
-    raise ValueError("Did not find row")
-
-
-# Retrieves profile information for the subject.
-# @param    subject     user_id for the database entry
-# @return   json profile data or raises value error.
-def retrieve_profile(subject):
-    # Retrieves user info.
-    rows = get_db().execute(
-        '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
-        FROM profile 
-        WHERE user_id = '{}'
-        '''.format(subject)
-    )
-
-    return build_profile_data(rows)
+    raise ValueError
 
 
 # Retrieves the user hobbies
@@ -108,7 +106,7 @@ def retrieve_profile(subject):
 def get_hobbies(subject):
     # Retrieves hobbies
     rows = get_db().execute(
-        '''      
+        '''
         SELECT  h.hobby_id, h.name, uh.swap
         FROM profile
           JOIN user_hobbies uh
@@ -118,13 +116,9 @@ def get_hobbies(subject):
         WHERE profile.user_id = '{}';
         '''.format(subject)
     )
-    return build_hobby_data(rows)
 
-
-def build_hobby_data(rows):
     share = []
     discover = []
-    matched = []
 
     for row in rows:
         data = {
@@ -137,25 +131,16 @@ def build_hobby_data(rows):
         if row['swap'] == 'discover':
             discover.append(data)
 
-        if row['swap'] == 'matched':
-            matched.append(data)
-
-    hobbies = []
-    if len(share) > 0:
-        hobbies.append(containerize("share", share))
-    if len(discover) > 0:
-        hobbies.append(containerize("discover", discover))
-    if len(matched) > 0:
-        hobbies.append(containerize("matched", matched))
-
-    return hobbies
-
-
-def containerize(offer, list):
-    return {
-        'container': offer,
-        'hobbies': list
-    }
+    return [
+        {
+            'container': 'share',
+            'hobbies': share
+        },
+        {
+            'container': 'discover',
+            'hobbies': discover
+        }
+    ]
 
 
 # @brief Gets a users current matches
@@ -187,8 +172,8 @@ def get_matches(subject):
         matches.append({
             'id': row['user_id'],
             'name': row['nickname'],
-            'photo': row['photo'],
-            'hobbies': get_matched_hobbies(subject, row['user_id'])
+            # 'photo': 'DOES NOT EXIST'
+            'photo': row['photo']
         })
 
     return {
@@ -218,7 +203,7 @@ def verify_user(subject):
 def make_user(name, email, uid):
     rows = get_db().execute(
         '''
-        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id; 
+        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id;
         '''.format(name, email, uid)
     )
     for row in rows:
@@ -233,7 +218,7 @@ def get_match_by_id(uid, id):
     print(uid, id)
     rows = get_db().execute(
         '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
         FROM profile
             WHERE user_id = '{}'
             AND user_id IN (
@@ -245,13 +230,36 @@ def get_match_by_id(uid, id):
         );
         '''.format(id, uid, id, uid, id)
     )
-    return build_profile_data(rows)
+
+    for row in rows:
+        profile = {
+            'profile': {
+                'user_id': row['user_id'],
+                'name': row['nickname'],
+                'age': str(row['age']),
+                'photo_location': row['photo'],
+                'contact_details': {
+                    'phone': row['phone'],
+                    'email': row['email']
+                },
+                'profile_fields': [
+                    {
+                        'id': 1,
+                        'name': 'About me',
+                        'display_value': row['bio']
+                    }
+                ],
+                'hobbies': get_hobbies(id)
+            }
+        }
+        return profile
+    raise ValueError("Did not find row")
 
 
 # @brief Updates the users hobbies
 # Deletes current hobbies and updates with the new hobbies.
 def update_user_hobbies(uid, request):
-     try:
+    try:
         get_db().execute(
             '''
             DELETE FROM user_hobbies
@@ -295,27 +303,4 @@ def get_hobby_list():
         return hobbies_list
 
     except Exception as e:
-        raise IOError(str(e))
-
-
-def get_matched_hobbies(uid, id):
-    try:
-        rows = get_db().execute(
-            '''
-                SELECT DISTINCT(me.hobby_id), 'matched' AS swap, (
-                    SELECT name
-                    FROM hobbies
-                    WHERE me.hobby_id = hobbies.hobby_id
-                )
-                FROM user_hobbies me
-                    INNER JOIN user_hobbies you
-                    ON me.hobby_id = you.hobby_id
-                    AND me.swap != you.swap
-                WHERE me.user_id = '{}'
-                AND you.user_id = '{}';
-            '''.format(uid, id)
-        )
-        return build_hobby_data(rows)
-    except Exception as e:
-        print(str(e))
         raise IOError(str(e))
