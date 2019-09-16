@@ -138,11 +138,8 @@ class EditProfileState extends State<EditProfile> {
                           print(_fbKey.currentState.value);
                           post(server + "profile", _fbKey.currentState.value);
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserPreferencesPage()),
-                          );
+                          Navigator.pop(context);
+
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");

@@ -128,7 +128,6 @@ class _EditHobbyPageState extends State<EditHobby> {
     ProfileData pd = RequestProvider.of<ProfileData>(context);
     List<String> hobbies = List();
     print("here");
-    print(pd.hobbyContainers);
     if (pd.hobbyContainers != null) {
       for (HobbyContainer hc in pd.hobbyContainers) {
         if(hc.container == discoverOrShare())
@@ -189,11 +188,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
                           post("http://10.0.2.2:5000/profile/hobbies", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserPreferencesPage()),
-                          );
+                          Navigator.pop(context);
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");
