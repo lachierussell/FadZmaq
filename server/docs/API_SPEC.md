@@ -101,17 +101,6 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
             "name": "Judy",
             "photo": "URL"
         },
-        "hobbies": [
-             {
-                "container": "share",
-                "hobbies": [
-                	{
-                	"id": 3,
-                	"name": "Rock Climbing"
-                	}
-                 ]
-             }
-		]	
     ]
 }
 ```
@@ -229,42 +218,26 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 ```json
 // POST 
 {
-    "matches": [
-        {
-            "hobbies": [],
-            "id": "b026324c6904b2a9cb4b88d6d61c81d1",
-            "name": "Lachie",
-            "photo": "URL"
-        },
-        {
-            "hobbies": [],
-            "id": "6d7fce9fee471194aa8b5b6e47267f03",
-            "name": "Smith",
-            "photo": "URL"
-        },
-        {
-            "hobbies": [],
-            "id": "48a24b70a0b376535542b996af517398",
-            "name": "Judy",
-            "photo": "URL"
-        },
-        {
-            "hobbies": [
-                {
-                    "container": "matched",
-                    "hobbies": [
-                        {
-                            "id": 3,
-                            "name": "Rock Climbing"
-                        }
-                    ]
-                }
-            ],
-            "id": "TMnFU6BmQoV8kSMoYYGLJDu8qSy1",
-            "name": "Lachie",
-            "photo": "URL"
-        }
-    ]
+     "hobbies": [
+         {
+             "container": "share",
+             "hobbies": [
+                 {
+                     "id": 3,
+                     "name": "Rock Climbing"
+                 }
+             ]
+         },
+         {
+             "container": "discover",
+             "hobbies": [
+                 {
+                     "id": 1,
+                     "name": "Boxing"
+                 }
+             ]
+         }
+     ]
 }
 // Receive
 // A users current hobbies

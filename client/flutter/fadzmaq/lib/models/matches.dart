@@ -1,5 +1,3 @@
-import 'package:fadzmaq/models/hobbies.dart';
-
 class MatchesData {
   List<MatchProfileData> matches;
 
@@ -24,26 +22,14 @@ class MatchProfileData {
   final String id;
   final String name;
   final String photo;
-  final List<HobbyContainer> hobbyContainers;
 
-  MatchProfileData({
-    this.id,
-    this.name,
-    this.photo,
-    this.hobbyContainers,
-  });
+  MatchProfileData({this.id, this.name, this.photo});
 
   factory MatchProfileData.fromJson(Map<String, dynamic> json) {
-    var hobbyContainersJson = json['hobbies'] as List;
-    List<HobbyContainer> hobbyContainers = hobbyContainersJson != null
-        ? hobbyContainersJson.map((i) => HobbyContainer.fromJson(i)).toList()
-        : null;
-
     return MatchProfileData(
       id: json['id'],
       name: json['name'],
       photo: json['photo'],
-      hobbyContainers: hobbyContainers,
     );
   }
 }
