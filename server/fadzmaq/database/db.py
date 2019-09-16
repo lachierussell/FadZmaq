@@ -14,17 +14,23 @@
 import hashlib
 from flask import current_app, g
 from sqlalchemy import create_engine
+import fadzmaq
 
 
 def init_app(app):
     app.teardown_appcontext(close_db)
 
 
+
+
 def get_engine():
-    if 'db_engine' not in g:
-        g.db_engine = create_engine(current_app.config['DATABASE_URI'])
-        # g.db_engine = create_engine(db_conf.DATABASE_URI)
-    return g.db_engine
+
+    if fadzmaq.engine == None:
+        print ("new engine")
+        fadzmaq.engine = create_engine(current_app.config['DATABASE_URI'])
+    return fadzmaq.engine
+
+
 
 
 def get_db():
@@ -41,8 +47,7 @@ def close_db(e=None):
 
 
 def connect_db():
-    engine = get_engine()
-    return engine.connect()
+    return get_engine().connect()
 
 
 def hash_id(id):
