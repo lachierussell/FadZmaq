@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -75,8 +75,10 @@ class EditHobby extends StatefulWidget {
 
 List<FormBuilderFieldOption> function(var x) {
   List<FormBuilderFieldOption> list = [];
+  hobbies = Map();
   for(var item  in x) {
     list.add(FormBuilderFieldOption(value: item.name));
+    hobbies[item.name] = item.id;
   }
   return list;
 }
