@@ -89,18 +89,53 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
         {
             "id": "b026324c6904b2a9cb4b88d6d61c81d1",
             "name": "Lachie",
-            "photo": "URL"
-        },
-        {
-            "id": "6d7fce9fee471194aa8b5b6e47267f03",
-            "name": "Smith",
-            "photo": "URL"
+            "photo": "URL",
+            "hobbies": [
+                 {
+                     "container": "share",
+                     "hobbies": [
+                         {
+                             "id": 3,
+                             "name": "Rock Climbing"
+                         }
+                     ]
+                 },
+                 {
+                     "container": "discover",
+                     "hobbies": [
+                         {
+                             "id": 1,
+                             "name": "Boxing"
+                         }
+                     ]
+                 }
+             ]
         },
         {
             "id": "48a24b70a0b376535542b996af517398",
             "name": "Judy",
-            "photo": "URL"
-        },
+            "photo": "URL",
+            "hobbies": [
+                 {
+                     "container": "share",
+                     "hobbies": [
+                         {
+                             "id": 3,
+                             "name": "Rock Climbing"
+                         }
+                     ]
+                 },
+                 {
+                     "container": "discover",
+                     "hobbies": [
+                         {
+                             "id": 1,
+                             "name": "Boxing"
+                         }
+                     ]
+                 }
+             ]
+        }
     ]
 }
 ```
@@ -262,6 +297,5 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 | **5xx**    | **Server Error**       |                                                              |
 | 500        | Internal server error  | A generic error message, given when an unexpected condition was encountered and no more specific message is suitable. |
 | 501        | Not implemented        | The server either does not recognize the request method, or it lacks the ability to fulfil the request. |
-
 
 
