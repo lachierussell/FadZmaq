@@ -62,7 +62,7 @@ def auth_required(func):
 # @param request.headers    The http headers must be available to retrieve the authentication token.
 # @returns                  The user id.
 # @throws ValueError        If authentication token is not valid.
-def verify_token():
+def verify_token(): 
     if 'Authorization' not in request.headers:
         raise ValueError("Token not present")
 
@@ -81,7 +81,7 @@ def verify_token():
 #
 def verify_user(uid):
     if not db.verify_user(uid):
-        raise ValueError("User does not exist")
+        raise ValueError("User does not exist") # pragma: no cover
 
 
 # @brief Retrieves user recommendations
@@ -155,7 +155,7 @@ def create_account():
     try:
         data = json.loads(request.get_data())
         user = data["new_user"]
-        uid = verify_token()
+        uid = verify_token() 
         user_id = db.make_user(user['name'], user['email'], uid)
         return user_id
     except ValueError as e:
