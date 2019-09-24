@@ -252,16 +252,17 @@ def get_match_by_id(uid, id):
 # Deletes current hobbies and updates with the new hobbies.
 def update_user_hobbies(uid, request):
     try:
-        get_db().execute(
-            '''
-            DELETE FROM user_hobbies
-            WHERE user_id = '{}';
-            '''.format(uid)
-        )
         hobbies = request["hobbies"]
         for category in hobbies:
             print(category)
             print(category['container'])
+            get_db().execute(
+                '''
+                DELETE FROM user_hobbies
+                WHERE user_id = '{}'
+                  AND swap = '{}';
+                '''.format(uid, category['container'])
+            )g
             for hobby in category['hobbies']:
                 print(hobby['id'])
                 get_db().execute(
