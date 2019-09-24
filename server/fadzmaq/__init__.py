@@ -14,6 +14,7 @@ from fadzmaq.database import db
 from fadzmaq.routes import route_bp
 
 auth_app = None
+engine = None
 
 
 # Initialisation of the api

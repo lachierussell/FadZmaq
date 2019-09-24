@@ -14,6 +14,7 @@
 import hashlib
 from flask import current_app, g
 from sqlalchemy import create_engine
+import fadzmaq
 
 
 def init_app(app):
@@ -21,10 +22,10 @@ def init_app(app):
 
 
 def get_engine():
-    if 'db_engine' not in g:
-        g.db_engine = create_engine(current_app.config['DATABASE_URI'])
-        # g.db_engine = create_engine(db_conf.DATABASE_URI)
-    return g.db_engine
+    if fadzmaq.engine == None:
+        print ("new engine")
+        fadzmaq.engine = create_engine(current_app.config['DATABASE_URI'])
+    return fadzmaq.engine
 
 
 def get_db():
@@ -41,8 +42,7 @@ def close_db(e=None):
 
 
 def connect_db():
-    engine = get_engine()
-    return engine.connect()
+    return get_engine().connect()
 
 
 def hash_id(id):
@@ -60,27 +60,13 @@ def update_profile(subject, uid):
     )
 
 
-# Retrieves profile information for the subject.
-# @param    subject     user_id for the database entry
-# @return   json profile data or raises value error.
-def retrieve_profile(subject):
-    # Retrieves user info.
-    rows = get_db().execute(
-        '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
-        FROM profile
-        WHERE user_id = '{}'
-        '''.format(subject)
-    )
-
+def build_profile_data(rows):
     for row in rows:
-        # TODO: Dynamically serve profile fields data.
         profile = {
             'profile': {
-                'user_id': hash_id(row['user_id']),
+                'user_id': row['user_id'],
                 'name': row['nickname'],
                 'age': str(row['age']),
-                'birth-date': str(row['dob']),
                 'photo_location': row['photo'],
                 'contact_details': {
                     'phone': row['phone'],
@@ -93,11 +79,27 @@ def retrieve_profile(subject):
                         'display_value': row['bio']
                     }
                 ],
-                'hobbies': get_hobbies(subject)
+                'hobbies': get_hobbies(row['user_id'])
             }
         }
         return profile
-    raise ValueError
+    raise ValueError("Did not find row")
+
+
+# Retrieves profile information for the subject.
+# @param    subject     user_id for the database entry
+# @return   json profile data or raises value error.
+def retrieve_profile(subject):
+    # Retrieves user info.
+    rows = get_db().execute(
+        '''
+        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        FROM profile 
+        WHERE user_id = '{}'
+        '''.format(subject)
+    )
+
+    return build_profile_data(rows)
 
 
 # Retrieves the user hobbies
@@ -116,9 +118,13 @@ def get_hobbies(subject):
         WHERE profile.user_id = '{}';
         '''.format(subject)
     )
+    return build_hobby_data(rows)
 
+
+def build_hobby_data(rows):
     share = []
     discover = []
+    matched = []
 
     for row in rows:
         data = {
@@ -131,16 +137,25 @@ def get_hobbies(subject):
         if row['swap'] == 'discover':
             discover.append(data)
 
-    return [
-        {
-            'container': 'share',
-            'hobbies': share
-        },
-        {
-            'container': 'discover',
-            'hobbies': discover
-        }
-    ]
+        if row['swap'] == 'matched':
+            matched.append(data)
+
+    hobbies = []
+    if len(share) > 0:
+        hobbies.append(containerize("share", share))
+    if len(discover) > 0:
+        hobbies.append(containerize("discover", discover))
+    if len(matched) > 0:
+        hobbies.append(containerize("matched", matched))
+
+    return hobbies
+
+
+def containerize(offer, list):
+    return {
+        'container': offer,
+        'hobbies': list
+    }
 
 
 # @brief Gets a users current matches
@@ -172,8 +187,8 @@ def get_matches(subject):
         matches.append({
             'id': row['user_id'],
             'name': row['nickname'],
-            # 'photo': 'DOES NOT EXIST'
-            'photo': row['photo']
+            'photo': row['photo'],
+            'hobbies': get_matched_hobbies(subject, row['user_id'])
         })
 
     return {
@@ -230,30 +245,7 @@ def get_match_by_id(uid, id):
         );
         '''.format(id, uid, id, uid, id)
     )
-
-    for row in rows:
-        profile = {
-            'profile': {
-                'user_id': row['user_id'],
-                'name': row['nickname'],
-                'age': str(row['age']),
-                'photo_location': row['photo'],
-                'contact_details': {
-                    'phone': row['phone'],
-                    'email': row['email']
-                },
-                'profile_fields': [
-                    {
-                        'id': 1,
-                        'name': 'About me',
-                        'display_value': row['bio']
-                    }
-                ],
-                'hobbies': get_hobbies(id)
-            }
-        }
-        return profile
-    raise ValueError("Did not find row")
+    return build_profile_data(rows)
 
 
 # @brief Updates the users hobbies
@@ -278,8 +270,10 @@ def update_user_hobbies(uid, request):
                     VALUES ('{}', {}, '{}');
                     '''.format(uid, hobby['id'], category['container'])
                 )
-     except Exception as e:
+    except Exception as e:
         raise IOError(str(e))
+
+
 # @brief Retrieves the full list of hobbies from the db.
 def get_hobby_list():
     try:
@@ -303,4 +297,27 @@ def get_hobby_list():
         return hobbies_list
 
     except Exception as e:
+        raise IOError(str(e))
+
+
+def get_matched_hobbies(uid, id):
+    try:
+        rows = get_db().execute(
+            '''
+                SELECT DISTINCT(me.hobby_id), 'matched' AS swap, (
+                    SELECT name
+                    FROM hobbies
+                    WHERE me.hobby_id = hobbies.hobby_id
+                )
+                FROM user_hobbies me
+                    INNER JOIN user_hobbies you
+                    ON me.hobby_id = you.hobby_id
+                    AND me.swap != you.swap
+                WHERE me.user_id = '{}'
+                AND you.user_id = '{}';
+            '''.format(uid, id)
+        )
+        return build_hobby_data(rows)
+    except Exception as e:
+        print(str(e))
         raise IOError(str(e))

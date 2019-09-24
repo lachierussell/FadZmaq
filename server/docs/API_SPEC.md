@@ -299,4 +299,3 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 | 501        | Not implemented        | The server either does not recognize the request method, or it lacks the ability to fulfil the request. |
 
 
-
