@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -193,7 +194,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post("http://10.0.2.2:5000/profile/hobbies", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
+                          post(AppConfig.of(context).server + "profile/hobbies", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
                           Navigator.pop(context);
                         } else {
                           print(_fbKey.currentState.value);
