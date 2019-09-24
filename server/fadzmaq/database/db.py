@@ -22,7 +22,7 @@ def init_app(app):
 
 
 def get_engine():
-    if fadzmaq.engine == None:
+    if fadzmaq.engine is None:
         print ("new engine")
         fadzmaq.engine = create_engine(current_app.config['DATABASE_URI'])
     return fadzmaq.engine
@@ -254,17 +254,14 @@ def update_user_hobbies(uid, request):
     try:
         hobbies = request["hobbies"]
         for category in hobbies:
-            print(category)
-            print(category['container'])
             get_db().execute(
                 '''
                 DELETE FROM user_hobbies
                 WHERE user_id = '{}'
                   AND swap = '{}';
                 '''.format(uid, category['container'])
-            )g
+            )
             for hobby in category['hobbies']:
-                print(hobby['id'])
                 get_db().execute(
                     '''
                     INSERT INTO user_hobbies (user_id, hobby_id, swap)
