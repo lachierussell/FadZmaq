@@ -162,7 +162,7 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditHobbyPage()),
+                              builder: (context) => EditHobbyPage2(isShare:false)),
                         );
                       },
                       child: Text("Choose hobbies that you want to discover"),
@@ -175,7 +175,7 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditHobbyPage()),
+                              builder: (context) => EditHobbyPage2(isShare:true)),
                         );
                       },
                       child: Text("Choose hobbies that you want to share"),

@@ -68,7 +68,7 @@ def verify_token():
 
     # Verifying the token, if it fails proceed to except block.
     token = request.headers['Authorization']
-    print('Attempting to verify token:', token)
+    print('Attempting to verify token.')
     decoded_token = auth.verify_id_token(token, fadzmaq.auth_app, False)
     uid = decoded_token['uid']
     print('Verified, UID:', uid)

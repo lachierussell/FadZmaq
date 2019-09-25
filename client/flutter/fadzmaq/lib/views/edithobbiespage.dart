@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -16,7 +17,29 @@ class HobbyTempApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const EditHobbyPage(),
+      home: const EditHobbyPage2(),
+    );
+  }
+}
+
+Map<String, int> hobbies;
+bool finalIsShare;
+
+class EditHobbyPage2 extends StatelessWidget {
+  final bool isShare;
+  const EditHobbyPage2({Key key, this.isShare}) : super(key : key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+
+      body: GetRequest<ProfileData>(
+        url: "profile",
+        builder: (context) {
+          finalIsShare = isShare;
+          return new EditHobbyPage();
+        },
+      ),
     );
   }
 }
@@ -26,7 +49,6 @@ class HobbyTempApp extends StatelessWidget {
 
 class EditHobbyPage extends StatelessWidget {
   const EditHobbyPage({Key key}) : super(key : key);
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,10 +76,40 @@ class EditHobby extends StatefulWidget {
 
 List<FormBuilderFieldOption> function(var x) {
   List<FormBuilderFieldOption> list = [];
+  hobbies = Map();
   for(var item  in x) {
     list.add(FormBuilderFieldOption(value: item.name));
+    hobbies[item.name] = item.id;
   }
   return list;
+}
+
+List<Map> deriveResult(var x) {
+  List<Map> ret = List();
+  List<String> y = x["languages"];
+  for(var z in y) {
+    ret.add({"id" : hobbies[z], "name" : z});
+  }
+  return ret;
+}
+
+
+Map compileJson(var x) {
+  Map map = {
+    'hobbies': [{'container': discoverOrShare() , "hobbies": deriveResult(x) }
+  ]};
+  print(map);
+  return map;
+}
+
+String discoverOrShare() {
+  if(finalIsShare) {
+    return "share";
+  }
+
+  else {
+    return "discover";
+  }
 }
 
 class _EditHobbyPageState extends State<EditHobby> {
@@ -75,13 +127,28 @@ class _EditHobbyPageState extends State<EditHobby> {
     var x = ["Surfing", "Summer"];
     // List<FormBuilderFieldOption> y = function(x);
     AllHobbiesData hb = RequestProvider.of<AllHobbiesData>(context);
+    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    List<String> hobbies = List();
+    print("here");
+    if (pd.hobbyContainers != null) {
+      for (HobbyContainer hc in pd.hobbyContainers) {
+        if(hc.container == discoverOrShare())
+        if (hc.hobbies != null) {
+          for (HobbyData h in hc.hobbies) {
+           hobbies.add(h.name);
+          }
+        }
+      }
+    }
+
+    print(hobbies);
     List<FormBuilderFieldOption> y = function(hb.hobbies);
     // print(hb);
     // return Scaffold(
     //   appBar: AppBar(
     //     title: Text("Choose hobbies to discover"),
     //   ),
-    //   body: 
+    //   body:
      return Padding(
         padding: EdgeInsets.all(10),
         child: SingleChildScrollView(
@@ -106,7 +173,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                       // TODO make this use the hobbies we're looking for
                       // probably use another getRequest for now, but it should be smoother
                       // maybe some storage of the hobby list on the app so we're only requesting the user hobbies
-                      initialValue: ["Surfing"],
+                      initialValue: hobbies,
                       leadingInput: true,
                       options: y,
                       onChanged: _onChanged,
@@ -127,6 +194,8 @@ class _EditHobbyPageState extends State<EditHobby> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
+                          post(AppConfig.of(context).server + "profile/hobbies", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
+                          Navigator.pop(context);
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");
@@ -147,4 +216,3 @@ class _EditHobbyPageState extends State<EditHobby> {
     );
   }
 }
-

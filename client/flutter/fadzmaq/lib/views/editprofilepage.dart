@@ -138,13 +138,9 @@ class EditProfileState extends State<EditProfile> {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
                           post(server + "profile", _fbKey.currentState.value);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                // builder: (context) => UserPreferencesPage()),
-                                //TODO this should probably just return to last page through nav?
-                                builder: (context) => LandingPage()),
-                          );
+
+                          Navigator.pop(context);
+
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");
