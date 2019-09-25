@@ -45,6 +45,8 @@ def test_profile(client):
 
 
 def test_profile_post(client):
+    # Note this currently fails since the posting to profile is *not* implemented with json.
+    # Do not change this test, profile should (and will soon) be json.
     post_data = dict(somedata=profile_data.my_profile)
     response = client.post('/profile', data=post_data, follow_redirects=True)
     assert response.status_code == 200
