@@ -69,7 +69,7 @@ class ProfilePageState extends StatelessWidget {
 
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
-    // final String profileAge = pd.age != null ? pd.age : "-";
+    final String profileAge = pd.age != null ? pd.age : "-";
     final String profileName = pd.age != null ? pd.name : "-";
 
     String hobbiesRaw = "";
@@ -124,24 +124,86 @@ class ProfilePageState extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // ],
-                  // ),
-                  // ),
-                  //SizedBox(height: 15.0),
+
+                  SizedBox(height: 15.0),
                   Text(
-                    profileName,
+                    profileName + ', ' + profileAge,
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16.0,
-                        height: 10.0),
-                  ),
-                  Text(
-                    hobbiesRaw,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
+                        fontSize: 34.0,
+                        height: 1.5
                     ),
                   ),
+                  Align
+                    (
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 5.0),
+                      child: Text("Discovering"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, top: 5.0),
+                    child: Align
+                      (
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                          child: Wrap(
+                            spacing: 5.0,
+                            runSpacing: 3.0,
+                            children: <Widget>[
+                              FilterChipWidget(chipName: 'Boxing'),
+                              FilterChipWidget(chipName: 'Boating'),
+                              FilterChipWidget(chipName: 'Rock Climbing'),
+                              FilterChipWidget(chipName: 'Hiking'),
+                              FilterChipWidget(chipName: 'Golf'),
+                              FilterChipWidget(chipName: 'Surfing'),
+
+                            ],
+                          )
+                      ),
+                    ),
+                  ),
+                  Align
+                    (
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          left: 40.0, right: 40.0, top: 5.0),
+                      child: Text("Sharing"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        left: 40.0, right: 40.0, top: 5.0),
+                    child: Align
+                      (
+                      alignment: Alignment.centerLeft,
+                      child: Container(
+                          child: Wrap(
+                            spacing: 5.0,
+                            runSpacing: 3.0,
+                            children: <Widget>[
+                              FilterChipWidget(chipName: 'Boxing'),
+                              FilterChipWidget(chipName: 'Boating'),
+                              FilterChipWidget(chipName: 'Rock Climbing'),
+                              FilterChipWidget(chipName: 'Hiking'),
+                              FilterChipWidget(chipName: 'Golf'),
+                              FilterChipWidget(chipName: 'Surfing'),
+                            ],
+                          )
+                      ),
+                    ),
+                  ),
+//                  Text(
+//                    hobbiesRaw,
+//                    style: TextStyle(
+//                      fontSize: 16.0,
+//                      height: 2.0,
+//                    ),
+//                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -238,4 +300,26 @@ class ProfilePageState extends StatelessWidget {
       ),
     );
   }
+}
+
+class FilterChipWidget extends StatefulWidget {
+  final String chipName;
+
+  FilterChipWidget({Key key, this.chipName}) : super(key : key);
+
+  @override
+  _FilterChipWidgetState createState() => _FilterChipWidgetState();
+
+}
+
+class _FilterChipWidgetState extends State<FilterChipWidget>{
+
+  Widget build(BuildContext context){
+    return FilterChip(
+      label:Text(widget.chipName),
+      labelStyle: TextStyle(color: Color(0xff6200ee),fontSize: 16.0),
+
+    );
+  }
+
 }
