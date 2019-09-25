@@ -21,16 +21,11 @@ def init_app(app):
     app.teardown_appcontext(close_db)
 
 
-
-
 def get_engine():
-
-    if fadzmaq.engine == None:
+    if fadzmaq.engine is None:
         print ("new engine")
         fadzmaq.engine = create_engine(current_app.config['DATABASE_URI'])
     return fadzmaq.engine
-
-
 
 
 def get_db():
@@ -57,8 +52,8 @@ def hash_id(id):
 def update_profile(subject, uid):
     rows = get_db().execute(
         '''
-        UPDATE profile 
-        SET nickname='{}', bio='{}', email='{}', phone='{}' 
+        UPDATE profile
+        SET nickname='{}', bio='{}', email='{}', phone='{}'
         WHERE user_id='{}';
         '''.format(subject.values['nickname'], subject.values['bio'], subject.values['email'], subject.values['phone'],
                    uid)
@@ -113,7 +108,7 @@ def retrieve_profile(subject):
 def get_hobbies(subject):
     # Retrieves hobbies
     rows = get_db().execute(
-        '''      
+        '''
         SELECT  h.hobby_id, h.name, uh.swap
         FROM profile
           JOIN user_hobbies uh
@@ -223,7 +218,7 @@ def verify_user(subject):
 def make_user(name, email, uid):
     rows = get_db().execute(
         '''
-        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id; 
+        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id;
         '''.format(name, email, uid)
     )
     for row in rows:
@@ -238,7 +233,7 @@ def get_match_by_id(uid, id):
     print(uid, id)
     rows = get_db().execute(
         '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
         FROM profile
             WHERE user_id = '{}'
             AND user_id IN (
@@ -257,25 +252,22 @@ def get_match_by_id(uid, id):
 # Deletes current hobbies and updates with the new hobbies.
 def update_user_hobbies(uid, request):
     try:
-        get_db().execute(
-            '''
-            DELETE FROM user_hobbies
-            WHERE user_id = '{}';
-            '''.format(uid)
-        )
         hobbies = request["hobbies"]
         for category in hobbies:
-            print(category)
-            print(category['container'])
+            get_db().execute(
+                '''
+                DELETE FROM user_hobbies
+                WHERE user_id = '{}'
+                  AND swap = '{}';
+                '''.format(uid, category['container'])
+            )
             for hobby in category['hobbies']:
-                print(hobby['id'])
                 get_db().execute(
                     '''
                     INSERT INTO user_hobbies (user_id, hobby_id, swap)
                     VALUES ('{}', {}, '{}');
                     '''.format(uid, hobby['id'], category['container'])
                 )
-
     except Exception as e:
         raise IOError(str(e))
 
