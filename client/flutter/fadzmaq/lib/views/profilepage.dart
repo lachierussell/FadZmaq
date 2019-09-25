@@ -213,27 +213,7 @@ class ProfilePageState extends StatelessWidget {
                     ],
                   ),
                   SizedBox(height: 5.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      IconButton(
-                        color: Colors.grey,
-                        icon: Icon(CupertinoIcons.photo_camera),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        color: Colors.grey,
-                        icon: Icon(CupertinoIcons.fullscreen),
-                        onPressed: () {},
-                      ),
-                      IconButton(
-                        color: Colors.grey.shade600,
-                        icon: Icon(CupertinoIcons.game_controller),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+                  
                   SizedBox(height: 10.0),
                   Container(
                     child: Stack(
@@ -251,6 +231,7 @@ class ProfilePageState extends StatelessWidget {
                           child: Row(
                             children: <Widget>[
                               IconButton(
+                                  color: Colors.white,
                                   icon: Icon(CupertinoIcons.person_solid),
                                   onPressed: () {}),
                               IconButton(
@@ -336,8 +317,8 @@ Widget getHobbies(BuildContext context, ProfileData profile, String container) {
   return Padding(
     padding: const EdgeInsets.only(top: 8),
     child: new Wrap(
-      spacing: 4,
-      runSpacing: 4,
+      spacing: 8,
+      runSpacing: 8,
       children: list,
     ),
   );
@@ -353,7 +334,7 @@ Widget getHobbyChip(BuildContext context, HobbyData hobby) {
     child: Container(
       color: Color(0xfff2f2f2),
       child: Padding(
-          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+          padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
           // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
           child: new Text(hobby.name)),
     ),
