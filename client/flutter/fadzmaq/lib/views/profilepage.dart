@@ -154,13 +154,7 @@ class ProfilePageState extends StatelessWidget {
                             spacing: 5.0,
                             runSpacing: 3.0,
                             children: <Widget>[
-                              FilterChipWidget(chipName: 'Boxing'),
-                              FilterChipWidget(chipName: 'Boating'),
-                              FilterChipWidget(chipName: 'Rock Climbing'),
-                              FilterChipWidget(chipName: 'Hiking'),
-                              FilterChipWidget(chipName: 'Golf'),
-                              FilterChipWidget(chipName: 'Surfing'),
-
+                              getHobbies(context, pd, "discover")
                             ],
                           )
                       ),
@@ -171,7 +165,7 @@ class ProfilePageState extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Padding(
                       padding: const EdgeInsets.only(
-                          left: 40.0, right: 40.0, top: 5.0),
+                          left: 40.0, right: 40.0, top: 15.0),
                       child: Text("Sharing"),
                     ),
                   ),
@@ -186,12 +180,7 @@ class ProfilePageState extends StatelessWidget {
                             spacing: 5.0,
                             runSpacing: 3.0,
                             children: <Widget>[
-                              FilterChipWidget(chipName: 'Boxing'),
-                              FilterChipWidget(chipName: 'Boating'),
-                              FilterChipWidget(chipName: 'Rock Climbing'),
-                              FilterChipWidget(chipName: 'Hiking'),
-                              FilterChipWidget(chipName: 'Golf'),
-                              FilterChipWidget(chipName: 'Surfing'),
+                              getHobbies(context, pd, "share")
                             ],
                           )
                       ),
@@ -208,6 +197,10 @@ class ProfilePageState extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            top: 50.0),
+                      ),
                       Icon(
                         Icons.location_on,
                         size: 16.0,
@@ -304,7 +297,7 @@ class ProfilePageState extends StatelessWidget {
 
 class FilterChipWidget extends StatefulWidget {
   final String chipName;
-
+  String hobbyContainer;
   FilterChipWidget({Key key, this.chipName}) : super(key : key);
 
   @override
@@ -319,7 +312,51 @@ class _FilterChipWidgetState extends State<FilterChipWidget>{
       label:Text(widget.chipName),
       labelStyle: TextStyle(color: Color(0xff6200ee),fontSize: 16.0),
 
+
     );
   }
 
 }
+
+Widget getHobbies(BuildContext context, ProfileData profile, String container) {
+  // return Text("to be done");
+
+  List<Widget> list = new List<Widget>();
+  // print(profile.hobbyContainers.toString());
+  if (profile.hobbyContainers != null) {
+    for (HobbyContainer hc in profile.hobbyContainers) {
+      print(hc.container.toString());
+      if (hc.container == container) {
+        for (HobbyData hobby in hc.hobbies) {
+          list.add(getHobbyChip(context, hobby));
+        }
+      }
+    }
+  }
+  return Padding(
+    padding: const EdgeInsets.only(top: 8),
+    child: new Wrap(
+      spacing: 4,
+      runSpacing: 4,
+      children: list,
+    ),
+  );
+}
+
+Widget getHobbyChip(BuildContext context, HobbyData hobby) {
+  // return Chip(
+  //   label: Text(hobby.name),
+  //   backgroundColor: hobby.color,
+  // );
+  return ClipRRect(
+    borderRadius: BorderRadius.all(Radius.circular(32)),
+    child: Container(
+      color: Color(0xfff2f2f2),
+      child: Padding(
+          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+          // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
+          child: new Text(hobby.name)),
+    ),
+  );
+}
+
