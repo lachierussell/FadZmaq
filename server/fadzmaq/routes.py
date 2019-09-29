@@ -11,7 +11,7 @@
 from flask import jsonify, request, Blueprint
 import fadzmaq
 from fadzmaq.api import recs_data
-from fadzmaq.database import profile, recommendations, matches, hobbies
+from fadzmaq.database import profile, recs, matches, hobbies
 from firebase_admin import auth
 import json
 
@@ -219,6 +219,7 @@ def rate_user_up(uid, id):
 @route_bp.route('/like/<string:id>', methods=['POST'])
 @auth_required
 def like_user(uid, id):
+    recs.like_user(uid, id, True)
     return "User liked", 501
 
 
