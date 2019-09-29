@@ -1,3 +1,8 @@
+from flask import current_app, g
+from sqlalchemy import create_engine
+import fadzmaq
+
+
 def init_app(app):
     app.teardown_appcontext(close_db)
 
