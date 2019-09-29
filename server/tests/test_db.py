@@ -9,8 +9,7 @@
 # @author Jordan Russell    [email]
 
 import pytest
-from fadzmaq.database.matches import get_db, get_engine
-from fadzmaq.database import matches
+import fadzmaq.database.connection as dbc
 import sqlalchemy
 import json
 
@@ -18,7 +17,7 @@ import json
 # Tests the correct tables are presentu
 def test_tables(api):
     with api.app_context():
-        engine = get_engine()
+        engine = dbc.get_engine()
         assert engine.dialect.has_table(engine, "hobbies")
         assert engine.dialect.has_table(engine, "matches")
         assert engine.dialect.has_table(engine, "profile")
@@ -29,8 +28,8 @@ def test_tables(api):
 # Checks that the connection is closed outside the flask context
 def test_get_close_db(api):
     with api.app_context():
-        db = get_db()
-        assert db is get_db()
+        db = dbc.get_db()
+        assert db is dbc.get_db()
 
     with pytest.raises(sqlalchemy.exc.StatementError) as e:
         db.execute('SELECT 1')
