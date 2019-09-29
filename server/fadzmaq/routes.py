@@ -11,7 +11,7 @@
 from flask import jsonify, request, Blueprint
 import fadzmaq
 from fadzmaq.api import recs_data
-from fadzmaq.database import db
+import fadzmaq.database as db
 from firebase_admin import auth
 import json
 
@@ -88,7 +88,7 @@ def verify_user(uid):
 @auth_required
 def recommendations(uid):
     print(uid)
-    return jsonify(recs_data.my_recs), 501
+    return jsonify(recs_data.recs), 501
 
 
 # @brief Retries a users profile by their id
@@ -97,7 +97,7 @@ def recommendations(uid):
 def get_user_by_id(uid, id):
     print(uid)
     print(id)
-    return jsonify(recs_data.my_candiate), 501
+    return "Deprecated", 410
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -121,7 +121,7 @@ def get_profile(uid):
 @auth_required
 def update_profile(uid):
     try:
-        db.update_profile(request, uid)
+        matches_db.update_profile(request, uid)
         return get_profile()
     except Exception as e:
         return "Profile edit failed " + str(e), 500
@@ -133,7 +133,7 @@ def update_profile(uid):
 def update_hobbies(uid):
     try:
         request_data = json.loads(request.get_data())
-        db.update_user_hobbies(uid, request_data)
+        matches_db.update_user_hobbies(uid, request_data)
         return "Success", 200
     except IOError as e:
         return "Update hobbies failed " + str(e), 500
@@ -142,7 +142,7 @@ def update_hobbies(uid):
 # @brief Route for retrieving all current hobbies available.
 @route_bp.route('/hobbies', methods=['GET'])
 def get_hobbies():
-    return jsonify(db.get_hobby_list()), 200
+    return jsonify(matches_db.get_hobby_list()), 200
 
 
 # @brief Creates a new account for a user if it does not already exist
@@ -155,7 +155,7 @@ def create_account():
         data = json.loads(request.get_data())
         user = data["new_user"]
         uid = verify_token() 
-        user_id = db.make_user(user['name'], user['email'], uid)
+        user_id = matches_db.make_user(user['name'], user['email'], uid)
         return user_id
     except ValueError as e:
         print('Account creation failed ' + str(e))
@@ -175,7 +175,7 @@ def create_account():
 @auth_required
 def get_matches(uid):
     try:
-        return jsonify(db.get_matches(uid)), 200
+        return jsonify(matches_db.get_matches(uid)), 200
     except ValueError as e:
         return 'Failed:' + str(e), 204
 
@@ -185,7 +185,7 @@ def get_matches(uid):
 @auth_required
 def get_matched_user(uid, id):
     try:
-        return jsonify(db.get_match_by_id(uid, id)), 200
+        return jsonify(matches_db.get_match_by_id(uid, id)), 200
     except ValueError as e:
         return 'Failed: ' + str(e), 403
 

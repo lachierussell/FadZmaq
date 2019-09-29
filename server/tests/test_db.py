@@ -9,8 +9,8 @@
 # @author Jordan Russell    [email]
 
 import pytest
-from fadzmaq.database.db import get_db, get_engine
-from fadzmaq.database import db
+from fadzmaq.database.matches import get_db, get_engine
+from fadzmaq.database import matches
 import sqlalchemy
 import json
 
