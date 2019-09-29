@@ -5,7 +5,7 @@ def like_user(uid, id, vote):
     rows = db.get_db().execute(
         '''
         INSERT INTO votes (time, vote, user_from, user_to) 
-        VALUES (now(), $1, $2, $3)
+        VALUES (now(), %s, %s, %s)
         RETURNING *;
         ''', vote, uid, id
     )

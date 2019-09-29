@@ -14,8 +14,8 @@ def get_hobbies(subject):
             ON profile.user_id = uh.user_id
           JOIN hobbies h
             ON uh.hobby_id = h.hobby_id
-        WHERE profile.user_id = '{}';
-        '''.format(subject)
+        WHERE profile.user_id = %s;
+        ''', subject
     )
     return build_hobby_data(rows)
 
@@ -66,16 +66,16 @@ def update_user_hobbies(uid, request):
             db.get_db().execute(
                 '''
                 DELETE FROM user_hobbies
-                WHERE user_id = '{}'
-                  AND swap = '{}';
-                '''.format(uid, category['container'])
+                WHERE user_id = %s
+                  AND swap = %s;
+                ''', uid, category['container']
             )
             for hobby in category['hobbies']:
                 db.get_db().execute(
                     '''
                     INSERT INTO user_hobbies (user_id, hobby_id, swap)
-                    VALUES ('{}', {}, '{}');
-                    '''.format(uid, hobby['id'], category['container'])
+                    VALUES (%s, %s, %s);
+                    ''', uid, hobby['id'], category['container']
                 )
     except Exception as e:
         raise IOError(str(e))
@@ -120,9 +120,9 @@ def get_matched_hobbies(uid, id):
                     INNER JOIN user_hobbies you
                     ON me.hobby_id = you.hobby_id
                     AND me.swap != you.swap
-                WHERE me.user_id = '{}'
-                AND you.user_id = '{}';
-            '''.format(uid, id)
+                WHERE me.user_id = %s
+                AND you.user_id = %s;
+            ''', uid, id
         )
         return build_hobby_data(rows)
     except Exception as e:

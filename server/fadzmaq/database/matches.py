@@ -25,18 +25,18 @@ def get_matches(subject):
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
-            WHERE user_a = '{}'
-               OR user_b = '{}'
+            WHERE user_a = %s
+               OR user_b = %s
         )
-        AND profile.user_id != '{}'
+        AND profile.user_id != %s
         OR profile.user_id IN (
             SELECT user_b
             FROM matches
-            WHERE user_a = '{}'
-               OR user_b = '{}'
+            WHERE user_a = %s
+               OR user_b = %s
         )
-        AND profile.user_id != '{}';
-        '''.format(subject, subject, subject, subject, subject, subject)
+        AND profile.user_id != %s;
+        ''', subject, subject, subject, subject, subject, subject
     )
 
     matches = []
@@ -61,15 +61,15 @@ def get_match_by_id(uid, id):
         '''
         SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
         FROM profile
-            WHERE user_id = '{}'
+            WHERE user_id = %s
             AND user_id IN (
                 SELECT user_id FROM matches
-                WHERE user_a = '{}'
-                        AND user_b = '{}'
-                    OR user_b = '{}'
-                        AND user_a = '{}'
+                WHERE user_a = %s
+                        AND user_b = %s
+                    OR user_b = %s
+                        AND user_a = %s
         );
-        '''.format(id, uid, id, uid, id)
+        ''', id, uid, id, uid, id
     )
     return build_profile_data(rows)
 

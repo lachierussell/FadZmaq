@@ -6,10 +6,10 @@ def update_profile(subject, uid):
     rows = db.get_db().execute(
         '''
         UPDATE profile
-        SET nickname='{}', bio='{}', email='{}', phone='{}'
-        WHERE user_id='{}';
-        '''.format(subject.values['nickname'], subject.values['bio'], subject.values['email'], subject.values['phone'],
-                   uid)
+        SET nickname= %s, bio= %s, email= %s, phone= %s
+        WHERE user_id= %s;
+        ''', subject.values['nickname'], subject.values['bio'], subject.values['email'],
+        subject.values['phone'], uid
     )
 
 
@@ -48,8 +48,8 @@ def retrieve_profile(subject):
         '''
         SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
         FROM profile 
-        WHERE user_id = '{}'
-        '''.format(subject)
+        WHERE user_id = %s
+        ''', subject
     )
 
     return build_profile_data(rows)
@@ -62,8 +62,8 @@ def verify_user(subject):
         '''
         SELECT COUNT(user_id)
         FROM profile
-        WHERE user_id = '{}';
-        '''.format(subject)
+        WHERE user_id = %s;
+        ''', subject
     )
 
     for row in rows:
@@ -77,8 +77,8 @@ def verify_user(subject):
 def make_user(name, email, uid):
     rows = db.get_db().execute(
         '''
-        INSERT INTO profile (nickname, email, user_id) VALUES ('{}', '{}', '{}') RETURNING user_id;
-        '''.format(name, email, uid)
+        INSERT INTO profile (nickname, email, user_id) VALUES (%s, %s, %s) RETURNING user_id;
+        ''', name, email, uid
     )
     for row in rows:
         print(str(row['user_id']))
