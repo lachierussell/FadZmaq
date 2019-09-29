@@ -111,17 +111,17 @@ def get_matched_hobbies(uid, id):
     try:
         rows = db.get_db().execute(
             '''
-                SELECT DISTINCT(me.hobby_id), 'matched' AS swap, (
-                    SELECT name
-                    FROM hobbies
-                    WHERE me.hobby_id = hobbies.hobby_id
-                )
-                FROM user_hobbies me
-                    INNER JOIN user_hobbies you
-                    ON me.hobby_id = you.hobby_id
-                    AND me.swap != you.swap
-                WHERE me.user_id = %s
-                AND you.user_id = %s;
+            SELECT DISTINCT(me.hobby_id), 'matched' AS swap, (
+                SELECT name
+                FROM hobbies
+                WHERE me.hobby_id = hobbies.hobby_id
+            )
+            FROM user_hobbies me
+                INNER JOIN user_hobbies you
+                ON me.hobby_id = you.hobby_id
+                AND me.swap != you.swap
+            WHERE me.user_id = %s
+            AND you.user_id = %s;
             ''', uid, id
         )
         return build_hobby_data(rows)
