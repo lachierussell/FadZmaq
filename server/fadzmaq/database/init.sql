@@ -17,6 +17,7 @@ DROP TABLE IF EXISTS matches;
 DROP VIEW IF EXISTS matches_v;
 DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS hobbies;
+DROP TABLE IF EXISTS rating;
 DROP TABLE IF EXISTS user_location;
 DROP TABLE IF EXISTS location_data;
 DROP TABLE IF EXISTS profile;
@@ -85,6 +86,13 @@ CREATE TABLE IF NOT EXISTS user_location
     location_id     SERIAL NOT NULL REFERENCES location_data (location_id)
 );
 
+CREATE TABLE IF NOT EXISTS rating
+(
+    user_to     VARCHAR NOT NULL REFERENCES profile (user_id),
+    user_from   VARCHAR NOT NULL REFERENCES profile (user_id),
+    rating      BOOLEAN NOT NULL
+);
+
 
 --------------------------------------------
 --  ----------------------------------------
@@ -92,7 +100,8 @@ CREATE TABLE IF NOT EXISTS user_location
 --  ----------------------------------------
 --------------------------------------------
 
--- TODO reinstate this in sprint 3
+
+-- Trigger to form a match between two consenting users
 CREATE OR REPLACE FUNCTION match()
     RETURNS TRIGGER
     LANGUAGE plpgsql
