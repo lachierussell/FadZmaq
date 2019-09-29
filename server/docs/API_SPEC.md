@@ -202,6 +202,7 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
         {
             "id": "b026324c6904b2a9cb4b88d6d61c81d1",
             "name": "Lachie",
+            "rating": 0,
             "photo": "URL",
             "hobbies": [
                 {
@@ -222,6 +223,7 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
         {
             "id": "48a24b70a0b376535542b996af517398",
             "name": "Judy",
+            "rating": null,
             "photo": "URL",
             "hobbies": [
                  {
