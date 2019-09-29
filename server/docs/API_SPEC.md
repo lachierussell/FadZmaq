@@ -19,6 +19,8 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 | /profile                        | Update profile data                       | POST   | 200     | 401, 500            |
 | /profile/ping                   | Set location                              | POST   |         | **501**             |
 | /profile/hobbies                | Update a users hobbies                    | POST   | 200     | 401 / 500           |
+| /profile/settings               | Retrieves user settings                   | GET    | 200     | 401 / **501**       |
+| /profile/settings               | Sets user settings                        | POST   | 200     | 401 / **501**       |
 | **Hobbies**                     |                                           |        |         |                     |
 | /hobbies                        | A list of all available hobbies to choose | GET    | 200     | 500                 |
 | **MATCHES**                     |                                           |        |         |                     |
@@ -192,6 +194,15 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
          ]
     }
 }
+```
+
+### /profile/settings
+
+```json
+// I dont know what goes in here yet.
+
+// Distance 
+// Notifications? Or is this purely OS settings
 ```
 
 ### /matches
@@ -387,6 +398,15 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 }
 // Receive
 // A users current hobbies
+```
+
+### /profile/settings
+
+```json
+// I dont know what goes in here yet.
+
+// Distance 
+// Notifications? Or is this purely OS settings
 ```
 
 ### /like/`id`
