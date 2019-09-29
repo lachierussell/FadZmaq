@@ -78,10 +78,9 @@ def verify_token():
 # @brief Verifies the user is in the database
 # @param uid            The user ID from firebase
 # @throws ValueError    If the user is not present in the database
-#
 def verify_user(uid):
     if not db.verify_user(uid):
-        raise ValueError("User does not exist") # pragma: no cover
+        raise ValueError("User does not exist")  # pragma: no cover
 
 
 # @brief Retrieves user recommendations
