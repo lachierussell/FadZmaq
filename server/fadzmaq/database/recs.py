@@ -13,4 +13,5 @@ def like_user(uid, id, vote):
     if rows.first() is None:
         print('MATCH')
         notify_match()
-        return  # TODO: Implement match response.
+        return {"match": True}
+    return {"match": False}

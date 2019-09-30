@@ -271,14 +271,12 @@ def rate_user_up(uid, id):
 @route_bp.route('/like/<string:id>', methods=['POST'])
 @auth_required
 def like_user(uid, id):
-    recs.like_user(uid, id, True)
-    return "User liked", 501
+    return recs.like_user(uid, id, True), 501
 
 
 # @brief Pass on a user
 @route_bp.route('/pass/<string:id>', methods=['POST'])
 @auth_required
 def pass_user(uid, id):
+    recs.like_user(uid, id, False)
     return "User passed", 501
-
-
