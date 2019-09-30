@@ -124,42 +124,42 @@ $make_match$;
 CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
     FOR EACH ROW EXECUTE FUNCTION match();
 
-CREATE OR REPLACE FUNCTION rate_user(from_user VARCHAR, to_user VARCHAR, r_value BOOLEAN, OUT o_id VARCHAR)
-    RETURNS VARCHAR
+CREATE OR REPLACE FUNCTION rate_user()
+    RETURNS TRIGGER
     LANGUAGE plpgsql AS
-$col$
+$rate$
 BEGIN
     IF (
         SELECT user_a
         FROM matches
-        WHERE user_a = from_user
-          AND user_b = to_user
-        OR user_a = to_user
-          AND user_b = from_user
+        WHERE user_a = new.user_from
+          AND user_b = new.user_to
+        OR user_a = new.user_to
+          AND user_b = new.user_from
         ) IS NULL
     THEN
---         RETURN -1;
+        RETURN NULL;
     END IF;
-
     IF (
        (SELECT rt.user_from
         FROM rating rt
-        WHERE rt.user_from = from_user
-          AND rt.user_to = to_user
+        WHERE rt.user_from = new.user_from
+          AND rt.user_to = new.user_to
        ) IS NOT NULL
     ) THEN
-        UPDATE rating SET rate_value=r_value
-        WHERE user_from = from_user
-        AND user_to = to_user;
---         RETURN 0;
-    ELSE
-        INSERT INTO rating (user_to, user_from, rate_value)
-        VALUES (to_user, from_user, r_value) RETURNING rate_value INTO o_id;
+        UPDATE rating SET rate_value=new.rate_value
+        WHERE user_from = new.user_from
+        AND user_to = new.user_to;
+        RETURN NULL;
     END IF;
+    RETURN new;
 END;
-$col$;
+$rate$;
 
--- INSERT INTO rating (user_to, user_from, rate_value) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'FALSE');
+CREATE TRIGGER rate BEFORE INSERT ON rating
+    FOR EACH ROW EXECUTE FUNCTION rate_user();
+
+INSERT INTO rating (user_to, user_from, rate_value) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'false');
 
 --------------------------------------------
 --  ----------------------------------------
