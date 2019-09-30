@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/models.dart';
 import 'package:fadzmaq/models/matches.dart';
@@ -162,7 +163,8 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditHobbyPage2(isShare:false)),
+                              builder: (context) =>
+                                  EditHobbyPage2(isShare: false)),
                         );
                       },
                       child: Text("Choose hobbies that you want to discover"),
@@ -175,7 +177,8 @@ class UserPreferencesState extends State {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => EditHobbyPage2(isShare:true)),
+                              builder: (context) =>
+                                  EditHobbyPage2(isShare: true)),
                         );
                       },
                       child: Text("Choose hobbies that you want to share"),
@@ -229,6 +232,13 @@ class UserPreferencesState extends State {
                     child: RaisedButton(
                       onPressed: logOut,
                       child: Text("Log out"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: (){ postAsync(context, "profile");},
+                      child: Text("Post Request Test"),
                     ),
                   ),
                 ],

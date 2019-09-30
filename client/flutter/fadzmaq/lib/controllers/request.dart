@@ -51,7 +51,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
       future: _future,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          if(snapshot.data is Exception){
+          if (snapshot.data is Exception) {
             return Center(child: Text(snapshot.data.toString()));
           }
           if (snapshot.data.statusCode == 200) {
@@ -90,10 +90,16 @@ Future<int> fetchResponseCode(String url) async {
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-  final response = await http.get(
-    url,
-    headers: {"Authorization": result.token},
-  );
+  http.Response response;
+
+  try {
+    response = await http.get(
+      url,
+      headers: {"Authorization": result.token},
+    );
+  } catch (e) {
+    return e;
+  }
   return response.statusCode;
 }
 
@@ -102,17 +108,9 @@ Future post(String url, var Json) async {
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-
-
-    http.post(
-      url,
-      headers: {"Authorization": result.token},
-      body: Json
-    );
-
-
-
+  http.post(url, headers: {"Authorization": result.token}, body: Json);
 }
+
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user
