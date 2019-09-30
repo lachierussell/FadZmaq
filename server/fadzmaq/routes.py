@@ -139,10 +139,16 @@ def update_hobbies(uid):
         return "Update hobbies failed " + str(e), 500
 
 
-# @brief Route for retrieving all current hobbies available.
-@route_bp.route('/hobbies', methods=['GET'])
-def get_hobbies():
-    return jsonify(hobbies.get_hobby_list()), 200
+@route_bp.route('/profile/ping', methods=['POST'])
+@auth_required
+def ping_location(uid):
+    try:
+        data = json.loads(request.get_data())
+        data = data['location']
+        profile.set_location(uid, data['lat'], data['long'])
+        return 'Ping Set', 204
+    except Exception as e:
+        return 'FAILED', 500
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -199,6 +205,12 @@ def update_settings(uid):
         return 'Success', 204
     except Exception as e:
         return 'Failed', 500
+
+
+# @brief Route for retrieving all current hobbies available.
+@route_bp.route('/hobbies', methods=['GET'])
+def get_hobbies():
+    return jsonify(hobbies.get_hobby_list()), 200
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##

@@ -127,3 +127,11 @@ def update_settings(uid, value):
         WHERE user_id = %s;
         ''', value, uid
     )
+
+
+def set_location(uid, lat, long):
+    db.get_db().execute(
+        '''
+        INSERT INTO location_data (user_id, lat, long) VALUES (%s, %s, %s)
+        ''', uid, float(lat), float(long)
+    )
