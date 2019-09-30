@@ -10,6 +10,24 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 
+List<Widget> profileFieldRender(context){
+    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    List<Widget>rows = pd.profileFields.map((item) => new Text(item.displayValue)).toList();
+    return rows;
+}
+
+class ProfileFieldWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(child:
+      Column(
+        children: profileFieldRender(context)
+      )
+    );
+  }
+}
+
+
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
 
@@ -142,6 +160,7 @@ class ProfilePageState extends StatelessWidget {
                       fontSize: 16.0,
                     ),
                   ),
+                  ProfileFieldWidget(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,

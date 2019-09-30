@@ -228,6 +228,7 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGL
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 2, 'discover');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 3, 'discover');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 6, 'discover');
 
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'share');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 5, 'share');

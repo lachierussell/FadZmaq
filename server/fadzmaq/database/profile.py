@@ -35,8 +35,63 @@ def build_profile_data(rows):
                 'hobbies': get_hobbies(row['user_id'])
             }
         }
-        return profile
-    raise ValueError("Did not find row")
+        # return profile
+    profile = \
+{
+    "profile": {
+        "user_id": "29f51c08adac957424e06699b81acdb5",
+        "name": "John",
+        "photo_location": "URL",
+        "profile_fields": [
+            {
+                "name": "About me",
+                "display_value": "Avid rock climber and hiking enthusiast."
+            },
+            {
+                "name": "phone",
+                "display_value": "0423199199"
+            },
+            {
+                "name": "email",
+                "display_value": "john@email.com"
+            },
+            {
+                "name": "age",
+                "display_value": "20"
+            },
+            {
+                "name": "birth-date",
+                "display_value": "1999-10-04 00:00:00"
+            },
+            {
+                "name": "location",
+                "display_value": "<5"
+            }
+        ],
+        "hobbies": [
+             {
+                 "container": "share",
+                 "hobbies": [
+                     {
+                         "id": 3,
+                         "name": "Rock Climbing"
+                     }
+                 ]
+             },
+             {
+                 "container": "discover",
+                 "hobbies": [
+                     {
+                         "id": 1,
+                         "name": "Boxing"
+                     }
+                 ]
+             }
+         ]
+    }
+}
+    return profile
+    # raise ValueError("Did not find row")
 
 
 # Retrieves profile information for the subject.

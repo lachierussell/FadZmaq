@@ -85,10 +85,10 @@ class EditProfileState extends State<EditProfile> {
     // check for id 1 (about me) and grab the display value
     String bio = bioFromPD(pd);
 
-    final String contact_phone =
-        pd.contactDetails.phone != null ? pd.contactDetails.phone : "";
-    String contact_email =
-        pd.contactDetails.email != null ? pd.contactDetails.email : "";
+//    final String contact_phone =
+//        pd.contactDetails.phone != null ? pd.contactDetails.phone : "";
+//    String contact_email =
+//        pd.contactDetails.email != null ? pd.contactDetails.email : "";
 
     return Scaffold(
       body: Padding(
@@ -112,11 +112,11 @@ class EditProfileState extends State<EditProfile> {
                         decoration: InputDecoration(labelText: "Nickname")),
                     FormBuilderTextField(
                         attribute: "email",
-                        initialValue: contact_email,
+//                        initialValue: contact_email,
                         decoration: InputDecoration(labelText: "email")),
                     FormBuilderTextField(
                         attribute: "phone",
-                        initialValue: contact_phone,
+//                        initialValue: contact_phone,
                         decoration: InputDecoration(labelText: "phone")),
                     FormBuilderTextField(
                         attribute: "bio",
