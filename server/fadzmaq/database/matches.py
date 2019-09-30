@@ -95,9 +95,8 @@ def unmatch(uid, id):
 # @param uid    My id
 # @param id     id of the user being rated/
 def rate_user(uid, id, value):
-    rows = db.get_db().execute(
+    db.get_db().execute(
         '''
-        SELECT rate_user(%s, %s, %s) as col FROM public.profile; 
-        ''', uid, id, value
+        INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
+        ''', id, uid, value
     )
-    print(rows.first()['col'])
