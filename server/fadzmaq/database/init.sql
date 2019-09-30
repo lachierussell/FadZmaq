@@ -47,7 +47,8 @@ CREATE TABLE IF NOT EXISTS matches
     user_a   VARCHAR NOT NULL REFERENCES profile (user_id),
     user_b   VARCHAR NOT NULL REFERENCES profile (user_id),
     time     TIME,
-    rating   BOOLEAN
+    rating   BOOLEAN,
+    unmatch  BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE IF NOT EXISTS votes
