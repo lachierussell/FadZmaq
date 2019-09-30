@@ -71,6 +71,6 @@ def get_match_by_id(uid, id):
         );
         ''', id, uid, id, uid, id
     )
-    return build_profile_data(rows)
+    return build_profile_data(rows, 1)
 
 

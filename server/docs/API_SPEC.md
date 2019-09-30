@@ -48,7 +48,7 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
                 "photo_location": "URL",
                 "profile_fields": [
                     {
-                        "name": "About me",
+                        "name": "about me",
                         "display_value": "Avid rock climber and hiking enthusiast."
                     },
                     {
@@ -95,7 +95,7 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
                 "photo_location": "URL",
                 "profile_fields": [
                     {
-                        "name": "About me",
+                        "name": "about me",
                         "display_value": "Avid rock climber and hiking enthusiast."
                     },
                     {
@@ -148,7 +148,7 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
         "photo_location": "URL",
         "profile_fields": [
             {
-                "name": "About me",
+                "name": "about me",
                 "display_value": "Avid rock climber and hiking enthusiast."
             },
             {
@@ -262,7 +262,7 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
         "photo_location": "URI",
         "profile_fields": [
             {
-                "name": "About me",
+                "name": "about me",
                 "display_value": "Avid rock climber and hiking enthusiast."
             },
             {

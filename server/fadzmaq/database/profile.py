@@ -1,3 +1,5 @@
+import json
+
 import fadzmaq.database.connection as db
 from fadzmaq.database.hobbies import get_hobbies
 
@@ -13,85 +15,38 @@ def update_profile(subject, uid):
     )
 
 
-def build_profile_data(rows):
-    for row in rows:
-        profile = {
-            'profile': {
-                'user_id': row['user_id'],
-                'name': row['nickname'],
-                'age': str(row['age']),
-                'photo_location': row['photo'],
-                'contact_details': {
-                    'phone': row['phone'],
-                    'email': row['email']
-                },
-                'profile_fields': [
-                    {
-                        'id': 1,
-                        'name': 'About me',
-                        'display_value': row['bio']
-                    }
-                ],
-                'hobbies': get_hobbies(row['user_id'])
-            }
+def build_profile_data(rows, permission):
+    assert type(permission) is int
+    assert permission <= 2
+    row = rows.first()
+    assert row is not None, "Query retrieved no rows to build profile."
+
+    profile_fields = []
+    permission_keys = [['bio', 'age', 'location'],
+                       ['phone', 'email'],
+                       ['birth-date']
+                       ]
+    for perm in range(0, permission):
+        for key in permission_keys[perm]:
+            if key == 'location':
+                continue  # TODO: Add this to query and calculate on db
+            profile_fields.append(
+                {
+                    "name": key,
+                    "display_value": str(row[key])
+                }
+            )
+
+    profile = {
+        'profile': {
+            'user_id': row['user_id'],
+            'name': row['nickname'],
+            'photo_location': row['photo'],
+            'profile_fields': profile_fields,
+            'hobbies': get_hobbies(row['user_id'])
         }
-        # return profile
-    profile = \
-{
-    "profile": {
-        "user_id": "29f51c08adac957424e06699b81acdb5",
-        "name": "John",
-        "photo_location": "URL",
-        "profile_fields": [
-            {
-                "name": "About me",
-                "display_value": "Avid rock climber and hiking enthusiast."
-            },
-            {
-                "name": "phone",
-                "display_value": "0423199199"
-            },
-            {
-                "name": "email",
-                "display_value": "john@email.com"
-            },
-            {
-                "name": "age",
-                "display_value": "20"
-            },
-            {
-                "name": "birth-date",
-                "display_value": "1999-10-04 00:00:00"
-            },
-            {
-                "name": "location",
-                "display_value": "<5"
-            }
-        ],
-        "hobbies": [
-             {
-                 "container": "share",
-                 "hobbies": [
-                     {
-                         "id": 3,
-                         "name": "Rock Climbing"
-                     }
-                 ]
-             },
-             {
-                 "container": "discover",
-                 "hobbies": [
-                     {
-                         "id": 1,
-                         "name": "Boxing"
-                     }
-                 ]
-             }
-         ]
     }
-}
     return profile
-    # raise ValueError("Did not find row")
 
 
 # Retrieves profile information for the subject.
@@ -107,7 +62,7 @@ def retrieve_profile(subject):
         ''', subject
     )
 
-    return build_profile_data(rows)
+    return build_profile_data(rows, 2)
 
 
 # @brief Verifies the user is in the database
@@ -138,6 +93,5 @@ def make_user(name, email, uid):
     for row in rows:
         print(str(row['user_id']))
         return str(row['user_id'])
-    print('IOErro: No Rows')
+    print('IOError: No Rows')
     raise IOError
-
