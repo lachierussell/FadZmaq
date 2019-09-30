@@ -19,12 +19,12 @@ import os
 
 # from flask import current_app
 
-def get_test_admin_engine(app):
-    if fadzmaq.test_engine is None:
-        print ("new test engine")
-        # fadzmaq.test_engine = create_engine('postgresql+pg8000://test_fadzmaq_admin:test_admin_pass@localhost/fadzmaq_test')
-        fadzmaq.test_engine = create_engine(app.config['DATABASE_TEST_ADMIN'])
-    return fadzmaq.test_engine
+# def get_test_admin_engine(app):
+#     if fadzmaq.test_engine is None:
+#         print ("new test engine")
+#         # fadzmaq.test_engine = create_engine('postgresql+pg8000://test_fadzmaq_admin:test_admin_pass@localhost/fadzmaq_test')
+#         fadzmaq.test_engine = create_engine(app.config['DATABASE_TEST_ADMIN'])
+#     return fadzmaq.test_engine
 
 
 
@@ -55,12 +55,12 @@ def api(mocker):
 
 
     # rebuild the database for each test
-    build_test_db(api)
+    # build_test_db(api)
 
     yield api
 
     # drop all tables - just in case some scripts rely on remnet tables
-    teardown_test_db(api)
+    # teardown_test_db(api)
 
 
 @pytest.fixture
@@ -74,32 +74,32 @@ def client(api):
     return api.test_client()
 
     
-def build_test_db(api):
-    # engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
+# def build_test_db(api):
+#     # engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
 
-    #os.system('PGPASSWORD=test_admin_pass psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
-    #os.system('PGPASSWORD=test_admin_pass psql psql -q -U test_fadzmaq_admin -d fadzmaq_test -f tests/create_test_user.sql')
+#     # os.system('PGPASSWORD=test_admin_pass psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
+#     # os.system('PGPASSWORD=test_admin_pass psql psql -q -U test_fadzmaq_admin -d fadzmaq_test -f tests/create_test_user.sql')
 
-    #os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
-    #os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
+#     # os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
+#     # os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
 
-    execute_sql(get_test_admin_engine(api), "fadzmaq/database/init.sql")
-    execute_sql(get_test_admin_engine(api), "tests/create_test_user.sql")
+#     execute_sql(get_test_admin_engine(api), "fadzmaq/database/init.sql")
+#     execute_sql(get_test_admin_engine(api), "tests/create_test_user.sql")
     
 
-def teardown_test_db(api):
-    # engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
+# def teardown_test_db(api):
+#     # engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
 
-    # Load the existing tables into sqlalchemy's meta
-    meta = sqlalchemy.MetaData()
-    meta.reflect(get_test_admin_engine(api))
-    # drop all tables
-    con = get_test_admin_engine(api).connect()
-    meta.drop_all(con)
-    con.close()
+#     # Load the existing tables into sqlalchemy's meta
+#     meta = sqlalchemy.MetaData()
+#     meta.reflect(get_test_admin_engine(api))
+#     # drop all tables
+#     con = get_test_admin_engine(api).connect()
+#     meta.drop_all(con)
+#     con.close()
 
-    # Drop the test fadzmaq app user
-    execute_sql(get_test_admin_engine(api), "tests/drop_roles.sql")
+#     # Drop the test fadzmaq app user
+#     execute_sql(get_test_admin_engine(api), "tests/drop_roles.sql")
 
 
 def execute_sql(engine, file):
