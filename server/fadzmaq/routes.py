@@ -253,14 +253,16 @@ def unmatch_user(uid, id):
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
-    return "Thumbs down!", 501
+    matches.rate_user(uid, id, False)
+    return "Thumbs down!", 204
 
 
 # @brief Rates a user positively
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
-    return "Thumbs up!", 501
+    matches.rate_user(uid, id, True)
+    return "Thumbs up!", 204
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##

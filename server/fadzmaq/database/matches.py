@@ -89,3 +89,15 @@ def unmatch(uid, id):
         ''', uid, id, id, uid
     )
 
+
+# Rates a user Thumbs up or down
+# @param value  True is thumbs up
+# @param uid    My id
+# @param id     id of the user being rated/
+def rate_user(uid, id, value):
+    rows = db.get_db().execute(
+        '''
+        SELECT rate_user(%s, %s, %s) as col FROM public.profile; 
+        ''', uid, id, value
+    )
+    print(rows.first()['col'])
