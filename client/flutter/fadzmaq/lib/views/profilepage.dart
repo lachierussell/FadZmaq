@@ -10,12 +10,21 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 
+
+/// Helper (method?) to the ProfileFieldWidget.
+/// Builds a list of Text from the Profile data.
+/// @param context  The BuildContext from the ProfileFieldWidget
+/// @return A list of Text objects.
 List<Widget> profileFieldRender(context){
     ProfileData pd = RequestProvider.of<ProfileData>(context);
     List<Widget>rows = pd.profileFields.map((item) => new Text(item.displayValue)).toList();
     return rows;
 }
 
+/// Dynamically builds/renders the profile fields section of the Profile page.
+/// It will draw every field that is sent to it. It also ignores anything that
+/// isn't sent. E.g. If it is a match, it will render contact details, but if
+/// it is a recommendation, it will not.
 class ProfileFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
