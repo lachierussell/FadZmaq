@@ -199,12 +199,12 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('26ab0db90d72e28ad0ba
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 4, 'discover');
 
 -- Test data for matches (John has three, a few others have one with him)
--- INSERT INTO matches (user_a, user_b)
--- VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '6d7fce9fee471194aa8b5b6e47267f03');
--- INSERT INTO matches (user_a, user_b)
--- VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
--- INSERT INTO matches (user_a, user_b)
--- VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '48a24b70a0b376535542b996af517398');
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '6d7fce9fee471194aa8b5b6e47267f03');
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
+INSERT INTO matches (user_a, user_b)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '48a24b70a0b376535542b996af517398');
 
 --------------------------------------------
 --  ----------------------------------------
@@ -213,16 +213,16 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b
 --------------------------------------------
 
 -- Lachie
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'OQezYUwFC2P2JOP81nicQR4qZRB3', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'OQezYUwFC2P2JOP81nicQR4qZRB3', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
 
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'discover');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 2, 'discover');
@@ -236,16 +236,16 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGL
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'share');
 
 -- Jordan
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
 
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'discover');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 6, 'discover');
@@ -258,16 +258,16 @@ INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nic
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'share');
 
 -- Seharsh
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'OQezYUwFC2P2JOP81nicQR4qZRB3', now(), null);
--- INSERT INTO matches (user_a, user_b, time, rating)
--- VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', '26ab0db90d72e28ad0ba1e22ee510510', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'b026324c6904b2a9cb4b88d6d61c81d1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'OQezYUwFC2P2JOP81nicQR4qZRB3', now(), null);
+INSERT INTO matches (user_a, user_b, time, rating)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now(), null);
 
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 1, 'discover');
 INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 6, 'discover');

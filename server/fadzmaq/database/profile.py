@@ -1,5 +1,3 @@
-import json
-
 import fadzmaq.database.connection as db
 from fadzmaq.database.hobbies import get_hobbies
 
