@@ -145,6 +145,10 @@ def get_hobbies():
     return jsonify(hobbies.get_hobby_list()), 200
 
 
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# ACCOUNT
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
 # @brief Creates a new account for a user if it does not already exist
 # Creates a new account with the users firebase token for uid.
 # Client must provide json containing the user 'name' and 'email'
@@ -170,9 +174,31 @@ def create_account():
 def delete_account(uid):
     try:
         profile.delete_account(uid)
-        return 204
+        return "Success", 204
     except Exception as e:
         return "We don't let users delete others accounts", 403
+
+
+@route_bp.route('/account/settings', methods=['GET'])
+@auth_required
+def get_settings(uid):
+    try:
+        return jsonify(profile.retrieve_settings(uid)), 200
+    except Exception as e:
+        return "Settings not retrieved", 500
+
+
+@route_bp.route('/account/settings', methods=['POST'])
+@auth_required
+def update_settings(uid):
+    try:
+        data = json.loads(request.get_data())
+        setting = data['distance_setting']
+        print(setting)
+        profile.update_settings(uid, setting)
+        return 'Success', 204
+    except Exception as e:
+        return 'Failed', 500
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -242,3 +268,5 @@ def like_user(uid, id):
 @auth_required
 def pass_user(uid, id):
     return "User passed", 501
+
+

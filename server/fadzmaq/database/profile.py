@@ -104,3 +104,26 @@ def delete_account(uid):
         DELETE FROM profile WHERE user_id = %s; 
         ''', uid
     )
+
+
+def retrieve_settings(uid):
+    rows = db.get_db().execute(
+        '''
+        SELECT distance_setting 
+        FROM profile
+        WHERE user_id = %s;
+        ''', uid
+    )
+    return {
+        "distance_setting": rows.first()['distance_setting']
+    }
+
+
+def update_settings(uid, value):
+    db.get_db().execute(
+        '''
+        UPDATE profile 
+        SET distance_setting = %s 
+        WHERE user_id = %s;
+        ''', value, uid
+    )

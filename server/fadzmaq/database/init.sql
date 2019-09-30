@@ -18,9 +18,8 @@ DROP VIEW IF EXISTS matches_v;
 DROP TABLE IF EXISTS votes;
 DROP TABLE IF EXISTS hobbies;
 DROP TABLE IF EXISTS rating;
-DROP TABLE IF EXISTS user_location;
 DROP TABLE IF EXISTS location_data;
-DROP TABLE IF EXISTS profile;
+DROP TABLE IF EXISTS profile CASCADE;
 DROP TYPE IF EXISTS HOBBY_SWAP;
 
 -- TODO reinstate this in sprint 3
@@ -38,7 +37,7 @@ CREATE TABLE IF NOT EXISTS profile
     email    VARCHAR(255) UNIQUE NOT NULL,
     phone    VARCHAR      UNIQUE,
     photo    VARCHAR      DEFAULT NULL,
-    distance INT          DEFAULT 20 NOT NULL
+    distance_setting INT          DEFAULT 20 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS matches
@@ -76,15 +75,9 @@ CREATE TABLE IF NOT EXISTS user_hobbies
 
 CREATE TABLE IF NOT EXISTS location_data
 (
-    location_id SERIAL NOT NULL UNIQUE PRIMARY KEY,
+    user_id     VARCHAR UNIQUE NOT NULL REFERENCES profile (user_id),
     lat         FLOAT NOT NULL,
     long        FLOAT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS user_location
-(
-    user_id         VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
-    location_id     SERIAL NOT NULL REFERENCES location_data (location_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS rating
