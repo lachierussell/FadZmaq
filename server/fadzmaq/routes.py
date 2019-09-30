@@ -135,7 +135,7 @@ def update_hobbies(uid):
         request_data = json.loads(request.get_data())
         hobbies.update_user_hobbies(uid, request_data)
         return "Success", 200
-    except IOError as e:
+    except Exception as e:
         return "Update hobbies failed " + str(e), 500
 
 
@@ -163,6 +163,16 @@ def create_account():
     except Exception as e:
         print("Authentication failed: " + str(e))
         return "Authentication failed: " + str(e), 401
+
+
+@route_bp.route('/account', methods=['DELETE'])
+@auth_required
+def delete_account(uid):
+    try:
+        profile.delete_account(uid)
+        return 204
+    except Exception as e:
+        return "We don't let users delete others accounts", 403
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -194,7 +204,11 @@ def get_matched_user(uid, id):
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):
-    return "User unmatched", 501
+    try:
+        matches.unmatch(uid, id)
+        return "User unmatched", 204
+    except Exception as e:
+        return "Unmatch failed: " + str(e), 403
 
 
 # @brief Rates a user negatively

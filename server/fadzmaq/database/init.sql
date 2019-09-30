@@ -44,8 +44,8 @@ CREATE TABLE IF NOT EXISTS profile
 CREATE TABLE IF NOT EXISTS matches
 (
     match_id SERIAL  NOT NULL CONSTRAINT matches_pk PRIMARY KEY,
-    user_a   VARCHAR NOT NULL REFERENCES profile (user_id),
-    user_b   VARCHAR NOT NULL REFERENCES profile (user_id),
+    user_a   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
+    user_b   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
     time     TIME,
     rating   BOOLEAN,
     unmatch  BOOLEAN DEFAULT FALSE
@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS votes
 (
     time      TIME,
     vote      BOOLEAN,
-    user_from VARCHAR NOT NULL REFERENCES profile (user_id),
-    user_to   VARCHAR NOT NULL REFERENCES profile (user_id)
+    user_from VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
+    user_to   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS hobbies
@@ -69,8 +69,8 @@ CREATE TYPE HOBBY_SWAP AS ENUM ('share', 'discover', 'matched');
 
 CREATE TABLE IF NOT EXISTS user_hobbies
 (
-    user_id  VARCHAR    NOT NULL REFERENCES profile (user_id),
-    hobby_id INTEGER    NOT NULL REFERENCES hobbies (hobby_id),
+    user_id  VARCHAR    NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
+    hobby_id INTEGER    NOT NULL REFERENCES hobbies (hobby_id) ON DELETE CASCADE,
     swap     HOBBY_SWAP NOT NULL
 );
 
@@ -83,14 +83,14 @@ CREATE TABLE IF NOT EXISTS location_data
 
 CREATE TABLE IF NOT EXISTS user_location
 (
-    user_id         VARCHAR NOT NULL REFERENCES profile (user_id),
-    location_id     SERIAL NOT NULL REFERENCES location_data (location_id)
+    user_id         VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
+    location_id     SERIAL NOT NULL REFERENCES location_data (location_id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS rating
 (
-    user_to     VARCHAR NOT NULL REFERENCES profile (user_id),
-    user_from   VARCHAR NOT NULL REFERENCES profile (user_id),
+    user_to     VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
+    user_from   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
     rating      BOOLEAN NOT NULL
 );
 

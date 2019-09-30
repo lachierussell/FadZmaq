@@ -93,3 +93,14 @@ def make_user(name, email, uid):
         return str(row['user_id'])
     print('IOError: No Rows')
     raise IOError
+
+
+# @brief Performs a cascade delete on all the user information
+# This will revoke and previous matches, likes, ratings and locations
+# associated with this user.
+def delete_account(uid):
+    db.get_db().execute(
+        '''
+        DELETE FROM profile WHERE user_id = %s; 
+        ''', uid
+    )

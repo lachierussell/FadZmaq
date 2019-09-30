@@ -1,6 +1,7 @@
 import fadzmaq.database.connection as db
 from fadzmaq.api.notifications import notify_match
 
+
 def like_user(uid, id, vote):
     rows = db.get_db().execute(
         '''

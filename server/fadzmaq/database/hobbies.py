@@ -60,25 +60,22 @@ def containerize(offer, hobbies):
 # @brief Updates the users hobbies
 # Deletes current hobbies and updates with the new hobbies.
 def update_user_hobbies(uid, request):
-    try:
-        hobbies = request["hobbies"]
-        for category in hobbies:
+    hobbies = request["hobbies"]
+    for category in hobbies:
+        db.get_db().execute(
+            '''
+            DELETE FROM user_hobbies
+            WHERE user_id = %s
+              AND swap = %s;
+            ''', uid, category['container']
+        )
+        for hobby in category['hobbies']:
             db.get_db().execute(
                 '''
-                DELETE FROM user_hobbies
-                WHERE user_id = %s
-                  AND swap = %s;
-                ''', uid, category['container']
+                INSERT INTO user_hobbies (user_id, hobby_id, swap)
+                VALUES (%s, %s, %s);
+                ''', uid, hobby['id'], category['container']
             )
-            for hobby in category['hobbies']:
-                db.get_db().execute(
-                    '''
-                    INSERT INTO user_hobbies (user_id, hobby_id, swap)
-                    VALUES (%s, %s, %s);
-                    ''', uid, hobby['id'], category['container']
-                )
-    except Exception as e:
-        raise IOError(str(e))
 
 
 # @brief Retrieves the full list of hobbies from the db.
