@@ -41,8 +41,10 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
   @override
   void didChangeDependencies() {
-    String server = AppConfig.of(context).server + widget.url;
-    _future = fetchResponse(server);
+    if (widget.model == null && _future == null) {
+      String server = AppConfig.of(context).server + widget.url;
+      _future = fetchResponse(server);
+    }
 
     super.didChangeDependencies();
   }
@@ -50,7 +52,6 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   @override
   Widget build(BuildContext context) {
     if (widget.model != null) {
-
       return RequestProvider<T>(
         // the fromJson method takes T but checks it against specified types
         // (dart cannot initialise generic types so we can't use an extended class)
