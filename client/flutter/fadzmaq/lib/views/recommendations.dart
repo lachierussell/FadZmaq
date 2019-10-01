@@ -24,7 +24,7 @@ class RecommendationsList extends StatelessWidget {
         RequestProvider.of<RecommendationsData>(context);
 
     return ListView.separated(
-      separatorBuilder: (context, index){ return Divider(color: Colors.black,);},
+      separatorBuilder: (context, index){ return Divider(color: Colors.grey,indent: 10, endIndent: 10,);},
       itemCount: recommendationsData.recommendations.length,
       itemBuilder: _listItemBuilder,
     );

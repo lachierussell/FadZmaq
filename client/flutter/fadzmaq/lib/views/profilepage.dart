@@ -1,5 +1,6 @@
 import 'package:fadzmaq/main.dart';
 import 'package:fadzmaq/models/hobbies.dart';
+import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
@@ -166,11 +167,26 @@ class ProfilePageState extends StatelessWidget {
                         height: 10.0),
                   ),
                   Text(
-                    hobbiesRaw,
+                    "share",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16.0,
                     ),
+                  ),
+                  HobbyChips(
+                    hobbies: pd.hobbyContainers,
+                    container: "share",
+                  ),
+                  Text(
+                    "discover",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  HobbyChips(
+                    hobbies: pd.hobbyContainers,
+                    container: "discover",
                   ),
                   ProfileFieldWidget(),
                   Row(
