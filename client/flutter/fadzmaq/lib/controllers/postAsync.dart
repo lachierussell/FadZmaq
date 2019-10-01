@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 void postAsync(BuildContext context, String url, {var json}) async {
   url = AppConfig.of(context).server + url;
 
-  httpPost(url).then(( value) {
+  httpPost(url, json:json).then(( value) {
     errorSnack(context, "snack: " + value.statusCode.toString());
   }).catchError((error) {
     errorSnack(context, "snack: " + error.toString());
