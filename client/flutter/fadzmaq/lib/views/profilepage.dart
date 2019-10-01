@@ -10,15 +10,15 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
 /// Helper (method?) to the ProfileFieldWidget.
 /// Builds a list of Text from the Profile data.
 /// @param context  The BuildContext from the ProfileFieldWidget
 /// @return A list of Text objects.
-List<Widget> profileFieldRender(context){
-    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-    List<Widget>rows = pd.profileFields.map((item) => new Text(item.displayValue)).toList();
-    return rows;
+List<Widget> profileFieldRender(context) {
+  ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+  List<Widget> rows =
+      pd.profileFields.map((item) => new Text(item.displayValue)).toList();
+  return rows;
 }
 
 /// Dynamically builds/renders the profile fields section of the Profile page.
@@ -28,14 +28,9 @@ List<Widget> profileFieldRender(context){
 class ProfileFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(child:
-      Column(
-        children: profileFieldRender(context)
-      )
-    );
+    return Container(child: Column(children: profileFieldRender(context)));
   }
 }
-
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -50,17 +45,26 @@ class ProfileTempApp extends StatelessWidget {
 
 class ProfilePage extends StatelessWidget {
   final String url;
+  final ProfileData profile;
 
-  const ProfilePage({Key key, this.url}) : super(key: key);
+  const ProfilePage({
+    Key key,
+    this.url,
+    this.profile,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ProfileContainer container =
+        (profile != null) ? ProfileContainer(profile: profile) : null;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('My Profile'),
       ),
       body: GetRequest<ProfileContainer>(
         url: url,
+        model: container,
         builder: (context) {
           return ProfilePageState();
         },
@@ -80,7 +84,6 @@ class ProfilePic extends StatelessWidget {
       fit: BoxFit.cover,
       // placeholder: (context, url) => new CircularProgressIndicator(),
       errorWidget: (context, url, error) => new Icon(Icons.error),
-      
     );
   }
 }
@@ -101,7 +104,7 @@ class ProfilePageState extends StatelessWidget {
 
     String hobbiesRaw = "";
 
-    print(pd.hobbyContainers.toString());
+    // print(pd.hobbyContainers.toString());
 
     if (pd.hobbyContainers != null) {
       for (HobbyContainer hc in pd.hobbyContainers) {

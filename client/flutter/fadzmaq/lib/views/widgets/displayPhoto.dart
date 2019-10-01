@@ -2,8 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 
-
-// TODO unify this
 class DisplayPhoto extends StatelessWidget {
   final String url;
   final double dimension;
@@ -15,7 +13,7 @@ class DisplayPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(url);
+    // print(url);
 
     return SizedBox(
       height: dimension,

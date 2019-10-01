@@ -20,10 +20,12 @@ class GetRequest<T> extends StatefulWidget {
   /// The relative url to request
   final String url;
   final WidgetBuilder builder;
+  final T model;
 
   const GetRequest({
     @required this.builder,
     @required this.url,
+    this.model,
   })  : assert(builder != null),
         assert(url != null);
 
@@ -47,39 +49,50 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if(snapshot.data is Exception){
-            return Center(child: Text(snapshot.data.toString()));
-          }
-          if (snapshot.data.statusCode == 200) {
-            return RequestProvider<T>(
-              // the fromJson method takes T but checks it against specified types
-              // (dart cannot initialise generic types so we can't use an extended class)
-              // this converts json data into our model class
-              data: fromJson<T>(json.decode(snapshot.data.body)),
-              child: widget.builder(context),
-            );
-          } else if (snapshot.data.statusCode == 401) {
-            // not sure if this is the best way to do this but it works for now - Jordan
-            return LoginScreen();
-          } else {
-            // TODO make this handle better
-            return Text("Error with HTTP request: " +
-                snapshot.data.statusCode.toString());
-          }
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
+    if (widget.model != null) {
 
-        // By default, show a loading spinner.
-        // We can pipe something else in here later if we wish,
-        // or make our own default
-        return Center(child: CircularProgressIndicator());
-      },
-    );
+      return RequestProvider<T>(
+        // the fromJson method takes T but checks it against specified types
+        // (dart cannot initialise generic types so we can't use an extended class)
+        // this converts json data into our model class
+        data: widget.model,
+        child: widget.builder(context),
+      );
+    } else {
+      return FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data is Exception) {
+              return Center(child: Text(snapshot.data.toString()));
+            }
+            if (snapshot.data.statusCode == 200) {
+              return RequestProvider<T>(
+                // the fromJson method takes T but checks it against specified types
+                // (dart cannot initialise generic types so we can't use an extended class)
+                // this converts json data into our model class
+                data: fromJson<T>(json.decode(snapshot.data.body)),
+                child: widget.builder(context),
+              );
+            } else if (snapshot.data.statusCode == 401) {
+              // not sure if this is the best way to do this but it works for now - Jordan
+              return LoginScreen();
+            } else {
+              // TODO make this handle better
+              return Text("Error with HTTP request: " +
+                  snapshot.data.statusCode.toString());
+            }
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
+          }
+
+          // By default, show a loading spinner.
+          // We can pipe something else in here later if we wish,
+          // or make our own default
+          return Center(child: CircularProgressIndicator());
+        },
+      );
+    }
   }
 }
 
@@ -102,17 +115,9 @@ Future post(String url, var Json) async {
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-
-
-    http.post(
-      url,
-      headers: {"Authorization": result.token},
-      body: Json
-    );
-
-
-
+  http.post(url, headers: {"Authorization": result.token}, body: Json);
 }
+
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user

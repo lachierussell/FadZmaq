@@ -21,8 +21,8 @@ class MatchesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MatchesData matchesData = RequestProvider.of<MatchesData>(context);
-    print(matchesData.toString());
-    print(matchesData.matches.toString());
+    // print(matchesData.toString());
+    // print(matchesData.matches.toString());
 
     return ListView.builder(
       itemCount: matchesData.matches.length,

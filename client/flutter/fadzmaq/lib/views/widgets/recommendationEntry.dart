@@ -4,8 +4,6 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
 
-
-
 class RecommendationEntry extends StatelessWidget {
   final ProfileData profile;
 
@@ -25,7 +23,9 @@ Widget _recommendationEntry(BuildContext context, ProfileData profile) {
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ProfilePage(url: "matches/" + profile.userId)),
+          builder: (context) =>
+              ProfilePage(url: "matches/" + profile.userId, profile: profile),
+        ),
       );
     },
     behavior: HitTestBehavior.opaque,
@@ -33,6 +33,7 @@ Widget _recommendationEntry(BuildContext context, ProfileData profile) {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         // mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             child: ClipRRect(
@@ -52,7 +53,7 @@ Widget _recommendationEntry(BuildContext context, ProfileData profile) {
               // ),
               child: DisplayPhoto(
                 url: profile.photo,
-                dimension: 80,
+                dimension: 200,
               ),
             ),
           ),
@@ -73,11 +74,15 @@ Widget _recommendationEntry(BuildContext context, ProfileData profile) {
 Widget _getMatchText(BuildContext context, ProfileData profile) {
   return new Column(
     crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.end,
     children: <Widget>[
-      Text(
-        profile.name,
-        // style: Theme.of(context).textTheme.title,
-        style: nameStyle,
+      Container(
+        // color: Colors.black,
+        child: Text(
+          profile.name,
+          // style: Theme.of(context).textTheme.title,
+          style: _nameStyle,
+        ),
       ),
       _getHobbies(context, profile),
     ],
@@ -91,7 +96,7 @@ Widget _getHobbies(BuildContext context, ProfileData profile) {
   // print(profile.hobbyContainers.toString());
   if (profile.hobbyContainers != null) {
     for (HobbyContainer hc in profile.hobbyContainers) {
-      print(hc.container.toString());
+      // print(hc.container.toString());
       if (hc.container == "matched") {
         for (HobbyData hobby in hc.hobbies) {
           list.add(_getHobbyChip(context, hobby));
@@ -121,17 +126,17 @@ Widget _getHobbyChip(BuildContext context, HobbyData hobby) {
       child: Padding(
           padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
           // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
-          child: new Text(hobby.name, style: hobbyStyle)),
+          child: new Text(hobby.name, style: _hobbyStyle)),
     ),
   );
 }
 
-final TextStyle nameStyle = TextStyle(
-  fontSize: 16,
+final TextStyle _nameStyle = TextStyle(
+  fontSize: 32,
   fontWeight: FontWeight.w600,
 );
 
-final TextStyle hobbyStyle = TextStyle(
+final TextStyle _hobbyStyle = TextStyle(
   fontSize: 14,
   fontWeight: FontWeight.w400,
 );

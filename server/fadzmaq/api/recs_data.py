@@ -5,7 +5,7 @@ recs = {
             "user": {
                 "user_id": "29f51c08adac957424e06699b81acdb5",
                 "name": "John",
-                "photo_location": "URL",
+                "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg",
                 "profile_fields": [
                     {
                         "name": "About me",
@@ -52,7 +52,7 @@ recs = {
             "user": {
                 "user_id": "29f51c08adac957424e06699b81acdb5",
                 "name": "Amy",
-                "photo_location": "URL",
+                "photo_location": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg/800px-Jeffrey_Wright_by_Gage_Skidmore_3.jpg",
                 "profile_fields": [
                     {
                         "name": "About me",

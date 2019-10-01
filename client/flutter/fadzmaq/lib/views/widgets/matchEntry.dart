@@ -89,7 +89,7 @@ Widget _getHobbies(BuildContext context, MatchProfileData profile) {
   // print(profile.hobbyContainers.toString());
   if (profile.hobbyContainers != null) {
     for (HobbyContainer hc in profile.hobbyContainers) {
-      print(hc.container.toString());
+      // print(hc.container.toString());
       if (hc.container == "matched") {
         for (HobbyData hobby in hc.hobbies) {
           list.add(_getHobbyChip(context, hobby));

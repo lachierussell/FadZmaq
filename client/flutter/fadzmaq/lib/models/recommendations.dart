@@ -33,7 +33,7 @@ class RecommendationContainer {
 
 
     var userJson = json['user'];
-    print("USERJSON: " + userJson.toString());
+    // print("USERJSON: " + userJson.toString());
     ProfileData user = userJson != null ? ProfileData.fromJson(userJson) : null;
 
     return RecommendationContainer(
