@@ -14,6 +14,7 @@ import fadzmaq
 from fadzmaq import create_app
 from sqlalchemy import create_engine
 import sqlalchemy
+import fadzmaq.database.connection as dbc
 import os
 
 
@@ -27,11 +28,10 @@ def get_test_admin_engine(app):
     return fadzmaq.test_engine
 
 
-
 @pytest.fixture
 def api_no_db(mocker):
 
-    mocker.patch("fadzmaq.routes.verify_token", return_value = "26ab0db90d72e28ad0ba1e22ee510510")
+    mocker.patch("fadzmaq.routes.verify_token", return_value="26ab0db90d72e28ad0ba1e22ee510510")
     # mocker.patch("fadzmaq.db.get_engine", return_value = get_test_engine)
 
     api = create_app({
@@ -41,18 +41,15 @@ def api_no_db(mocker):
     yield api_no_db
 
 
-
-
 @pytest.fixture
 def api(mocker):
 
-    mocker.patch("fadzmaq.routes.verify_token", return_value = "26ab0db90d72e28ad0ba1e22ee510510")
+    mocker.patch("fadzmaq.routes.verify_token", return_value="26ab0db90d72e28ad0ba1e22ee510510")
     # mocker.patch("fadzmaq.db.get_engine", return_value = get_test_engine)
 
     api = create_app({
         'TESTING': True,
     })
-
 
     # rebuild the database for each test
     build_test_db(api)
@@ -77,11 +74,11 @@ def client(api):
 def build_test_db(api):
     # engine = create_engine(api.config['DATABASE_TEST_ADMIN'])
 
-    #os.system('PGPASSWORD=test_admin_pass psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
-    #os.system('PGPASSWORD=test_admin_pass psql psql -q -U test_fadzmaq_admin -d fadzmaq_test -f tests/create_test_user.sql')
+    # os.system('PGPASSWORD=test_admin_pass psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
+    # os.system('PGPASSWORD=test_admin_pass psql psql -q -U test_fadzmaq_admin -d fadzmaq_test -f tests/create_test_user.sql')
 
-    #os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
-    #os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
+    # os.system('psql -q psql.log -U postgres -d fadzmaq -f fadzmaq/database/init.sql')
+    # os.system('psql -q -U test_fadzmaq_admin -d fadzmaq_test -f fadzmaq/database/init.sql')
 
     execute_sql(get_test_admin_engine(api), "fadzmaq/database/init.sql")
     execute_sql(get_test_admin_engine(api), "tests/create_test_user.sql")
