@@ -71,7 +71,7 @@ class ProfilePage extends StatelessWidget {
           return ProfilePageState();
         },
       ),
-      floatingActionButton: Row(
+      floatingActionButton: profile != null ? Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           LikeButton(id:profile.userId),
@@ -80,7 +80,7 @@ class ProfilePage extends StatelessWidget {
           ),
           LikeButton(id:profile.userId),
         ],
-      ),
+      ) : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
