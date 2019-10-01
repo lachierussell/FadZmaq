@@ -80,7 +80,7 @@ class RecommendationsList extends StatelessWidget {
 
   Widget _listItemBuilder(BuildContext context, int index) {
     RecommendationsData recommendationsData = RequestProvider.of<RecommendationsData>(context);
-    return _listItem(context, recommendationsData.recommendations[index]);
+    return _listItem(context, recommendationsData.recommendations[index].user);
   }
 
   Widget _listItem(BuildContext context, ProfileData profile) {

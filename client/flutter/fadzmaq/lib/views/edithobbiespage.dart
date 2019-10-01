@@ -33,7 +33,7 @@ class EditHobbyPage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: GetRequest<ProfileData>(
+      body: GetRequest<ProfileContainer>(
         url: "profile",
         builder: (context) {
           finalIsShare = isShare;
@@ -127,7 +127,7 @@ class _EditHobbyPageState extends State<EditHobby> {
     var x = ["Surfing", "Summer"];
     // List<FormBuilderFieldOption> y = function(x);
     AllHobbiesData hb = RequestProvider.of<AllHobbiesData>(context);
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     List<String> hobbies = List();
     print("here");
     if (pd.hobbyContainers != null) {

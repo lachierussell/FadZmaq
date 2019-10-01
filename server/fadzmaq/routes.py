@@ -88,7 +88,7 @@ def verify_user(uid):
 @auth_required
 def recommendations(uid):
     print(uid)
-    return jsonify(recs_data.recs), 501
+    return jsonify(recs_data.recs), 200
 
 
 # @brief Retries a users profile by their id

@@ -9,8 +9,8 @@ import 'dart:core';
 // We need to maintain a map of types to factory functions
 // Add any new class created to handle requests below
 T fromJson<T>(Map<String, dynamic> json) {
-  if (T == ProfileData) {
-    return ProfileData.fromJson(json) as T;
+  if (T == ProfileContainer) {
+    return ProfileContainer.fromJson(json) as T;
   }
   if (T == MatchesData) {
     return MatchesData.fromJson(json) as T;

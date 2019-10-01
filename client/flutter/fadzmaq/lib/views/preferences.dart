@@ -30,7 +30,7 @@ class PreferencesTempApp extends StatelessWidget {
 class TestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileData>(context);
+    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
 
     return Text(profile.name);
   }
@@ -39,7 +39,7 @@ class TestWidget extends StatelessWidget {
 class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileData>(context);
+    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
     return SizedBox(
       height: 200,
       width: 200,
@@ -84,7 +84,7 @@ class UserPreferencesState extends State {
     /// note [url] is matches and the [builder] creates the below children
     /// this is a [builder] because [children] are initialised independent to heirachy
     /// only [builder] waits for the parent to initialise
-    return GetRequest<ProfileData>(
+    return GetRequest<ProfileContainer>(
       url: "profile",
       builder: (context) {
         return SingleChildScrollView(

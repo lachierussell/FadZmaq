@@ -34,7 +34,7 @@ class EditProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
-      body: GetRequest<ProfileData>(
+      body: GetRequest<ProfileContainer>(
         url: "profile",
         builder: (context) {
           return new EditProfile();
@@ -80,7 +80,7 @@ class EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     String server = AppConfig.of(context).server;
 
     // check for id 1 (about me) and grab the display value

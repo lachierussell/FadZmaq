@@ -16,7 +16,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 /// @param context  The BuildContext from the ProfileFieldWidget
 /// @return A list of Text objects.
 List<Widget> profileFieldRender(context){
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     List<Widget>rows = pd.profileFields.map((item) => new Text(item.displayValue)).toList();
     return rows;
 }
@@ -59,7 +59,7 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('My Profile'),
       ),
-      body: GetRequest<ProfileData>(
+      body: GetRequest<ProfileContainer>(
         url: url,
         builder: (context) {
           return ProfilePageState();
@@ -73,7 +73,7 @@ class ProfilePage extends StatelessWidget {
 class ProfilePic extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileData>(context);
+    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
 
     return CachedNetworkImage(
       imageUrl: profile.photo,
@@ -90,14 +90,14 @@ class ProfilePageState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     final Color color1 = Color(0xffCCFC6D);
     final Color color2 = Color(0xff2ACDDF);
 
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
     // final String profileAge = pd.age != null ? pd.age : "-";
-    final String profileName = pd.age != null ? pd.name : "-";
+    final String profileName = pd.name != null ? pd.name : "-";
 
     String hobbiesRaw = "";
 
