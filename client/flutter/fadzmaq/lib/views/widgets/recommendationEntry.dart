@@ -18,16 +18,38 @@ class RecommendationEntry extends StatelessWidget {
   }
 }
 
+// A method that launches the SelectionScreen and awaits the
+// result from Navigator.pop.
+_navigateAndDisplaySelection(BuildContext context, ProfileData profile) async {
+  // Navigator.push returns a Future that completes after calling
+  // Navigator.pop on the Selection Screen.
+  final result = await Navigator.push(
+    context,
+    // Create the SelectionScreen in the next step.
+    MaterialPageRoute(
+      builder: (context) =>
+          ProfilePage(url: "matches/" + profile.userId, profile: profile),
+    ),
+  );
+
+  // After the Selection Screen returns a result, hide any previous snackbars
+  // and show the new result.
+  Scaffold.of(context)
+    ..removeCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text("$result")));
+}
+
 Widget _recommendationEntry(BuildContext context, ProfileData profile) {
   return GestureDetector(
     onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              ProfilePage(url: "matches/" + profile.userId, profile: profile),
-        ),
-      );
+      _navigateAndDisplaySelection(context, profile);
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) =>
+      //         ProfilePage(url: "matches/" + profile.userId, profile: profile),
+      //   ),
+      // );
     },
     behavior: HitTestBehavior.opaque,
     child: Padding(
@@ -72,15 +94,15 @@ Widget _getMatchText(BuildContext context, ProfileData profile) {
           style: _nameStyle,
         ),
       ),
-      HobbyChips(hobbies:profile.hobbyContainers, container: "matched",),
+      HobbyChips(
+        hobbies: profile.hobbyContainers,
+        container: "matched",
+      ),
     ],
   );
 }
-
-
 
 final TextStyle _nameStyle = TextStyle(
   fontSize: 32,
   fontWeight: FontWeight.w600,
 );
-

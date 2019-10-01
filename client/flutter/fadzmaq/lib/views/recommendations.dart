@@ -37,3 +37,5 @@ class RecommendationsList extends StatelessWidget {
         profile: recommendationsData.recommendations[index].user);
   }
 }
+
+

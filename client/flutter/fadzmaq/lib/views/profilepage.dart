@@ -1,6 +1,7 @@
 import 'package:fadzmaq/main.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
+import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
@@ -70,6 +71,17 @@ class ProfilePage extends StatelessWidget {
           return ProfilePageState();
         },
       ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          LikeButton(id:profile.userId),
+          Expanded(
+            child: Container(height: 10,),
+          ),
+          LikeButton(id:profile.userId),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
