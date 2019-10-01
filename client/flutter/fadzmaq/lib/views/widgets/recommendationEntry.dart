@@ -38,22 +38,9 @@ Widget _recommendationEntry(BuildContext context, ProfileData profile) {
           Container(
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(10)),
-              // child: Image.network(
-              //   profile.photo,
-              //   height: 80,
-              //   width: 80,
-              //   fit: BoxFit.cover,
-              // ),
-              // child: FadeInImage.assetNetwork(
-              //   image: profile.photo,
-              //   placeholder: 'assets/images/placeholder-person.jpg',
-              //   height: 80,
-              //   width: 80,
-              //   fit: BoxFit.cover,
-              // ),
               child: DisplayPhoto(
                 url: profile.photo,
-                dimension: 200,
+                dimension: 160,
               ),
             ),
           ),

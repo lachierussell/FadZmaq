@@ -98,89 +98,7 @@ class UserPreferencesState extends State {
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        ProfilePic(),
-                        // Text("Rowan Atkinson"),
-
-                        /// here we see [TestWidget], it accesses the
-                        /// [RequestProvider<T>] created by [GetRequest<T>]
-                        /// to access the model data
-                        ///
-                        /// this is all test at the moment, I'll adjust it shortly,
-                        /// but you can hopefully see how its arranged - Jordan
-                        TestWidget(),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ProfilePage(url: "profile")),
-                        );
-                      },
-                      child: Text("View Profile"),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditProfilePage()),
-                        );
-                      },
-                      child: Text("Edit Profile"),
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: RaisedButton(
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (context) => MatchesPage()),
-                  //       );
-                  //     },
-                  //     child: Text("View Matches"),
-                  //   ),
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditHobbyPage2(isShare:false)),
-                        );
-                      },
-                      child: Text("Choose hobbies that you want to discover"),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditHobbyPage2(isShare:true)),
-                        );
-                      },
-                      child: Text("Choose hobbies that you want to share"),
-                    ),
-                  ),
+                  new PreferenceButtons(),
                   Column(
                     children: <Widget>[
                       Text("Distance: $_roundDist"),
@@ -248,5 +166,93 @@ class UserPreferencesState extends State {
 
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+}
+
+class PreferenceButtons extends StatelessWidget {
+  const PreferenceButtons({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              ProfilePic(),
+              // Text("Rowan Atkinson"),
+
+              /// here we see [TestWidget], it accesses the
+              /// [RequestProvider<T>] created by [GetRequest<T>]
+              /// to access the model data
+              ///
+              /// this is all test at the moment, I'll adjust it shortly,
+              /// but you can hopefully see how its arranged - Jordan
+              TestWidget(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        ProfilePage(url: "profile", profile: profile,)),
+              );
+            },
+            child: Text("View Profile"),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditProfilePage()),
+              );
+            },
+            child: Text("Edit Profile"),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EditHobbyPage2(isShare: false)),
+              );
+            },
+            child:
+                Text("Choose hobbies that you want to discover"),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        EditHobbyPage2(isShare: true)),
+              );
+            },
+            child: Text("Choose hobbies that you want to share"),
+          ),
+        ),
+      ],
+    );
   }
 }
