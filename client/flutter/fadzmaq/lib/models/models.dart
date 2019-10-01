@@ -1,6 +1,7 @@
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/hobbies.dart';
+import 'package:fadzmaq/models/recommendations.dart';
 import 'dart:core';
 
 // Dart does not support instantiating from a generic type aparemeter
@@ -16,6 +17,9 @@ T fromJson<T>(Map<String, dynamic> json) {
   }
   if (T == AllHobbiesData) {
     return AllHobbiesData.fromJson(json) as T;
+  }
+  if (T == RecommendationsData) {
+    return RecommendationsData.fromJson(json) as T;
   }
   throw UnimplementedError();
 }
