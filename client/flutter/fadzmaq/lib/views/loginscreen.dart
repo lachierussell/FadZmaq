@@ -104,8 +104,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           // a quick check to the server to see if we have an account already
                           // fetch response code will use Firebase Authentication to send our token
                           String url = "matches";
-                          int code =
-                              await fetchResponseCode(config.server + url);
+                          // TODO check for timeout here
+                          http.Response response = await httpGet(config.server + url);
+                          int code = response.statusCode;
+                              
 
                           // 401: no user account
                           if (code == 401) {
