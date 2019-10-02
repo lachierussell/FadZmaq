@@ -9,6 +9,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:location/location.dart';
+
+
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -66,6 +69,10 @@ class ProfilePageState extends StatelessWidget {
     ProfileData pd = RequestProvider.of<ProfileData>(context);
     final Color color1 = Color(0xffCCFC6D);
     final Color color2 = Color(0xff2ACDDF);
+
+    var location = new Location();
+
+    // Platform messages may fail, so we use a try/catch PlatformException.
 
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
@@ -239,3 +246,4 @@ class ProfilePageState extends StatelessWidget {
     );
   }
 }
+
