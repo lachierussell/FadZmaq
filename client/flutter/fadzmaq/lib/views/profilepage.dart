@@ -292,7 +292,7 @@ class _FilterChipWidgetState extends State<FilterChipWidget>{
     return FilterChip(
       label:Text(widget.chipName),
       labelStyle: TextStyle(color: Color(0xff6200ee),fontSize: 16.0),
-
+      onSelected: (b){},
 
     );
   }
