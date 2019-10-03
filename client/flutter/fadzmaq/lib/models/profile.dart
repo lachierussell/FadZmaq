@@ -80,19 +80,19 @@ class ProfileData {
 //}
 
 class ProfileField {
-  final int id;
+  // final int id;
   final String displayValue;
   final String name;
 
   ProfileField({
-    this.id,
+    // this.id,
     this.displayValue,
     this.name,
   });
 
   factory ProfileField.fromJson(Map<String, dynamic> json) {
     return ProfileField(
-      id: json['id'] as int,
+      // id: json['id'] as int,
       name: json['name'] as String,
       displayValue: json['display_value'] as String,
     );

@@ -1,6 +1,4 @@
--- this script is for creating a new test database as well as a user with privileges for that test db
--- you will need to log in as root initially for this setup
-
+-- Who is using the database in case it can't be properly refreshed
 SELECT pid AS process_id,
        usename AS username,
        datname AS database_name,
@@ -12,15 +10,14 @@ SELECT pid AS process_id,
 FROM pg_stat_activity;
 
 -- drop everything and start again
-DROP DATABASE IF EXISTS fadzmaq_test ;
+DROP DATABASE IF EXISTS fadzmaq;
 
 -- do creation
-CREATE DATABASE fadzmaq_test;
+CREATE DATABASE fadzmaq;
 
 SELECT current_database();
--- SET ROLE test_fadzmaq_admin;
-\c fadzmaq_test
+
+-- connect to new DB
+\c fadzmaq
+
 SELECT current_database();
-
-
-
