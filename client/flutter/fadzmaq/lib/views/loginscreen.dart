@@ -1,4 +1,5 @@
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,6 +9,8 @@ import 'package:fadzmaq/views/preferences.dart';
 import 'package:fadzmaq/controllers/request.dart';
 
 import 'package:http/http.dart' as http;
+
+import 'createprofilescreen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -29,11 +32,11 @@ class _LoginScreenState extends State<LoginScreen> {
         _currentUser = account;
       });
       if (_currentUser != null) {
-        // Navigator.pushNamed(context, "/UwaAll");
+        //
       }
     });
     _googleSignIn.signInSilently().whenComplete(() => {
-          // Navigator.pushNamed(context, "/UwaAll")
+          //
         });
   }
 
@@ -136,6 +139,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // update our code
                             code = response.statusCode;
+
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                // builder: (context) => UserPreferencesPage(),
+                                builder: (context) => EditProfilePage(),
+                              ),
+                            );
                           }
 
                           // success with the server

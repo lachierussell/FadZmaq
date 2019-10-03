@@ -1,18 +1,24 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/preferences.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:fadzmaq/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:image/image.dart' as Im;
+import 'package:uuid/uuid.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -68,6 +74,49 @@ String profileFieldFromString(ProfileData pd, String fieldName) {
 }
 
 class EditProfileState extends State<EditProfile> {
+  File _image1;
+
+  String imgurl;
+
+  final FirebaseStorage storage =
+      new FirebaseStorage(storageBucket: 'gs://fadzmaq1.appspot.com/');
+
+  // Get an image from your gallery
+  Future getImage1() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      final Directory tempDir = Directory.systemTemp;
+      final path = tempDir.path;
+      int rand = new Random().nextInt(10000);
+      Im.Image newimage = Im.decodeImage(image.readAsBytesSync());
+      newimage = Im.copyResizeCropSquare(newimage, 1080);
+      var newim1 = new File('$path/img_$rand.jpg')
+        ..writeAsBytesSync(Im.encodeJpg(newimage, quality: 52));
+
+      setState(() {
+        _image1 = newim1;
+      });
+
+      _uploadFile();
+    }
+  }
+
+  // Upload File to firebase
+  Future<Null> _uploadFile() async {
+    String fileName = "${Uuid().v1()}";
+    final StorageReference reference =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(_image1);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    final String url = (await taskSnapshot.ref.getDownloadURL());
+    print('URL Is $url');
+
+    setState(() {
+      imgurl = url;
+    });
+  }
+
   var data;
   bool autoValidate = true;
   bool readOnly = false;
@@ -109,17 +158,25 @@ class EditProfileState extends State<EditProfile> {
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
+                    // Get an Image
+                    RaisedButton(
+                      child: _image1 == null
+                          ? Text('No image selected.')
+                          : Image.file(_image1),
+                      onPressed: getImage1,
+                    ),
+
                     FormBuilderTextField(
                         attribute: "nickname",
                         initialValue: pd.name,
                         decoration: InputDecoration(labelText: "Nickname")),
                     FormBuilderTextField(
                         attribute: "email",
-                       initialValue: contactEmail,
+                        initialValue: contactEmail,
                         decoration: InputDecoration(labelText: "email")),
                     FormBuilderTextField(
                         attribute: "phone",
-                       initialValue: contactPhone,
+                        initialValue: contactPhone,
                         decoration: InputDecoration(labelText: "phone")),
                     FormBuilderTextField(
                         attribute: "bio",
@@ -143,7 +200,6 @@ class EditProfileState extends State<EditProfile> {
                           post(server + "profile", _fbKey.currentState.value);
 
                           Navigator.pop(context);
-
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");
