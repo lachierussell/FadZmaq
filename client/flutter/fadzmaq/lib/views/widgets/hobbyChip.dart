@@ -15,36 +15,12 @@ class HobbyChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // get list to show
-    // get list to compare
-
-    // for each in show
-    // for each in compare
-    // if equal record
-
-    // do twice
-
-    // for each in one
-    // for each in two
-    // if the same record for both
-
-    // one
-    // return one
-
-    // two
-    // return two
-
-    // matches
-    // for each in one add
-    // for each in two check if already in one
-    // if in change one
-    // else add two
-
     List<HobbyInfo> listMyShare = new List<HobbyInfo>();
     List<HobbyInfo> listMyDiscover = new List<HobbyInfo>();
     List<HobbyInfo> listShare = new List<HobbyInfo>();
     List<HobbyInfo> listDiscover = new List<HobbyInfo>();
 
+    // Get all the hobby data from the model
     if (hobbies != null) {
       for (HobbyContainer hc in hobbies) {
         // print(hc.container.toString());
@@ -71,6 +47,8 @@ class HobbyChips extends StatelessWidget {
       }
     }
 
+    // highlight all hobbies in this share
+    // that I am looking to discover
     for (HobbyInfo share in listShare) {
       for (HobbyInfo mine in listMyDiscover) {
         if (share.hobby == mine.hobby) {
@@ -79,6 +57,8 @@ class HobbyChips extends StatelessWidget {
       }
     }
 
+    // highlight all hobbies in this discover
+    // that I am looking to share
     for (HobbyInfo discover in listDiscover) {
       for (HobbyInfo mine in listMyShare) {
         if (discover.hobby == mine.hobby) {
@@ -87,26 +67,37 @@ class HobbyChips extends StatelessWidget {
       }
     }
 
+    // special highlights
     for (HobbyInfo discover in listDiscover) {
       for (HobbyInfo share in listShare) {
-        if (discover.hobby == share.hobby &&
-            discover.direction != HobbyDirection.none &&
-            share.direction != HobbyDirection.none) {
-          discover.direction = HobbyDirection.match;
-          share.direction = HobbyDirection.match;
-        } else {}
+        if (discover.hobby == share.hobby) {
+          // Hobbies are highlighted if there is a two way match
+          if (discover.direction != HobbyDirection.none &&
+              share.direction != HobbyDirection.none) {
+            discover.direction = HobbyDirection.match;
+            share.direction = HobbyDirection.match;
+          }
+          // Hobbies are highlighted if there is one way match to a two way share/discover
+          else if (discover.direction != HobbyDirection.none) {
+            share.direction = HobbyDirection.share;
+            // Hobbies are highlighted if there is one way match to a two way share/discover
+          } else if (share.direction != HobbyDirection.none) {
+            discover.direction = HobbyDirection.discover;
+          }
+        }
       }
     }
 
     List<Widget> list = new List<Widget>();
-
     List<HobbyInfo> toProccess;
+
+    // prepare to convert the hobby info into a list of chips
+    // different results depending on the container
     if (container == HobbyDirection.share) {
-      print("share");
       toProccess = listShare;
     } else if (container == HobbyDirection.discover) {
-      print("discover");
       toProccess = listDiscover;
+      // for matching exclude non matching and duplicates
     } else if (container == HobbyDirection.match) {
       toProccess = new List<HobbyInfo>();
       for (HobbyInfo info in listDiscover) {
@@ -122,19 +113,18 @@ class HobbyChips extends StatelessWidget {
       }
     }
 
+    // make chips
     if (toProccess != null) {
       for (HobbyInfo info in toProccess) {
         list.add(HobbyChip(hobby: info));
       }
     }
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 8),
-      child: new Wrap(
-        spacing: 4,
-        runSpacing: 4,
-        children: list,
-      ),
+    // return in wrap
+    return Wrap(
+      spacing: 4,
+      runSpacing: 4,
+      children: list,
     );
   }
 }
@@ -257,7 +247,7 @@ class HobbyDirectionIcon extends StatelessWidget {
     const double size = 26;
     const shade = -0.2;
 
-    final Widget share = Container(
+    final Widget discover = Container(
       height: height,
       child: Padding(
         padding: EdgeInsets.fromLTRB(0.5, 1, 0, 0),
@@ -269,7 +259,7 @@ class HobbyDirectionIcon extends StatelessWidget {
       ),
     );
 
-    final Widget discover = Container(
+    final Widget share = Container(
       height: height,
       child: Padding(
         padding: EdgeInsets.fromLTRB(2.5, 1, 0, 0),
@@ -313,7 +303,10 @@ class HobbyDirectionIcon extends StatelessWidget {
       case HobbyDirection.share:
         return share;
       default:
-        return Container(height: height, width: 0,);
+        return Container(
+          height: height,
+          width: 0,
+        );
     }
   }
 }
