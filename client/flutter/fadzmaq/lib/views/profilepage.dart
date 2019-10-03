@@ -10,6 +10,7 @@ class ProfileAppbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
+      elevation: 0,
     );
   }
 }
