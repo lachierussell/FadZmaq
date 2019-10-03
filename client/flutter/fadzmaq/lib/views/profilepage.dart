@@ -1,4 +1,5 @@
 import 'package:fadzmaq/views/widgets/profile_body.dart';
+import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
@@ -31,13 +32,29 @@ class ProfilePage extends StatelessWidget {
         (profile != null) ? ProfileContainer(profile: profile) : null;
 
     return Scaffold(
-        body: GetRequest<ProfileContainer>(
-      url: url,
-      model: container,
-      builder: (context) {
-        return ProfilePageState();
-      },
-    ));
+      body: GetRequest<ProfileContainer>(
+        url: url,
+        model: container,
+        builder: (context) {
+          return ProfilePageState();
+        },
+      ),
+      floatingActionButton: profile != null
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                LikeButton(id: profile.userId),
+                Expanded(
+                  child: Container(
+                    height: 10,
+                  ),
+                ),
+                LikeButton(id: profile.userId),
+              ],
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 }
 
@@ -78,6 +95,9 @@ class ProfilePageState extends StatelessWidget {
                     margin: EdgeInsets.only(left: 16, right: 16),
                     child: ProfileBody(),
                   ),
+                  // TODO match this to the size of the like/pass buttons
+                  // and only show if they are present
+                  SizedBox(height: 100,)
                 ],
               ),
             ),
