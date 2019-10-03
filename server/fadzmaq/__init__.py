@@ -10,7 +10,7 @@
 
 
 from flask import Flask
-from fadzmaq.database import db
+import fadzmaq.database.connection as db
 from fadzmaq.routes import route_bp
 
 auth_app = None
