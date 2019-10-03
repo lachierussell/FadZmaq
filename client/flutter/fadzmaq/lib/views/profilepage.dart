@@ -85,10 +85,17 @@ class ProfilePageState extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container(
-                    child: AspectRatio(
-                      aspectRatio: 1,
-                      child: ProfilePic(),
+                  Container( // Extra container in case screen is turned
+                    color: Colors.black,
+                    child: Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.shortestSide,
+                        height: MediaQuery.of(context).size.shortestSide,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: ProfilePic(),
+                        ),
+                      ),
                     ),
                   ),
                   Container(
@@ -97,7 +104,9 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   // TODO match this to the size of the like/pass buttons
                   // and only show if they are present
-                  SizedBox(height: 100,)
+                  SizedBox(
+                    height: 100,
+                  )
                 ],
               ),
             ),

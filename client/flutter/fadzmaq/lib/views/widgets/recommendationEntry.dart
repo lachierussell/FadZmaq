@@ -86,6 +86,7 @@ Widget _getMatchText(BuildContext context, ProfileData profile) {
           style: _nameStyle,
         ),
       ),
+      SizedBox(height: 6),
       HobbyChips(
         hobbies: profile.hobbyContainers,
         container: HobbyDirection.match,
