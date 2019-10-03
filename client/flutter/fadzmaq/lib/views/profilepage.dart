@@ -10,7 +10,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 
-
+bool isFavourite = true;
 /// Helper (method?) to the ProfileFieldWidget.
 /// Builds a list of Text from the Profile data.
 /// @param context  The BuildContext from the ProfileFieldWidget
@@ -19,6 +19,11 @@ List<Widget> profileFieldRender(context){
     ProfileData pd = RequestProvider.of<ProfileData>(context);
     List<Widget>rows = pd.profileFields.map((item) => new Text(item.displayValue)).toList();
     return rows;
+}
+
+Null Function() printOut() {
+  print("here");
+  return null;
 }
 
 /// Dynamically builds/renders the profile fields section of the Profile page.
@@ -90,6 +95,7 @@ class ProfilePageState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    isFavourite = false;
     ProfileData pd = RequestProvider.of<ProfileData>(context);
     final Color color1 = Color(0xffCCFC6D);
     final Color color2 = Color(0xff2ACDDF);
@@ -247,12 +253,15 @@ class ProfilePageState extends StatelessWidget {
                         ),
                         Center(
                           child: FloatingActionButton(
-                            child: Icon(
+                            child: isFavourite ? Icon(
                               Icons.favorite,
                               color: Colors.pink,
-                            ),
+                            ) : Icon(
+                              Icons.favorite,
+                              color: Colors.black,
+                            ) ,
                             backgroundColor: Colors.white,
-                            onPressed: () {},
+                            onPressed: () {Navigator.pop(context);},
                           ),
                         ),
                       ],
