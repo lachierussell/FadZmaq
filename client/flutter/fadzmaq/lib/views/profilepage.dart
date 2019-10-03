@@ -10,6 +10,39 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
 
+/// Helper (method?) to the ProfileFieldWidget.
+/// Builds a list of Text from the Profile data.
+/// @param context  The BuildContext from the ProfileFieldWidget
+/// @return A list of Text objects.
+List<Widget> profileFieldRender(context) {
+  ProfileData pd = RequestProvider.of<ProfileData>(context);
+  List<Widget> rows =
+      pd.profileFields.map((item) => new Text(item.displayValue)).toList();
+  return rows;
+}
+
+/// Dynamically builds/renders the profile fields section of the Profile page.
+/// It will draw every field that is sent to it. It also ignores anything that
+/// isn't sent. E.g. If it is a match, it will render contact details, but if
+/// it is a recommendation, it will not.
+class ProfileFieldWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(child: Column(children: profileFieldRender(context)));
+  }
+}
+
+String getProfileField(ProfileData pd, String field) {
+  if (pd == null) return null;
+  if (pd.profileFields == null) return null;
+  for (ProfileField pf in pd.profileFields) {
+    if (pf.name == field) {
+      return pf.displayValue;
+    }
+  }
+  return null;
+}
+
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
 
@@ -62,17 +95,6 @@ class ProfilePageState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
-    final Color color1 = Color(0xffCCFC6D);
-    final Color color2 = Color(0xff2ACDDF);
-
-    // putting these up here in case of nulls
-    // right now just putting dash instead of the value
-    // final String profileAge = pd.age != null ? pd.age : "-";
-    final String profileName = pd.age != null ? pd.name : "-";
-
-
-    // final String image = 'assets/images/glenn.jpg';
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
@@ -112,61 +134,7 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, right: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        // SizedBox(height: 15.0),
-                        Text(
-                          profileName,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 42.0,
-                              height: 1.5),
-                        ),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                        Text("Discovering",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Container(
-                            child: Wrap(
-                          spacing: 5.0,
-                          runSpacing: 3.0,
-                          children: <Widget>[
-                            getHobbies(context, pd, "discover")
-                          ],
-                        )),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text("Sharing",
-                            style: TextStyle(fontWeight: FontWeight.bold)),
-                        Container(
-                            child: Wrap(
-                          spacing: 5.0,
-                          runSpacing: 3.0,
-                          children: <Widget>[getHobbies(context, pd, "share")],
-                        )),
-                        Divider(
-                          color: Colors.grey,
-                        ),
-                                                Text(
-                          "5km away",
-                          // style: TextStyle(
-                          //     fontWeight: FontWeight.bold,
-                          //     fontSize: 42.0,
-                          //     height: 1.5),
-                        ),
-                        SizedBox(height: 15,)
-//                  Text(
-//                    hobbiesRaw,
-//                    style: TextStyle(
-//                      fontSize: 16.0,
-//                      height: 2.0,
-//                    ),
-//                  ),
-                      ],
-                    ),
+                    child: new ProfileBody(),
                   ),
                   // Row(
                   //   mainAxisAlignment: MainAxisAlignment.center,
@@ -246,6 +214,83 @@ class ProfilePageState extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class ProfileBody extends StatelessWidget {
+  const ProfileBody({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ProfileData pd = RequestProvider.of<ProfileData>(context);
+
+    // putting these up here in case of nulls
+    // right now just putting dash instead of the value
+    // final String profileAge = pd.age != null ? pd.age : "-";
+    final String profileName = pd.name != null ? pd.name : "-";
+
+    final String bio = getProfileField(pd, "bio");
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        // SizedBox(height: 15.0),
+        Text(
+          profileName,
+          style: TextStyle(
+              fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5),
+        ),
+        Divider(
+          color: Colors.grey,
+        ),
+        Text("Discovering", style: TextStyle(fontWeight: FontWeight.bold)),
+        Container(
+            child: Wrap(
+          spacing: 5.0,
+          runSpacing: 3.0,
+          children: <Widget>[getHobbies(context, pd, "discover")],
+        )),
+        SizedBox(
+          height: 15,
+        ),
+        Text("Sharing", style: TextStyle(fontWeight: FontWeight.bold)),
+        Container(
+            child: Wrap(
+          spacing: 5.0,
+          runSpacing: 3.0,
+          children: <Widget>[getHobbies(context, pd, "share")],
+        )),
+        Divider(
+          color: Colors.grey,
+        ),
+        Text(
+          "5km away",
+          // style: TextStyle(
+          //     fontWeight: FontWeight.bold,
+          //     fontSize: 42.0,
+          //     height: 1.5),
+        ),
+        SizedBox(
+          height: 15,
+        ),
+        bio != null ? Text(bio) : Container(),
+        SizedBox(
+          height: 15,
+        ),
+        Divider(
+          color: Colors.grey,
+        ),
+//                  Text(
+//                    hobbiesRaw,
+//                    style: TextStyle(
+//                      fontSize: 16.0,
+//                      height: 2.0,
+//                    ),
+//                  ),
+      ],
     );
   }
 }
