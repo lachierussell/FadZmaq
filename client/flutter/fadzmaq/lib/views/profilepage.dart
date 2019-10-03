@@ -187,7 +187,7 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   HobbyChips(
                     hobbies: pd.hobbyContainers,
-                    container: "share",
+                    container: HobbyDirection.share,
                   ),
                   Text(
                     "discover",
@@ -198,7 +198,7 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   HobbyChips(
                     hobbies: pd.hobbyContainers,
-                    container: "discover",
+                    container: HobbyDirection.discover,
                   ),
                   ProfileFieldWidget(),
                   Row(

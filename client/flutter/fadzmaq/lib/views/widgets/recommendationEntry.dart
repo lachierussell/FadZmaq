@@ -88,7 +88,7 @@ Widget _getMatchText(BuildContext context, ProfileData profile) {
       ),
       HobbyChips(
         hobbies: profile.hobbyContainers,
-        container: "matched",
+        container: HobbyDirection.match,
       ),
     ],
   );

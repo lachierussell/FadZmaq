@@ -22,13 +22,21 @@ class HobbyData {
   final int id;
   final String name;
 
-  HobbyData({this.id, this.name});
+  const HobbyData({this.id, this.name});
 
   factory HobbyData.fromJson(Map<String, dynamic> json) {
     return HobbyData(
       id: json['id'],
       name: json['name'],
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is HobbyData &&
+            runtimeType == other.runtimeType &&
+            id == other.id;
   }
 }
 

@@ -65,7 +65,7 @@ Widget _getMatchText(BuildContext context, MatchProfileData profile) {
         // style: Theme.of(context).textTheme.title,
         style: nameStyle,
       ),
-      HobbyChips(hobbies: profile.hobbyContainers, container: "matched",),
+      HobbyChips(hobbies: profile.hobbyContainers, container: HobbyDirection.match,),
     ],
   );
 }

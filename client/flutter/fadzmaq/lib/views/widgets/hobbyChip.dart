@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class HobbyChips extends StatelessWidget {
   final List<HobbyContainer> hobbies;
-  final String container;
+  final HobbyDirection container;
 
   HobbyChips({
     @required this.hobbies,
@@ -91,24 +91,42 @@ class HobbyChips extends StatelessWidget {
         if (discover.hobby == share.hobby &&
             discover.direction != HobbyDirection.none &&
             share.direction != HobbyDirection.none) {
-              discover.direction = HobbyDirection.match;
-              share.direction = HobbyDirection.match;
-            }
+          discover.direction = HobbyDirection.match;
+          share.direction = HobbyDirection.match;
+        } else {}
       }
     }
 
     List<Widget> list = new List<Widget>();
-    // print(profile.hobbyContainers.toString());
-    if (hobbies != null) {
-      for (HobbyContainer hc in hobbies) {
-        // print(hc.container.toString());
-        if (hc.container == container) {
-          for (HobbyData hobby in hc.hobbies) {
-            list.add(HobbyChip(hobby: hobby));
-          }
+
+    List<HobbyInfo> toProccess;
+    if (container == HobbyDirection.share) {
+      print("share");
+      toProccess = listShare;
+    } else if (container == HobbyDirection.discover) {
+      print("discover");
+      toProccess = listDiscover;
+    } else if (container == HobbyDirection.match) {
+      toProccess = new List<HobbyInfo>();
+      for (HobbyInfo info in listDiscover) {
+        if (info.direction != HobbyDirection.none) {
+          toProccess.add(info);
+        }
+      }
+      for (HobbyInfo info in listShare) {
+        if (info.direction != HobbyDirection.none &&
+            !toProccess.contains(info)) {
+          toProccess.add(info);
         }
       }
     }
+
+    if (toProccess != null) {
+      for (HobbyInfo info in toProccess) {
+        list.add(HobbyChip(hobby: info));
+      }
+    }
+
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: new Wrap(
@@ -135,10 +153,18 @@ class HobbyInfo {
     this.hobby,
     this.direction = HobbyDirection.none,
   });
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is HobbyInfo &&
+            runtimeType == other.runtimeType &&
+            hobby.id == other.hobby.id;
+  }
 }
 
 class HobbyChip extends StatelessWidget {
-  final HobbyData hobby;
+  final HobbyInfo hobby;
 
   HobbyChip({
     this.hobby,
@@ -149,13 +175,26 @@ class HobbyChip extends StatelessWidget {
     return ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(32)),
       child: Container(
-        color: Color(0xfff2f2f2),
+        color: getColor(hobby.direction),
         child: Padding(
             padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
             // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
-            child: new Text(hobby.name, style: _hobbyStyle)),
+            child: new Text(hobby.hobby.name, style: _hobbyStyle)),
       ),
     );
+  }
+}
+
+Color getColor(HobbyDirection direction) {
+  switch (direction) {
+    case HobbyDirection.discover:
+      return Colors.red;
+    case HobbyDirection.share:
+      return Colors.blue;
+    case HobbyDirection.match:
+      return Colors.purple;
+    default:
+      return Color(0xffd9d9d9);
   }
 }
 
