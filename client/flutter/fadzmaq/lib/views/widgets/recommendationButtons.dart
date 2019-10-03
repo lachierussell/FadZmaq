@@ -19,9 +19,10 @@ class LikeButton extends StatelessWidget {
           child: FloatingActionButton(
             child: Icon(
               Icons.done,
+              color: Colors.green,
               size: 60,
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: Colors.white,
             heroTag: null,
             onPressed: () {
               Navigator.pop(context, id);
