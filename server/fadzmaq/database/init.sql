@@ -127,7 +127,7 @@ END;
 $make_match$;
 
 CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
-    FOR EACH ROW EXECUTE FUNCTION match();
+    FOR EACH ROW EXECUTE PROCEDURE match();
 
 
 --------------------------------------------
