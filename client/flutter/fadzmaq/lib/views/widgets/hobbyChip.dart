@@ -179,7 +179,8 @@ class HobbyChip extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Container(
-            color: getColor(hobby.direction, -0.17),
+            // color: getColor(hobby.direction, -0.12),
+            color: getColor(hobby.direction, 0.1),
             height: 30,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(3, 4, 10, 4),
@@ -188,7 +189,12 @@ class HobbyChip extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   HobbyIconBackground(direction: hobby.direction),
-                  Text(hobby.hobby.name, style: _hobbyStyle),
+                  Text(hobby.hobby.name,
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: getColor(hobby.direction, -0.4),
+                      )),
                 ],
               ),
             ),
@@ -222,7 +228,7 @@ class HobbyIconBackground extends StatelessWidget {
           width: 24,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: getColor(direction, 0.1),
+            color: getColor(direction, -0.1),
           ),
         ),
         SizedBox(
@@ -245,7 +251,7 @@ class HobbyDirectionIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     const double height = 30;
     const double size = 26;
-    const shade = -0.2;
+    const shade = 0.1;
 
     final Widget discover = Container(
       height: height,
@@ -320,7 +326,7 @@ Color getColor(HobbyDirection direction, double shade) {
     case HobbyDirection.match:
       return adjustShade(matchC, shade);
     default:
-      return Color(0xffb5b5b5);
+      return adjustShade(noneC, shade);
   }
 }
 
@@ -336,9 +342,11 @@ Color adjustShade(Color col, double shade) {
   return result.toColor();
 }
 
-Color matchC = Color(0xffB980FF);
+// Color matchC = Color(0xffB980FF);
+Color matchC = Color(0xffb193ff);
 Color discoverC = Color(0xffeb769f);
 Color shareC = Color(0xff80B7FF);
+Color noneC = Color(0xffb5b5b5);
 
 // Color purple = Color(0xff947bff);
 // Color red = Color(0xffff5785);
@@ -348,8 +356,8 @@ Color shareC = Color(0xff80B7FF);
 // Color redD = Color(0xffee2961);
 // Color blueD = Color(0xff4fa2ff);
 
-final TextStyle _hobbyStyle = TextStyle(
-  fontSize: 14,
-  fontWeight: FontWeight.w400,
-  color: Colors.white,
-);
+// final TextStyle _hobbyStyle = TextStyle(
+//   fontSize: 14,
+//   fontWeight: FontWeight.w400,
+//   color: Colors.black,
+// );
