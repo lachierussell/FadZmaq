@@ -110,6 +110,7 @@ BEGIN
           AND v.vote
           AND v.user_to = new.user_from
           AND new.user_to = v.user_from
+        LIMIT 1
          ) NOTNULL
     ) THEN
         INSERT INTO matches (user_a, user_b, time)
@@ -136,6 +137,7 @@ BEGIN
           AND user_b = new.user_to
         OR user_a = new.user_to
           AND user_b = new.user_from
+        LIMIT 1
         ) IS NULL
     THEN
         RETURN NULL;
@@ -145,6 +147,7 @@ BEGIN
         FROM rating rt
         WHERE rt.user_from = new.user_from
           AND rt.user_to = new.user_to
+        LIMIT 1
        ) IS NOT NULL
     ) THEN
         UPDATE rating SET rate_value=new.rate_value
@@ -157,7 +160,7 @@ END;
 $rate$;
 
 CREATE TRIGGER rate BEFORE INSERT ON rating
-    FOR EACH ROW EXECUTE FUNCTION rate_user();
+    FOR EACH ROW EXECUTE PROCEDURE rate_user();
 
 INSERT INTO rating (user_to, user_from, rate_value) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'false');
 
