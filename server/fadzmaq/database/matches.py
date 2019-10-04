@@ -21,7 +21,7 @@ from fadzmaq.database.profile import build_profile_data
 def get_matches(subject):
     rows = db.get_db().execute(
         '''
-        SELECT profile.nickname, profile.user_id, profile.photo FROM profile
+        SELECT * FROM profile
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
@@ -42,12 +42,14 @@ def get_matches(subject):
     matches = []
 
     for row in rows:
-        matches.append({
-            'id': row['user_id'],
-            'name': row['nickname'],
-            'photo': row['photo'],
-            'hobbies': get_matched_hobbies(subject, row['user_id'])
-        })
+        # matches.append({
+        #     'id': row['user_id'],
+        #     'name': row['nickname'],
+        #     'photo': row['photo'],
+        #     'hobbies': get_matched_hobbies(subject, row['user_id'])
+        # })
+
+        matches.append(build_profile_data(row, 1))
 
     return {
         "matches": matches
@@ -71,6 +73,6 @@ def get_match_by_id(uid, id):
         );
         ''', id, uid, id, uid, id
     )
-    return build_profile_data(rows, 1)
+    return build_profile_data(rows.first(), 1)
 
 
