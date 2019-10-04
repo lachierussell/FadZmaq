@@ -14,7 +14,12 @@ class RecommendationsPage extends StatelessWidget {
     return GetRequest<RecommendationsData>(
         url: "user/recs",
         builder: (context) {
-          return RecommendationsList();
+          return GetRequest<UserProfileContainer>(
+              url: "profile",
+              builder: (context) {
+                return RecommendationsList();
+              });
+          ;
         });
   }
 }

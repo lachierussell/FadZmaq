@@ -12,6 +12,9 @@ T fromJson<T>(Map<String, dynamic> json) {
   if (T == ProfileContainer) {
     return ProfileContainer.fromJson(json) as T;
   }
+  if (T == UserProfileContainer) {
+    return UserProfileContainer.fromJson(json) as T;
+  }
   if (T == MatchesData) {
     return MatchesData.fromJson(json) as T;
   }

@@ -19,15 +19,18 @@ class ProfileAppbar extends StatelessWidget {
 class ProfilePage extends StatelessWidget {
   final String url;
   final ProfileData profile;
+  final UserProfileContainer userData;
 
   const ProfilePage({
     Key key,
     this.url,
     this.profile,
+    this.userData,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // As we only pass profile data we convert it into a container
     final ProfileContainer container =
         (profile != null) ? ProfileContainer(profile: profile) : null;
 
@@ -36,7 +39,13 @@ class ProfilePage extends StatelessWidget {
         url: url,
         model: container,
         builder: (context) {
-          return ProfilePageState();
+          return GetRequest<UserProfileContainer>(
+            url: "profile",
+            model: userData,
+            builder: (context) {
+              return ProfilePageState();
+            },
+          );
         },
       ),
       floatingActionButton: profile != null
@@ -85,7 +94,8 @@ class ProfilePageState extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Container( // Extra container in case screen is turned
+                  Container(
+                    // Extra container in case screen is turned
                     color: Colors.black,
                     child: Center(
                       child: Container(

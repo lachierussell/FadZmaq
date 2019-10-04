@@ -1,3 +1,4 @@
+import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/widgets/matchEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -12,7 +13,11 @@ class MatchesPage extends StatelessWidget {
     return GetRequest<MatchesData>(
         url: "matches",
         builder: (context) {
-          return MatchesList();
+          return GetRequest<UserProfileContainer>(
+              url: "profile",
+              builder: (context) {
+                return MatchesList();
+              });
         });
   }
 }
@@ -32,6 +37,6 @@ class MatchesList extends StatelessWidget {
 
   Widget _listItemBuilder(BuildContext context, int index) {
     MatchesData matchesData = RequestProvider.of<MatchesData>(context);
-    return MatchEntry(profile: matchesData.matches[index]);
+    return MatchEntry(profile: matchesData.matches[index].profile);
   }
 }

@@ -110,7 +110,7 @@ class ProfileHobbies extends StatelessWidget {
             children: <Widget>[
               HobbyChips(
                 hobbies: hobbies,
-                container: direction,
+                hobbyCategory: direction,
               ),
             ],
           ),

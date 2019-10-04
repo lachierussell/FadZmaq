@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
@@ -5,20 +6,32 @@ import 'dart:math';
 
 class HobbyChips extends StatelessWidget {
   final List<HobbyContainer> hobbies;
-  final HobbyDirection container;
+  final HobbyDirection hobbyCategory;
 
   HobbyChips({
     @required this.hobbies,
-    @required this.container,
+    @required this.hobbyCategory,
   })  : assert(hobbies != null),
-        assert(container != null);
+        assert(hobbyCategory != null);
 
   @override
   Widget build(BuildContext context) {
-    List<HobbyInfo> listMyShare = new List<HobbyInfo>();
-    List<HobbyInfo> listMyDiscover = new List<HobbyInfo>();
+    List<HobbyData> listMyShare;
+    List<HobbyData> listMyDiscover;
     List<HobbyInfo> listShare = new List<HobbyInfo>();
     List<HobbyInfo> listDiscover = new List<HobbyInfo>();
+
+    // any request using hobby chips should have a user profile container request
+    // to compare the hobbies to.
+    UserProfileContainer pc = RequestProvider.of<UserProfileContainer>(context);
+
+    if(pc == null) return Container();
+
+    ProfileData pd = pc.profile;
+
+    if(pd == null) return Container();
+    if(pd.hobbyContainers == null) return Container();
+    if(hobbies == null) return Container();
 
     // Get all the hobby data from the model
     if (hobbies != null) {
@@ -34,15 +47,17 @@ class HobbyChips extends StatelessWidget {
             listDiscover.add(HobbyInfo(hobby: hobby));
           }
         }
-        if (hc.container == "my_share") {
-          for (HobbyData hobby in hc.hobbies) {
-            listMyShare.add(HobbyInfo(hobby: hobby));
-          }
+      }
+    }
+
+    if (pd.hobbyContainers != null) {
+      for (HobbyContainer hc in pd.hobbyContainers) {
+        // print(hc.container.toString());
+        if (hc.container == "share") {
+          listMyShare = hc.hobbies;
         }
-        if (hc.container == "my_discover") {
-          for (HobbyData hobby in hc.hobbies) {
-            listMyDiscover.add(HobbyInfo(hobby: hobby));
-          }
+        if (hc.container == "discover") {
+          listMyDiscover = hc.hobbies;
         }
       }
     }
@@ -50,8 +65,8 @@ class HobbyChips extends StatelessWidget {
     // highlight all hobbies in this share
     // that I am looking to discover
     for (HobbyInfo share in listShare) {
-      for (HobbyInfo mine in listMyDiscover) {
-        if (share.hobby == mine.hobby) {
+      for (HobbyData mine in listMyDiscover) {
+        if (share.hobby.id == mine.id) {
           share.direction = HobbyDirection.discover;
         }
       }
@@ -60,8 +75,8 @@ class HobbyChips extends StatelessWidget {
     // highlight all hobbies in this discover
     // that I am looking to share
     for (HobbyInfo discover in listDiscover) {
-      for (HobbyInfo mine in listMyShare) {
-        if (discover.hobby == mine.hobby) {
+      for (HobbyData mine in listMyShare) {
+        if (discover.hobby.id == mine.id) {
           discover.direction = HobbyDirection.share;
         }
       }
@@ -93,12 +108,12 @@ class HobbyChips extends StatelessWidget {
 
     // prepare to convert the hobby info into a list of chips
     // different results depending on the container
-    if (container == HobbyDirection.share) {
+    if (hobbyCategory == HobbyDirection.share) {
       toProccess = listShare;
-    } else if (container == HobbyDirection.discover) {
+    } else if (hobbyCategory == HobbyDirection.discover) {
       toProccess = listDiscover;
       // for matching exclude non matching and duplicates
-    } else if (container == HobbyDirection.match) {
+    } else if (hobbyCategory == HobbyDirection.match) {
       toProccess = new List<HobbyInfo>();
       for (HobbyInfo info in listDiscover) {
         if (info.direction != HobbyDirection.none) {
@@ -228,7 +243,7 @@ class HobbyIconBackground extends StatelessWidget {
           width: 24,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: getColor(direction, -0.1),
+            color: getColor(direction, -0.2),
           ),
         ),
         SizedBox(

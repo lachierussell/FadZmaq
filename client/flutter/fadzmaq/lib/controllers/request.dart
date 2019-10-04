@@ -51,14 +51,13 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 
   @override
   Widget build(BuildContext context) {
+    // If we have a model passed in no need to do a request
     if (widget.model != null) {
       return RequestProvider<T>(
-        // the fromJson method takes T but checks it against specified types
-        // (dart cannot initialise generic types so we can't use an extended class)
-        // this converts json data into our model class
         data: widget.model,
         child: widget.builder(context),
       );
+    // No model, request one
     } else {
       return FutureBuilder(
         future: _future,

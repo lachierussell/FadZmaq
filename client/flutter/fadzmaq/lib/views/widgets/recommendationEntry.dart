@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -21,15 +22,20 @@ class RecommendationEntry extends StatelessWidget {
     return _recommendationEntry(context, profile);
   }
 
-
   _navigateAwait(BuildContext context, ProfileData profile) async {
+    UserProfileContainer upc =
+        RequestProvider.of<UserProfileContainer>(context);
+
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
     final userId = await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) =>
-            ProfilePage(url: "matches/" + profile.userId, profile: profile),
+        builder: (context) => ProfilePage(
+          url: "matches/" + profile.userId,
+          profile: profile,
+          userData: upc,
+        ),
       ),
     );
 
@@ -89,7 +95,7 @@ Widget _getMatchText(BuildContext context, ProfileData profile) {
       SizedBox(height: 6),
       HobbyChips(
         hobbies: profile.hobbyContainers,
-        container: HobbyDirection.match,
+        hobbyCategory: HobbyDirection.match,
       ),
     ],
   );

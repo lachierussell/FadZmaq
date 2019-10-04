@@ -17,6 +17,26 @@ class ProfileContainer{
   }
 }
 
+// This is used to differential the current user from other profiles
+// The way the inherited request method works makes it complicated to
+// have two similtaneous requests to the same model type
+class UserProfileContainer{
+  final ProfileData profile;
+
+  UserProfileContainer({
+    this.profile,
+  });
+
+  factory UserProfileContainer.fromJson(Map<String, dynamic> json) {
+    var profileJson = json['profile'];
+    ProfileData profile = profileJson != null ? ProfileData.fromJson(profileJson) : null;
+
+    return UserProfileContainer(
+      profile: profile,
+    );
+  }
+}
+
 class ProfileData {
   final String userId;
   // final String gender;
