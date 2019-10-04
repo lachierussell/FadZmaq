@@ -24,7 +24,7 @@ class HobbyIconBackground extends StatelessWidget {
           width: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: getColor(direction, -0.2),
+            color: getColor(direction, iconShade),
           ),
         ),
         SizedBox(
@@ -64,7 +64,7 @@ class HobbyDirectionIcon extends StatelessWidget {
     final Widget share = Container(
       height: height,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(2, 1, 0, 0),
+        padding: EdgeInsets.fromLTRB(1.5, 1, 0, 0),
         child: Icon(
           Icons.keyboard_arrow_right,
           color: getColor(direction, shade),

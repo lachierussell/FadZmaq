@@ -74,9 +74,11 @@ class HobbyChips extends StatelessWidget {
     // highlight all hobbies in this share
     // that I am looking to discover
     for (HobbyInfo share in listShare) {
-      for (HobbyData mine in listMyDiscover) {
+      for (int i = 0; i < listMyDiscover.length; i++) {
+        HobbyData mine = listMyDiscover[i];
         if (share.hobby == mine) {
           share.direction = HobbyDirection.discover;
+          share.index = i;
         }
       }
     }
@@ -84,9 +86,11 @@ class HobbyChips extends StatelessWidget {
     // highlight all hobbies in this discover
     // that I am looking to share
     for (HobbyInfo discover in listDiscover) {
-      for (HobbyData mine in listMyShare) {
+      for (int i = 0; i < listMyShare.length; i++) {
+        HobbyData mine = listMyShare[i];
         if (discover.hobby == mine) {
           discover.direction = HobbyDirection.share;
+          discover.index = i;
         }
       }
     }
@@ -146,7 +150,7 @@ class HobbyChips extends StatelessWidget {
 
     // return in wrap
     return Wrap(
-      alignment: alignment != null ? alignment: WrapAlignment.start,
+      alignment: alignment != null ? alignment : WrapAlignment.start,
       spacing: 6,
       runSpacing: 8,
       children: list,

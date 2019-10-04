@@ -7,10 +7,12 @@ import 'dart:math';
 class HobbyInfo {
   final HobbyData hobby;
   HobbyDirection direction;
+  int index;
 
   HobbyInfo({
     this.hobby,
     this.direction = HobbyDirection.none,
+    this.index = 0,
   });
 
   @override
@@ -41,7 +43,7 @@ class HobbyChip extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(32)),
           child: Container(
             height: 24,
-            color: getColor(hobby.direction, 0.1),
+            color: getColor(hobby.direction, backgroundShade, index: hobby.index),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(3, 3, 10, 3),
               // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
@@ -53,7 +55,7 @@ class HobbyChip extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: getColor(hobby.direction, -0.4),
+                        color: getColor(hobby.direction, textShade),
                       )),
                 ],
               ),
@@ -66,7 +68,7 @@ class HobbyChip extends StatelessWidget {
   }
 }
 
-Color getColor(HobbyDirection direction, double shade) {
+Color getColor(HobbyDirection direction, double shade, {int index = 0}) {
   switch (direction) {
     case HobbyDirection.discover:
       return adjustShade(discoverC, shade);
@@ -79,23 +81,42 @@ Color getColor(HobbyDirection direction, double shade) {
   }
 }
 
-Color adjustShade(Color col, double shade) {
+Color adjustShade(Color col, double shade, ) {
   HSLColor hsl = HSLColor.fromColor(col);
 
   double lightness = hsl.lightness + shade;
+  double saturation = hsl.saturation;
+  double hue = hsl.hue;
+
   lightness = max(0, lightness);
   lightness = min(1, lightness);
 
-  HSLColor result = HSLColor.fromAHSL(1, hsl.hue, hsl.saturation, lightness);
+  // hue = max(0, hue);
+  // hue = min(360, hue);
+
+  HSLColor result = HSLColor.fromAHSL(1, hue, saturation, lightness);
 
   return result.toColor();
 }
 
+
+const double backgroundShade = 0.05;
+const double iconShade = -0.3;
+const double textShade = -0.4;
+const Color matchC = Color(0xffcfbbe5);
+const Color discoverC = Color(0xffe8b5c5);
+const Color shareC = Color(0xffb9cee8);
+const Color noneC = Color(0xffcbcbcb);
+
+
+// const double backgroundShade = 0.1;
+// const double iconShade = -0.2;
+// const double textShade = -0.4;
 // Color matchC = Color(0xffB980FF);
-Color matchC = Color(0xffb193ff);
-Color discoverC = Color(0xffeb769f);
-Color shareC = Color(0xff80B7FF);
-Color noneC = Color(0xffb5b5b5);
+// Color matchC = Color(0xffb193ff);
+// Color discoverC = Color(0xffeb769f);
+// Color shareC = Color(0xff80B7FF);
+// Color noneC = Color(0xffb5b5b5);
 
 // Color purple = Color(0xff947bff);
 // Color red = Color(0xffff5785);

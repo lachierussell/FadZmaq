@@ -65,6 +65,7 @@ Widget _getMatchText(BuildContext context, ProfileData profile) {
         // style: Theme.of(context).textTheme.title,
         style: nameStyle,
       ),
+      SizedBox(height: 4,),
       HobbyChips(
         hobbies: profile.hobbyContainers,
         hobbyCategory: HobbyDirection.match,
