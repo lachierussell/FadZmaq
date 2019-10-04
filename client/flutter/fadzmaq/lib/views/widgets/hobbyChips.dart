@@ -14,10 +14,12 @@ enum HobbyDirection {
 class HobbyChips extends StatelessWidget {
   final List<HobbyContainer> hobbies;
   final HobbyDirection hobbyCategory;
+  final WrapAlignment alignment;
 
   HobbyChips({
     @required this.hobbies,
     @required this.hobbyCategory,
+    this.alignment,
   })  : assert(hobbies != null),
         assert(hobbyCategory != null);
 
@@ -144,8 +146,9 @@ class HobbyChips extends StatelessWidget {
 
     // return in wrap
     return Wrap(
-      spacing: 4,
-      runSpacing: 4,
+      alignment: alignment != null ? alignment: WrapAlignment.start,
+      spacing: 6,
+      runSpacing: 8,
       children: list,
     );
   }

@@ -103,19 +103,10 @@ class ProfileHobbies extends StatelessWidget {
         SizedBox(
           height: 8,
         ),
-        Container(
-          child: Wrap(
-            spacing: 5.0,
-            runSpacing: 3.0,
-            children: <Widget>[
-              HobbyChips(
-                hobbies: hobbies,
-                hobbyCategory: direction,
-              ),
-            ],
-          ),
+        Center(child: HobbyChips(hobbies: hobbies, hobbyCategory: direction, alignment: WrapAlignment.center,)),
+        SizedBox(
+          height: 16,
         ),
-        SizedBox(height: 16,),
       ],
     );
   }

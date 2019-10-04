@@ -1,3 +1,4 @@
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/profile_body.dart';
 import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
 import 'package:flutter/material.dart';
@@ -49,49 +50,40 @@ class ProfilePage extends StatelessWidget {
             url: "profile",
             model: userData,
             builder: (context) {
-              return ProfilePageState(type:type);
+              return ProfilePageState(type: type, profile: profile);
             },
           );
         },
       ),
-      floatingActionButton: profile != null && type == ProfileType.recommendation
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                LikeButton(id: profile.userId, type: LikePass.pass),
-                Expanded(
-                  child: Container(
-                    height: 10,
-                  ),
-                ),
-                LikeButton(id: profile.userId, type: LikePass.like),
-              ],
-            )
-          : null,
+      floatingActionButton:
+          profile != null && type == ProfileType.recommendation
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    LikeButton(id: profile.userId, type: LikePass.pass),
+                    Expanded(
+                      child: Container(
+                        height: 10,
+                      ),
+                    ),
+                    LikeButton(id: profile.userId, type: LikePass.like),
+                  ],
+                )
+              : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-    );
-  }
-}
-
-// todo make this a proper reuseable widget
-class ProfilePic extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
-
-    return CachedNetworkImage(
-      imageUrl: profile.photo,
-      fit: BoxFit.cover,
-      // placeholder: (context, url) => new CircularProgressIndicator(),
-      errorWidget: (context, url, error) => new Icon(Icons.error),
     );
   }
 }
 
 class ProfilePageState extends StatelessWidget {
   final ProfileType type;
+  final ProfileData profile;
 
-  ProfilePageState({@required this.type}) : assert(type != null);
+  ProfilePageState({
+    @required this.type,
+    @required this.profile,
+  })  : assert(type != null),
+        assert(profile != null);
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +105,7 @@ class ProfilePageState extends StatelessWidget {
                         height: MediaQuery.of(context).size.shortestSide,
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child: ProfilePic(),
+                          child: DisplayPhoto(url: profile.photo),
                         ),
                       ),
                     ),
