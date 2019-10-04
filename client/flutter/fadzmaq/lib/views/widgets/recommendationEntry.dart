@@ -3,7 +3,7 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/recommendations.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
-import 'package:fadzmaq/views/widgets/hobbyChip.dart';
+import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 
 class RecommendationEntry extends StatelessWidget {
