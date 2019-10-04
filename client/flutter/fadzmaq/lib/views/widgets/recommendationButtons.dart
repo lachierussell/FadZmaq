@@ -1,5 +1,3 @@
-import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/models/matches.dart';
 import 'package:flutter/material.dart';
 
 class LikeButton extends StatelessWidget {

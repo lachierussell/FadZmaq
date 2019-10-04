@@ -4,7 +4,6 @@ import 'package:fadzmaq/views/widgets/recommendationEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/controllers/request.dart';
-import 'package:flutter/semantics.dart';
 
 class RecommendationsPage extends StatelessWidget {
   const RecommendationsPage([Key key]) : super(key: key);
@@ -19,7 +18,6 @@ class RecommendationsPage extends StatelessWidget {
               builder: (context) {
                 return RecommendationsList();
               });
-          ;
         });
   }
 }

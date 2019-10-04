@@ -1,11 +1,9 @@
 import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 import 'package:flutter/material.dart';
-import 'package:fadzmaq/models/matches.dart';
 
 class MatchEntry extends StatelessWidget {
   final ProfileData profile;

@@ -1,4 +1,3 @@
-import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
 
 class MatchesData {

@@ -1,5 +1,4 @@
 import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/recommendations.dart';

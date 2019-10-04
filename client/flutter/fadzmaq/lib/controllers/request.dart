@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 import 'package:fadzmaq/models/models.dart';
 
 /// Takes a type [T], [url] and [builder] and creates an [RequestProvider<T>] of that type

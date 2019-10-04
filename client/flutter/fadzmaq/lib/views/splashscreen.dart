@@ -1,11 +1,8 @@
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
-import 'package:fadzmaq/views/preferences.dart';
-import 'package:fadzmaq/views/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:fadzmaq/controllers/request.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override
