@@ -25,13 +25,13 @@ class HobbyChips extends StatelessWidget {
     // to compare the hobbies to.
     UserProfileContainer pc = RequestProvider.of<UserProfileContainer>(context);
 
-    if(pc == null) return Container();
+    if (pc == null) return Container();
 
     ProfileData pd = pc.profile;
 
-    if(pd == null) return Container();
-    if(pd.hobbyContainers == null) return Container();
-    if(hobbies == null) return Container();
+    if (pd == null) return Container();
+    if (pd.hobbyContainers == null) return Container();
+    if (hobbies == null) return Container();
 
     // Get all the hobby data from the model
     if (hobbies != null) {
@@ -189,16 +189,19 @@ class HobbyChip extends StatelessWidget {
 
     // );
 
-    return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(32)),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            // color: getColor(hobby.direction, -0.12),
+    // return Chip(
+    //   label: Text(hobby.name),
+    //   backgroundColor: hobby.color,
+    // );
+    return Stack(
+      children: <Widget>[
+        ClipRRect(
+          borderRadius: BorderRadius.all(Radius.circular(32)),
+          child: Container(
+            height: 24,
             color: getColor(hobby.direction, 0.1),
-            height: 30,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(3, 4, 10, 4),
+              padding: const EdgeInsets.fromLTRB(3, 3, 10, 3),
               // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -214,9 +217,9 @@ class HobbyChip extends StatelessWidget {
               ),
             ),
           ),
-          HobbyDirectionIcon(direction: hobby.direction),
-        ],
-      ),
+        ),
+        HobbyDirectionIcon(direction: hobby.direction),
+      ],
     );
   }
 }
@@ -239,8 +242,8 @@ class HobbyIconBackground extends StatelessWidget {
     return Row(
       children: <Widget>[
         Container(
-          height: 24,
-          width: 24,
+          height: 18,
+          width: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: getColor(direction, -0.2),
@@ -264,14 +267,14 @@ class HobbyDirectionIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const double height = 30;
-    const double size = 26;
+    const double height = 24;
+    const double size = 22;
     const shade = 0.1;
 
     final Widget discover = Container(
       height: height,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(0.5, 1, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
         child: Icon(
           Icons.keyboard_arrow_left,
           color: getColor(direction, shade),
@@ -283,7 +286,7 @@ class HobbyDirectionIcon extends StatelessWidget {
     final Widget share = Container(
       height: height,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(2.5, 1, 0, 0),
+        padding: EdgeInsets.fromLTRB(2, 1, 0, 0),
         child: Icon(
           Icons.keyboard_arrow_right,
           color: getColor(direction, shade),
@@ -297,19 +300,19 @@ class HobbyDirectionIcon extends StatelessWidget {
       child: Stack(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.fromLTRB(8.8, 5.4, 0, 0),
+            padding: const EdgeInsets.fromLTRB(7, 4, 0, 0),
             child: Icon(
               Icons.keyboard_arrow_right,
               color: getColor(direction, shade),
-              size: 20,
+              size: 16,
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(1, 5.8, 0, 0),
+            padding: const EdgeInsets.fromLTRB(1, 4.25, 0, 0),
             child: Icon(
               Icons.keyboard_arrow_left,
               color: getColor(direction, shade),
-              size: 20,
+              size: 16,
             ),
           ),
         ],
@@ -371,8 +374,8 @@ Color noneC = Color(0xffb5b5b5);
 // Color redD = Color(0xffee2961);
 // Color blueD = Color(0xff4fa2ff);
 
-// final TextStyle _hobbyStyle = TextStyle(
-//   fontSize: 14,
-//   fontWeight: FontWeight.w400,
-//   color: Colors.black,
-// );
+final TextStyle _hobbyStyle = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+  color: Colors.black,
+);
