@@ -49,7 +49,7 @@ def get_matches(subject):
         #     'hobbies': get_matched_hobbies(subject, row['user_id'])
         # })
 
-        matches.append(build_profile_data(row, 1))
+        matches.append(build_profile_data(row, 2))
 
     return {
         "matches": matches
@@ -73,6 +73,6 @@ def get_match_by_id(uid, id):
         );
         ''', id, uid, id, uid, id
     )
-    return build_profile_data(rows.first(), 1)
+    return build_profile_data(rows.first(), 2)
 
 
