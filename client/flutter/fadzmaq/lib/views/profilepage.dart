@@ -6,6 +6,8 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+enum ProfileType { own, match, recommendation }
+
 class ProfileAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -20,13 +22,17 @@ class ProfilePage extends StatelessWidget {
   final String url;
   final ProfileData profile;
   final UserProfileContainer userData;
+  final ProfileType type;
 
   const ProfilePage({
     Key key,
-    this.url,
+    @required this.url,
     this.profile,
     this.userData,
-  }) : super(key: key);
+    @required this.type,
+  })  : assert(url != null),
+        assert(type != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,22 +49,22 @@ class ProfilePage extends StatelessWidget {
             url: "profile",
             model: userData,
             builder: (context) {
-              return ProfilePageState();
+              return ProfilePageState(type:type);
             },
           );
         },
       ),
-      floatingActionButton: profile != null
+      floatingActionButton: profile != null && type == ProfileType.recommendation
           ? Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                LikeButton(id: profile.userId),
+                LikeButton(id: profile.userId, type: LikePass.pass),
                 Expanded(
                   child: Container(
                     height: 10,
                   ),
                 ),
-                LikeButton(id: profile.userId),
+                LikeButton(id: profile.userId, type: LikePass.like),
               ],
             )
           : null,
@@ -83,6 +89,10 @@ class ProfilePic extends StatelessWidget {
 }
 
 class ProfilePageState extends StatelessWidget {
+  final ProfileType type;
+
+  ProfilePageState({@required this.type}) : assert(type != null);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,11 +122,9 @@ class ProfilePageState extends StatelessWidget {
                     margin: EdgeInsets.only(left: 16, right: 16),
                     child: ProfileBody(),
                   ),
-                  // TODO match this to the size of the like/pass buttons
-                  // and only show if they are present
-                  SizedBox(
-                    height: 100,
-                  )
+                  type == ProfileType.recommendation
+                      ? SizedBox(height: 140)
+                      : Container(),
                 ],
               ),
             ),

@@ -34,6 +34,7 @@ class RecommendationEntry extends StatelessWidget {
           url: "matches/" + profile.userId,
           profile: profile,
           userData: upc,
+          type: ProfileType.recommendation,
         ),
       ),
     );

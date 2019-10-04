@@ -199,7 +199,7 @@ class PreferenceButtons extends StatelessWidget {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ProfilePage(url: "profile", profile: profile,)),
+                        ProfilePage(url: "profile", profile: profile, type: ProfileType.own,)),
               );
             },
             child: Text("View Profile"),
