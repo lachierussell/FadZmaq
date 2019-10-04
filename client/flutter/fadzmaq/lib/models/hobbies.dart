@@ -1,3 +1,5 @@
+import 'package:fadzmaq/views/widgets/hobbyChip.dart';
+
 class AllHobbiesData {
   List<HobbyData> hobbies;
 
@@ -34,9 +36,13 @@ class HobbyData {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is HobbyData &&
-            runtimeType == other.runtimeType &&
-            id == other.id;
+        other is HobbyData && id == other.id ||
+        other is HobbyInfo && id == other.hobby.id;
+  }
+
+  @override
+  int hashCode() {
+    return id;
   }
 }
 

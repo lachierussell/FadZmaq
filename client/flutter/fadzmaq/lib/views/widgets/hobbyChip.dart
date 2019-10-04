@@ -16,9 +16,13 @@ class HobbyInfo {
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
-        other is HobbyInfo &&
-            runtimeType == other.runtimeType &&
-            hobby.id == other.hobby.id;
+        other is HobbyInfo && hobby.id == other.hobby.id ||
+        other is HobbyData && hobby.id == other.id;
+  }
+
+  @override
+  int hashCode() {
+    return hobby.id;
   }
 }
 
@@ -31,21 +35,6 @@ class HobbyChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return Chip(
-    //   label: Text(hobby.hobby.name, style: _hobbyStyle),
-    //   backgroundColor: getColor(hobby.direction),
-    //   // padding: EdgeInsets.all(0),
-    //   labelPadding: EdgeInsets.all(0),
-    //   avatar: CircleAvatar(
-    //     child: Icon( Icons.ac_unit),
-    //   ),
-
-    // );
-
-    // return Chip(
-    //   label: Text(hobby.name),
-    //   backgroundColor: hobby.color,
-    // );
     return Stack(
       children: <Widget>[
         ClipRRect(

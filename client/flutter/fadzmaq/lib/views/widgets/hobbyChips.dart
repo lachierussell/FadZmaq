@@ -73,7 +73,7 @@ class HobbyChips extends StatelessWidget {
     // that I am looking to discover
     for (HobbyInfo share in listShare) {
       for (HobbyData mine in listMyDiscover) {
-        if (share.hobby.id == mine.id) {
+        if (share.hobby == mine) {
           share.direction = HobbyDirection.discover;
         }
       }
@@ -83,7 +83,7 @@ class HobbyChips extends StatelessWidget {
     // that I am looking to share
     for (HobbyInfo discover in listDiscover) {
       for (HobbyData mine in listMyShare) {
-        if (discover.hobby.id == mine.id) {
+        if (discover.hobby == mine) {
           discover.direction = HobbyDirection.share;
         }
       }
