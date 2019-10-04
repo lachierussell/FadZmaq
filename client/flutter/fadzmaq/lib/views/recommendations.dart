@@ -48,6 +48,7 @@ class RecommendationsListState extends State<RecommendationsList> {
 
   @override
   Widget build(BuildContext context) {
+    print("build recommendations");
     return ListView.separated(
       separatorBuilder: (context, index) {
         return Divider(

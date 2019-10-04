@@ -25,7 +25,7 @@ class MatchEntry extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfilePage(url: "matches/" + profile.userId, userData: upc,)),
+              builder: (context) => ProfilePage(url: "matches/" + profile.userId, profile: profile, userData: upc,)),
         );
       },
       behavior: HitTestBehavior.opaque,

@@ -29,6 +29,8 @@ class MatchesList extends StatelessWidget {
     // print(matchesData.toString());
     // print(matchesData.matches.toString());
 
+    print("build matches");
+
     return ListView.builder(
       itemCount: matchesData.matches.length,
       itemBuilder: _listItemBuilder,
