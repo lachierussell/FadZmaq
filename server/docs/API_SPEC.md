@@ -211,42 +211,110 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 {
     "matches": [
         {
-            "id": "b026324c6904b2a9cb4b88d6d61c81d1",
-            "name": "Lachie",
-            "rating": 0,
-            "photo": "URL",
-            "hobbies": [
-                {
-                    "container": "matched",
-                    "hobbies": [
-                        {
-                            "id": 3,
-                            "name": "Rock Climbing"
-                        },
-                        {
-                            "id": 1,
-                            "name": "Boxing"
-                        }
-                    ]
-                }
-            ]
+            "profile": {
+                "user_id": "29f51c08adac957424e06699b81acdb5",
+                "name": "John",
+                "photo_location": "URL",
+                "profile_fields": [
+                    {
+                        "name": "about me",
+                        "display_value": "Avid rock climber and hiking enthusiast."
+                    },
+                    {
+                        "name": "phone",
+                        "display_value": "0423199199"
+                    },
+                    {
+                        "name": "email",
+                        "display_value": "john@email.com"
+                    },
+                    {
+                        "name": "age",
+                        "display_value": "20"
+                    },
+                    {
+                        "name": "birth-date",
+                        "display_value": "1999-10-04 00:00:00"
+                    },
+                    {
+                        "name": "location",
+                        "display_value": "<5"
+                    }
+                ],
+                "hobbies": [
+                    {
+                        "container": "share",
+                        "hobbies": [
+                            {
+                                "id": 3,
+                                "name": "Rock Climbing"
+                            }
+                        ]
+                    },
+                    {
+                        "container": "discover",
+                        "hobbies": [
+                            {
+                                "id": 1,
+                                "name": "Boxing"
+                            }
+                        ]
+                    }
+                ]
+            }
         },
         {
-            "id": "48a24b70a0b376535542b996af517398",
-            "name": "Judy",
-            "rating": null,
-            "photo": "URL",
-            "hobbies": [
-                 {
-                     "container": "matched",
-                     "hobbies": [
-                         {
-                             "id": 3,
-                             "name": "Rock Climbing"
-                         }
-                     ]
-                 }
-             ]
+            "profile": {
+                "user_id": "29f51c08adac957424e06699b81acdb5",
+                "name": "John",
+                "photo_location": "URL",
+                "profile_fields": [
+                    {
+                        "name": "about me",
+                        "display_value": "Avid rock climber and hiking enthusiast."
+                    },
+                    {
+                        "name": "phone",
+                        "display_value": "0423199199"
+                    },
+                    {
+                        "name": "email",
+                        "display_value": "john@email.com"
+                    },
+                    {
+                        "name": "age",
+                        "display_value": "20"
+                    },
+                    {
+                        "name": "birth-date",
+                        "display_value": "1999-10-04 00:00:00"
+                    },
+                    {
+                        "name": "location",
+                        "display_value": "<5"
+                    }
+                ],
+                "hobbies": [
+                    {
+                        "container": "share",
+                        "hobbies": [
+                            {
+                                "id": 3,
+                                "name": "Rock Climbing"
+                            }
+                        ]
+                    },
+                    {
+                        "container": "discover",
+                        "hobbies": [
+                            {
+                                "id": 1,
+                                "name": "Boxing"
+                            }
+                        ]
+                    }
+                ]
+            }
         }
     ]
 }

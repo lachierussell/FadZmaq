@@ -4,6 +4,9 @@ import 'package:fadzmaq/views/widgets/hobbyIcons.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+/// An encapsulation of [HobbyData] used in displaying hobby chips
+/// [direction] is used to indicate the shading of a hobby chip
+/// [index] is unused at the moment but enables unique shading between hobbies
 class HobbyInfo {
   final HobbyData hobby;
   HobbyDirection direction;
@@ -28,6 +31,7 @@ class HobbyInfo {
   }
 }
 
+/// A chip display of a hobby
 class HobbyChip extends StatelessWidget {
   final HobbyInfo hobby;
 
@@ -43,7 +47,10 @@ class HobbyChip extends StatelessWidget {
           borderRadius: BorderRadius.all(Radius.circular(32)),
           child: Container(
             height: 24,
-            color: getColor(hobby.direction, backgroundShade, index: hobby.index),
+            color: getChipColor(
+                direction: hobby.direction,
+                shade: backgroundShade,
+                index: hobby.index),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(3, 3, 10, 3),
               // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
@@ -55,7 +62,10 @@ class HobbyChip extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
-                        color: getColor(hobby.direction, textShade),
+                        color: getChipColor(
+                          direction: hobby.direction,
+                          shade: textShade,
+                        ),
                       )),
                 ],
               ),
@@ -68,7 +78,11 @@ class HobbyChip extends StatelessWidget {
   }
 }
 
-Color getColor(HobbyDirection direction, double shade, {int index = 0}) {
+Color getChipColor({
+  HobbyDirection direction = HobbyDirection.none,
+  double shade = 0,
+  int index = 0,
+}) {
   switch (direction) {
     case HobbyDirection.discover:
       return adjustShade(discoverC, shade);
@@ -81,7 +95,10 @@ Color getColor(HobbyDirection direction, double shade, {int index = 0}) {
   }
 }
 
-Color adjustShade(Color col, double shade, ) {
+Color adjustShade(
+  Color col,
+  double shade,
+) {
   HSLColor hsl = HSLColor.fromColor(col);
 
   double lightness = hsl.lightness + shade;
@@ -99,7 +116,6 @@ Color adjustShade(Color col, double shade, ) {
   return result.toColor();
 }
 
-
 const double backgroundShade = 0.05;
 const double iconShade = -0.3;
 const double textShade = -0.4;
@@ -107,7 +123,6 @@ const Color matchC = Color(0xffcfbbe5);
 const Color discoverC = Color(0xffe8b5c5);
 const Color shareC = Color(0xffb9cee8);
 const Color noneC = Color(0xffcbcbcb);
-
 
 // const double backgroundShade = 0.1;
 // const double iconShade = -0.2;

@@ -2,6 +2,7 @@ import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 
+/// The circle shown in hobby chips
 class HobbyIconBackground extends StatelessWidget {
   const HobbyIconBackground({
     this.direction,
@@ -24,7 +25,7 @@ class HobbyIconBackground extends StatelessWidget {
           width: 18,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: getColor(direction, iconShade),
+            color: getChipColor(direction: direction, shade: iconShade),
           ),
         ),
         SizedBox(
@@ -35,6 +36,7 @@ class HobbyIconBackground extends StatelessWidget {
   }
 }
 
+/// The icon shown on hobby chips
 class HobbyDirectionIcon extends StatelessWidget {
   const HobbyDirectionIcon({
     Key key,
@@ -49,30 +51,35 @@ class HobbyDirectionIcon extends StatelessWidget {
     const double size = 22;
     const shade = 0.1;
 
+    // The following are returned with a swtich below
+
+    // Discover icon
     final Widget discover = Container(
       height: height,
       child: Padding(
         padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
         child: Icon(
           Icons.keyboard_arrow_left,
-          color: getColor(direction, shade),
+          color: getChipColor(direction: direction, shade: shade),
           size: size,
         ),
       ),
     );
 
+    // Share icon
     final Widget share = Container(
       height: height,
       child: Padding(
         padding: EdgeInsets.fromLTRB(1.5, 1, 0, 0),
         child: Icon(
           Icons.keyboard_arrow_right,
-          color: getColor(direction, shade),
+          color: getChipColor(direction: direction, shade: shade),
           size: size,
         ),
       ),
     );
 
+    // match icon
     final Widget match = Container(
       height: height,
       child: Stack(
@@ -81,7 +88,7 @@ class HobbyDirectionIcon extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(7, 4, 0, 0),
             child: Icon(
               Icons.keyboard_arrow_right,
-              color: getColor(direction, shade),
+              color: getChipColor(direction: direction, shade: shade),
               size: 16,
             ),
           ),
@@ -89,7 +96,7 @@ class HobbyDirectionIcon extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(1, 4.25, 0, 0),
             child: Icon(
               Icons.keyboard_arrow_left,
-              color: getColor(direction, shade),
+              color: getChipColor(direction: direction, shade: shade),
               size: 16,
             ),
           ),
@@ -97,6 +104,7 @@ class HobbyDirectionIcon extends StatelessWidget {
       ),
     );
 
+    // switch to return the above
     switch (direction) {
       case HobbyDirection.discover:
         return discover;

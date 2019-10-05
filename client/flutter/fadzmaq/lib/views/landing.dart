@@ -12,6 +12,7 @@ class LandingPage extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             flexibleSpace: new Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

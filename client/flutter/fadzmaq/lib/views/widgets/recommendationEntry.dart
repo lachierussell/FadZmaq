@@ -6,6 +6,7 @@ import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 
+/// Entry in the recommendation list
 class RecommendationEntry extends StatelessWidget {
   final ProfileData profile;
   final RecommendationsListState recommendationList;
@@ -21,6 +22,9 @@ class RecommendationEntry extends StatelessWidget {
     return _recommendationEntry(context, profile);
   }
 
+  /// Await a response from the profile (like / pass buttons)
+  /// If there is a response either way remove the entry from the list
+  /// This needs to be a async as it waits for the page to return
   _navigateAwait(BuildContext context, ProfileData profile) async {
     UserProfileContainer upc =
         RequestProvider.of<UserProfileContainer>(context);

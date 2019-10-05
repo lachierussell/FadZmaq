@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 enum LikePass { like, pass }
 
+/// Like and pass buttons for recommended profiles
 class LikeButton extends StatelessWidget {
   final String id;
   final LikePass type;
@@ -20,34 +21,24 @@ class LikeButton extends StatelessWidget {
     final double leftPad = type == LikePass.like ? 0 : 60;
     final double rightPad = type == LikePass.like ? 60 : 0;
 
-
-
     return Padding(
       padding: EdgeInsets.fromLTRB(leftPad, 0, rightPad, 20),
       child: Container(
-          width: 90,
-          height: 90,
-          child: FloatingActionButton(
-            child: Icon(
-              icon,
-              color: color,
-              size: 60,
-            ),
-            backgroundColor: Colors.white,
-            heroTag: null,
-            onPressed: () {
-              Navigator.pop(context, id);
-            },
-          )
-
-          // child: RawMaterialButton(
-          //   elevation: 0,
-          //   shape: CircleBorder(),
-          //   onPressed: (){},
-          //   fillColor: Colors.redAccent,
-          //   child: Icon(Icons.ac_unit),
-          // ),
+        width: 90,
+        height: 90,
+        child: FloatingActionButton(
+          child: Icon(
+            icon,
+            color: color,
+            size: 60,
           ),
+          backgroundColor: Colors.white,
+          heroTag: null,
+          onPressed: () {
+            Navigator.pop(context, id);
+          },
+        ),
+      ),
     );
   }
 }

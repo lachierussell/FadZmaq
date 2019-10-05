@@ -5,6 +5,7 @@ import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 
+/// List item for existing matches
 class MatchEntry extends StatelessWidget {
   final ProfileData profile;
 
@@ -46,7 +47,7 @@ class MatchEntry extends StatelessWidget {
                 // color: Colors.green,
                 padding: const EdgeInsets.only(left: 16),
                 // alignment: Alignment.centerLeft,
-                child: _getMatchText(context, profile),
+                child: _getMatchBody(context, profile),
               ),
             ),
           ],
@@ -56,14 +57,15 @@ class MatchEntry extends StatelessWidget {
   }
 }
 
-Widget _getMatchText(BuildContext context, ProfileData profile) {
+/// text and chips
+Widget _getMatchBody(BuildContext context, ProfileData profile) {
   return new Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       Text(
         profile.name,
         // style: Theme.of(context).textTheme.title,
-        style: nameStyle,
+        style: _nameStyle,
       ),
       SizedBox(height: 4,),
       HobbyChips(
@@ -74,7 +76,7 @@ Widget _getMatchText(BuildContext context, ProfileData profile) {
   );
 }
 
-final TextStyle nameStyle = TextStyle(
+final TextStyle _nameStyle = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w600,
 );

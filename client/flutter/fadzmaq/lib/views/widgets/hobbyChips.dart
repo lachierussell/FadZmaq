@@ -4,6 +4,7 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 import 'package:flutter/material.dart';
 
+
 enum HobbyDirection {
   none,
   match,
@@ -11,6 +12,8 @@ enum HobbyDirection {
   discover,
 }
 
+/// Displays a list of hobby chips for a given [hobbyCategory]
+/// The chips are returned in a wrap
 class HobbyChips extends StatelessWidget {
   final List<HobbyContainer> hobbies;
   final HobbyDirection hobbyCategory;
@@ -32,14 +35,14 @@ class HobbyChips extends StatelessWidget {
 
     // any request using hobby chips should have a user profile container request
     // to compare the hobbies to.
-    UserProfileContainer pc = RequestProvider.of<UserProfileContainer>(context);
+    UserProfileContainer upc = RequestProvider.of<UserProfileContainer>(context);
 
-    if (pc == null) return Container();
+    if (upc == null) return Container();
 
-    ProfileData pd = pc.profile;
+    ProfileData userProfile = upc.profile;
 
-    if (pd == null) return Container();
-    if (pd.hobbyContainers == null) return Container();
+    if (userProfile == null) return Container();
+    if (userProfile.hobbyContainers == null) return Container();
     if (hobbies == null) return Container();
 
     // Get all the hobby data from the model
@@ -59,8 +62,9 @@ class HobbyChips extends StatelessWidget {
       }
     }
 
-    if (pd.hobbyContainers != null) {
-      for (HobbyContainer hc in pd.hobbyContainers) {
+    // prepare user data
+    if (userProfile.hobbyContainers != null) {
+      for (HobbyContainer hc in userProfile.hobbyContainers) {
         // print(hc.container.toString());
         if (hc.container == "share") {
           listMyShare = hc.hobbies;
@@ -115,6 +119,7 @@ class HobbyChips extends StatelessWidget {
         }
       }
     }
+
 
     List<Widget> list = new List<Widget>();
     List<HobbyInfo> toProccess;
