@@ -19,6 +19,8 @@ class DisplayPhoto extends StatelessWidget {
       height: dimension,
       width: dimension,
       child: CachedNetworkImage(
+        height: dimension,
+        width: dimension,
         imageUrl: url,
         fit: BoxFit.cover,
         // placeholder: (context, url) => new CircularProgressIndicator(),
