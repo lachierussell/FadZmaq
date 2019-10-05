@@ -5,11 +5,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:http/http.dart' as http;
+import 'package:fadzmaq/models/app_config.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:cached_network_image/cached_network_image.dart';
-
+var globUrl = "";
 bool isFavourite = true;
 /// Helper (method?) to the ProfileFieldWidget.
 /// Builds a list of Text from the Profile data.
@@ -21,9 +22,9 @@ List<Widget> profileFieldRender(context){
     return rows;
 }
 
-Null Function() printOut() {
-  print("here");
-  return null;
+String printOut() {
+  print(globUrl);
+  return globUrl.substring(8,globUrl.length);
 }
 
 /// Dynamically builds/renders the profile fields section of the Profile page.
@@ -40,6 +41,7 @@ class ProfileFieldWidget extends StatelessWidget {
     );
   }
 }
+
 
 
 class ProfileTempApp extends StatelessWidget {
@@ -60,6 +62,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    globUrl = url;
     return Scaffold(
       appBar: AppBar(
         title: Text('My Profile'),
@@ -97,6 +100,7 @@ class ProfilePageState extends StatelessWidget {
   Widget build(BuildContext context) {
     isFavourite = false;
     ProfileData pd = RequestProvider.of<ProfileData>(context);
+    String server = AppConfig.of(context).server;
     final Color color1 = Color(0xffCCFC6D);
     final Color color2 = Color(0xff2ACDDF);
 
@@ -261,7 +265,7 @@ class ProfilePageState extends StatelessWidget {
                               color: Colors.black,
                             ) ,
                             backgroundColor: Colors.white,
-                            onPressed: () {Navigator.pop(context);},
+                            onPressed: () {Navigator.pop(context); post(server +'matches/thumbs/up/' + printOut(), ""); },
                           ),
                         ),
                       ],
