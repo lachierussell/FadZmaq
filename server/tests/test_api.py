@@ -84,9 +84,9 @@ def test_match_thumb_up(client):
 
 def test_like(client):
     response = client.post('/like/b026324c6904b2a9cb4b88d6d61c81d1', follow_redirects=True)
-    assert response.status_code == 204
+    assert response.status_code == 200
 
 
 def test_pass(client):
     response = client.post('/pass/b026324c6904b2a9cb4b88d6d61c81d1', follow_redirects=True)
-    assert response.status_code == 204
+    assert response.status_code == 200
