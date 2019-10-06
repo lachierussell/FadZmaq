@@ -36,7 +36,9 @@ Future<void> matchPopup(BuildContext context, ProfileData profile) async {
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
                           // just view our own profile for now
-                          url: "profile",
+                          url: "matches/" + profile.userId,
+                          // don't send the profile because it doesn't have contact info
+                          // profile: profile,
                           type: ProfileType.match,
                         )),
               );
@@ -47,3 +49,5 @@ Future<void> matchPopup(BuildContext context, ProfileData profile) async {
     },
   );
 }
+
+
