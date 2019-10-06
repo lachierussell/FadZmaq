@@ -1,4 +1,3 @@
-import 'package:fadzmaq/models/likeResult.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/hobbies.dart';

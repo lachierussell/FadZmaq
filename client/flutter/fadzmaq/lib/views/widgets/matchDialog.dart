@@ -1,23 +1,44 @@
 import 'package:fadzmaq/models/profile.dart';
+import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-Future<void> matchPopup(BuildContext context, ProfileData profile) async {
+Future<void> matchPopup(
+    BuildContext context, ProfileData profile, ProfileData userProfile) async {
   return showDialog<void>(
-    context: context,
+    context: mainScaffold.currentContext,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('New Match!'),
+        title: Text('New Match with ' + profile.name + '!'),
         content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text('Match with ' + profile.name),
-              DisplayPhoto(url: profile.photo, dimension: 50,),
-            ],
+          child: Center(
+            child: Row(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                // Text('Match with ' + profile.name),
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: DisplayPhoto(
+                    url: userProfile.photo,
+                    dimension: 80,
+                  ),
+                ),
+                SizedBox(width: 10),
+                Icon(Icons.add, size: 40),
+                SizedBox(width: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: DisplayPhoto(
+                    url: profile.photo,
+                    dimension: 80,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         actions: <Widget>[
@@ -37,8 +58,8 @@ Future<void> matchPopup(BuildContext context, ProfileData profile) async {
                     builder: (context) => ProfilePage(
                           // just view our own profile for now
                           url: "matches/" + profile.userId,
-                          // don't send the profile because it doesn't have contact info
-                          // profile: profile,
+                          //TODO don't send the profile because it doesn't have contact info
+                          profile: profile,
                           type: ProfileType.match,
                         )),
               );
@@ -49,5 +70,3 @@ Future<void> matchPopup(BuildContext context, ProfileData profile) async {
     },
   );
 }
-
-

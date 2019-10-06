@@ -46,23 +46,28 @@ class LikeButton extends StatelessWidget {
           onPressed: () {
             // return the result of this button press to recommendations page
             // TODO this should be more specific information
-            Navigator.pop(context, profile.userId);
+            // Navigator.pop(context, profile.userId);
+            Navigator.pop(context, type);
           },
         ),
       ),
     );
   }
-
-
 }
-  void asyncMatchPopup(BuildContext context, ProfileData profile) async {
 
-    print("asyncMatchPopup");
-    http.Response response = await postAsync(context, "like/" + profile.userId);
+void asyncMatchPopup(BuildContext context, ProfileData profile) async {
+  print("asyncMatchPopup");
+  // http.Response response = await postAsync(context, "like/" + profile.userId);
 
+  UserProfileContainer upc = RequestProvider.of<UserProfileContainer>(context);
+
+  await postAsync(context, "like/" + profile.userId).then((response) {
     if (response != null) {
-      LikeResult.fromJson(json.decode(response.body), context, profile);
-    }else{
+      print("RESPONSE! " + response.body);
+      LikeResult.fromJson(
+          json.decode(response.body), context, profile, upc.profile);
+    } else {
       print("asyncMatchPopup NULL!");
     }
-  }
+  });
+}

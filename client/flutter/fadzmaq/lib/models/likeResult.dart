@@ -4,25 +4,45 @@ import 'package:flutter/cupertino.dart';
 
 class LikeResult {
   final bool match;
+  final List<ProfileContainer> matched;
+
   final BuildContext context;
-
-  // TODO remove this temp
-  final ProfileData profile;
-
+  final ProfileData userProfile;
 
   LikeResult({
+    this.matched,
     this.match,
-    this.profile,
     this.context,
+    this.userProfile,
   }) {
-    if (match == true) matchPopup(context, profile);
+    if (match == true && matched != null && matched.length > 0) {
+      matchPopup(context, matched.first.profile, userProfile);
+    }
   }
 
-  factory LikeResult.fromJson(Map<String, dynamic> json, BuildContext context, ProfileData profile) {
-    return LikeResult(
-      match: json['match'],
-      profile: profile,
-      context: context,
-    );
-  }
+  factory LikeResult.fromJson(
+    Map<String, dynamic> json,
+    BuildContext context,
+    ProfileData profile,
+    ProfileData userProfile,
+  ) =>
+      _matchesFromJson(json, context, userProfile);
+}
+
+LikeResult _matchesFromJson(
+  Map<String, dynamic> json,
+  BuildContext context,
+  ProfileData userProfile,
+) {
+  var matchedJson = json['matched'] as List;
+  List<ProfileContainer> matched = matchedJson != null
+      ? matchedJson.map((i) => ProfileContainer.fromJson(i)).toList()
+      : null;
+
+  return LikeResult(
+    matched: matched,
+    match: json['match'],
+    context: context,
+    userProfile: userProfile,
+  );
 }
