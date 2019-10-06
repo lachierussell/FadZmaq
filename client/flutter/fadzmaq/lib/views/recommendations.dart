@@ -47,17 +47,22 @@ class RecommendationsListState extends State<RecommendationsList> {
   @override
   Widget build(BuildContext context) {
     print("build recommendations");
-    return ListView.separated(
-      separatorBuilder: (context, index) {
-        return Divider(
-          color: Colors.grey,
-          indent: 10,
-          endIndent: 10,
-        );
-      },
-      itemCount: recommendationsList.length,
-      itemBuilder: _listItemBuilder,
-    );
+
+    if (recommendationsList.length > 0) {
+      return ListView.separated(
+        separatorBuilder: (context, index) {
+          return Divider(
+            color: Colors.grey,
+            indent: 10,
+            endIndent: 10,
+          );
+        },
+        itemCount: recommendationsList.length,
+        itemBuilder: _listItemBuilder,
+      );
+    } else {
+      return Text("No recommendations");
+    }
   }
 
   Widget _listItemBuilder(BuildContext context, int index) {
