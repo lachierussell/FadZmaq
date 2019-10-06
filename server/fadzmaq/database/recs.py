@@ -1,4 +1,13 @@
+# @file
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Lachlan Russell       22414249@student.uwa.edu.au
+
 import fadzmaq.database.connection as db
+from fadzmaq.api.notifications import notify_match
 
 
 def like_user(uid, id, vote):
@@ -11,3 +20,6 @@ def like_user(uid, id, vote):
     )
     if rows.first() is None:
         print('MATCH')
+        notify_match()
+        return {"match": True}
+    return {"match": False}

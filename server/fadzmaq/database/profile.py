@@ -1,3 +1,11 @@
+# @file
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Lachlan Russell       22414249@student.uwa.edu.au
+
 import fadzmaq.database.connection as db
 from fadzmaq.database.hobbies import get_hobbies
 
@@ -94,3 +102,45 @@ def make_user(name, email, uid):
         return str(row['user_id'])
     print('IOError: No Rows')
     raise IOError
+
+
+# @brief Performs a cascade delete on all the user information
+# This will revoke and previous matches, likes, ratings and locations
+# associated with this user.
+def delete_account(uid):
+    db.get_db().execute(
+        '''
+        DELETE FROM profile WHERE user_id = %s; 
+        ''', uid
+    )
+
+
+def retrieve_settings(uid):
+    rows = db.get_db().execute(
+        '''
+        SELECT distance_setting 
+        FROM profile
+        WHERE user_id = %s;
+        ''', uid
+    )
+    return {
+        "distance_setting": rows.first()['distance_setting']
+    }
+
+
+def update_settings(uid, value):
+    db.get_db().execute(
+        '''
+        UPDATE profile 
+        SET distance_setting = %s 
+        WHERE user_id = %s;
+        ''', value, uid
+    )
+
+
+def set_location(uid, lat, long):
+    db.get_db().execute(
+        '''
+        INSERT INTO location_data (user_id, lat, long) VALUES (%s, %s, %s)
+        ''', uid, float(lat), float(long)
+    )

@@ -10,22 +10,23 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 | ------------------------------- | ----------------------------------------- | ------ | ------- | ------------------- |
 | /    OR    /index               | Main page                                 | GET    | -       | 308                 |
 | /account                        | Create a new account                      | POST   | 201     | 401 / 403           |
+| /account/settings               | Retrieves user settings                   | GET    | 200     | 401 / **501**       |
+| /account/settings               | Sets user settings                        | POST   | 200     | 401 / **501**       |
+| /account                        | Deletes account and associated data       | DELETE | 204     | 401                 |
 | **USERS**                       |                                           |        |         |                     |
 | /user/recs                      | Get recommendations.                      | GET    | 200     | 401 / 403 / **501** |
 | /user/`id` (deprecated)         | Gets a candidates profile information     | GET    | 200     | 401 / 403 / **501** |
 | /user/`id`/`photo` (deprecated) | Get user photo (Alternate domain)         | GET    | 200     | 504                 |
 | **PROFILE**                     |                                           |        |         |                     |
-| /profile                        | Get your own profile data.                | GET    | 200     | 401 / 204           |
+| /profile                        | Get your own profile data.                | GET    | 200     | 401                 |
 | /profile                        | Update profile data                       | POST   | 200     | 401, 500            |
 | /profile/ping                   | Set location                              | POST   |         | **501**             |
 | /profile/hobbies                | Update a users hobbies                    | POST   | 200     | 401 / 500           |
-| /profile/settings               | Retrieves user settings                   | GET    | 200     | 401 / **501**       |
-| /profile/settings               | Sets user settings                        | POST   | 200     | 401 / **501**       |
 | **Hobbies**                     |                                           |        |         |                     |
 | /hobbies                        | A list of all available hobbies to choose | GET    | 200     | 500                 |
 | **MATCHES**                     |                                           |        |         |                     |
-| /matches                        | Receive you current matches               | GET    | 200     | 401 / 204           |
-| /matches/`id`                   | Get match profile information             | GET    | 200     | 401 / 403 / 204     |
+| /matches                        | Receive you current matches               | GET    | 200     | 401                 |
+| /matches/`id`                   | Get match profile information             | GET    | 200     | 401 / 403           |
 | /matches/`id`                   | Un-match a user                           | DELETE | 200     | 401 / 403 / **501** |
 | /matches/thumbs/up/`id`         | Rate a user up                            | POST   | 200     | 401 / 403 / **501** |
 | /matches/thumbs/down/`id`       | Rate a user down                          | POST   | 200     | 401 / 403 / **501** |
@@ -196,13 +197,10 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 }
 ```
 
-### /profile/settings
+### /account/settings
 
 ```json
-// I dont know what goes in here yet.
-
-// Distance 
-// Notifications? Or is this purely OS settings
+{ "distance_setting": 20 }
 ```
 
 ### /matches
@@ -468,13 +466,13 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
 // A users current hobbies
 ```
 
-### /profile/settings
+### /account/settings
 
 ```json
-// I dont know what goes in here yet.
-
-// Distance 
-// Notifications? Or is this purely OS settings
+// POST
+{ "distance_setting": 20 }
+// Recieve 
+None
 ```
 
 ### /like/`id`

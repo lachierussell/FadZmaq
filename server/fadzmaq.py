@@ -22,6 +22,9 @@ fadzmaq.auth_app = firebase_admin.initialize_app(cred)
 fadzmaq.engine = create_engine(app.config['DATABASE_URI'])
 
 
+# TODO: NOTIFICATIONS
+# TODO: MATCH ALGORITHM / RECOMMENDATIONS
+
 # only run if we are executing this script, otherwise handled by WSGI
 if __name__ == "__main__":
     app.run()
