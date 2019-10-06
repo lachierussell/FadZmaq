@@ -195,7 +195,7 @@ VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@emai
 -- Inserting user data for ourselves --
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
 VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'Lachie', 'Mountain biker but wanting to try out rock climbing!', '1999-09-14', 'lachie.russell@gmail.com',
-        '04152122188', 'https://www.russell-systems.cc/other/48a825f8953a416e22525ac737975ee2785c3088448f665df3f0e13c4955241e.jpg');
+        '04152122188', 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
 VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'Jordan', 'Jordan has a background in graphic design and user experience. He ' ||

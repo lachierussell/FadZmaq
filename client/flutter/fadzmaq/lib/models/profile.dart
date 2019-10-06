@@ -1,9 +1,46 @@
 import 'package:fadzmaq/models/hobbies.dart';
 
+class ProfileContainer{
+  final ProfileData profile;
+
+  ProfileContainer({
+    this.profile,
+  });
+
+  factory ProfileContainer.fromJson(Map<String, dynamic> json) {
+    var profileJson = json['profile'];
+    ProfileData profile = profileJson != null ? ProfileData.fromJson(profileJson) : null;
+
+    return ProfileContainer(
+      profile: profile,
+    );
+  }
+}
+
+// This is used to differential the current user from other profiles
+// The way the inherited request method works makes it complicated to
+// have two similtaneous requests to the same model type
+class UserProfileContainer{
+  final ProfileData profile;
+
+  UserProfileContainer({
+    this.profile,
+  });
+
+  factory UserProfileContainer.fromJson(Map<String, dynamic> json) {
+    var profileJson = json['profile'];
+    ProfileData profile = profileJson != null ? ProfileData.fromJson(profileJson) : null;
+
+    return UserProfileContainer(
+      profile: profile,
+    );
+  }
+}
+
 class ProfileData {
   final String userId;
-  final String gender;
-  final String age;
+  // final String gender;
+  // final String age;
 
 //  final ContactData contactDetails;
 
@@ -16,8 +53,8 @@ class ProfileData {
 
   ProfileData({
     this.userId,
-    this.gender,
-    this.age,
+    // this.gender,
+    // this.age,
     this.name,
     this.photo,
 //    this.contactDetails,
@@ -26,10 +63,10 @@ class ProfileData {
   });
 
   factory ProfileData.fromJson(Map<String, dynamic> json) {
-    var profile = json['profile'];
+    // var profile = json['profile'];
 //    var contactJson = profile['contact_details'];
-    var profileFieldsJson = profile['profile_fields'] as List;
-    var hobbyContainersJson = profile['hobbies'] as List;
+    var profileFieldsJson = json['profile_fields'] as List;
+    var hobbyContainersJson = json['hobbies'] as List;
 
 //    ContactData contact =
 //        contactJson != null ? ContactData.fromJson(contactJson) : null;
@@ -51,10 +88,10 @@ class ProfileData {
         : null;
 
     return ProfileData(
-      userId: profile['user_id'],
-      name: profile['name'],
-      photo: profile['photo_location'],
-      age: profile['age'],
+      userId: json['user_id'],
+      name: json['name'],
+      photo: json['photo_location'],
+      // age: profile['age'],
 //      contactDetails: contact,
       profileFields: profileFields,
       hobbyContainers: hobbyContainers,

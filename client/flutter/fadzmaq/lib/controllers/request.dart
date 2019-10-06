@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'dart:io';
 import 'package:fadzmaq/models/models.dart';
 
 /// Takes a type [T], [url] and [builder] and creates an [RequestProvider<T>] of that type
@@ -20,10 +19,12 @@ class GetRequest<T> extends StatefulWidget {
   /// The relative url to request
   final String url;
   final WidgetBuilder builder;
+  final T model;
 
   const GetRequest({
     @required this.builder,
     @required this.url,
+    this.model,
   })  : assert(builder != null),
         assert(url != null);
 
@@ -39,47 +40,58 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
   @override
   void didChangeDependencies() {
-    String server = AppConfig.of(context).server + widget.url;
-    _future = fetchResponse(server);
+    if (widget.model == null && _future == null) {
+      String server = AppConfig.of(context).server + widget.url;
+      _future = fetchResponse(server);
+    }
 
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _future,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if(snapshot.data is Exception){
-            return Center(child: Text(snapshot.data.toString()));
+    // If we have a model passed in no need to do a request
+    if (widget.model != null) {
+      return RequestProvider<T>(
+        data: widget.model,
+        child: widget.builder(context),
+      );
+    // No model, request one
+    } else {
+      return FutureBuilder(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data is Exception) {
+              return Center(child: Text(snapshot.data.toString()));
+            }
+            if (snapshot.data.statusCode == 200) {
+              return RequestProvider<T>(
+                // the fromJson method takes T but checks it against specified types
+                // (dart cannot initialise generic types so we can't use an extended class)
+                // this converts json data into our model class
+                data: fromJson<T>(json.decode(snapshot.data.body)),
+                child: widget.builder(context),
+              );
+            } else if (snapshot.data.statusCode == 401) {
+              // not sure if this is the best way to do this but it works for now - Jordan
+              return LoginScreen();
+            } else {
+              // TODO make this handle better
+              return Text("Error with HTTP request: " +
+                  snapshot.data.statusCode.toString());
+            }
+          } else if (snapshot.hasError) {
+            return Text("${snapshot.error}");
           }
-          if (snapshot.data.statusCode == 200) {
-            return RequestProvider<T>(
-              // the fromJson method takes T but checks it against specified types
-              // (dart cannot initialise generic types so we can't use an extended class)
-              // this converts json data into our model class
-              data: fromJson<T>(json.decode(snapshot.data.body)),
-              child: widget.builder(context),
-            );
-          } else if (snapshot.data.statusCode == 401) {
-            // not sure if this is the best way to do this but it works for now - Jordan
-            return LoginScreen();
-          } else {
-            // TODO make this handle better
-            return Text("Error with HTTP request: " +
-                snapshot.data.statusCode.toString());
-          }
-        } else if (snapshot.hasError) {
-          return Text("${snapshot.error}");
-        }
 
-        // By default, show a loading spinner.
-        // We can pipe something else in here later if we wish,
-        // or make our own default
-        return Center(child: CircularProgressIndicator());
-      },
-    );
+          // By default, show a loading spinner.
+          // We can pipe something else in here later if we wish,
+          // or make our own default
+          return Center(child: CircularProgressIndicator());
+        },
+      );
+    }
   }
 }
 
@@ -102,17 +114,9 @@ Future post(String url, var Json) async {
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-
-
-    http.post(
-      url,
-      headers: {"Authorization": result.token},
-      body: Json
-    );
-
-
-
+  http.post(url, headers: {"Authorization": result.token}, body: Json);
 }
+
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user

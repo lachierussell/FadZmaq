@@ -1,5 +1,6 @@
 import 'package:fadzmaq/views/matches.dart';
 import 'package:fadzmaq/views/preferences.dart';
+import 'package:fadzmaq/views/recommendations.dart';
 import 'package:flutter/material.dart';
 
 class LandingPage extends StatelessWidget {
@@ -8,9 +9,10 @@ class LandingPage extends StatelessWidget {
     return MaterialApp(
       home: DefaultTabController(
         initialIndex: 1,
-        length: 2,
+        length: 3,
         child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Theme.of(context).primaryColor,
             flexibleSpace: new Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -18,6 +20,7 @@ class LandingPage extends StatelessWidget {
                   tabs: [
                     new Tab(icon: new Icon(Icons.settings)),
                     new Tab(icon: new Icon(Icons.people)),
+                    new Tab(icon: new Icon(Icons.public)),
                   ],
                 ),
               ],
@@ -27,6 +30,7 @@ class LandingPage extends StatelessWidget {
             children: [
               UserPreferencesPage(),
               MatchesPage(),
+              RecommendationsPage(),
             ],
           ),
         ),

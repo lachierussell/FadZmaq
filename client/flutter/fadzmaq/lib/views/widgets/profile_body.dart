@@ -2,6 +2,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/controllers/profile.dart';
+import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 
 /// Helper (method?) to the ProfileFieldWidget.
@@ -9,7 +10,7 @@ import 'package:flutter/material.dart';
 /// @param context  The BuildContext from the ProfileFieldWidget
 /// @return A list of Text objects.
 List<Widget> profileFieldRender(context) {
-  ProfileData pd = RequestProvider.of<ProfileData>(context);
+  ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
   List<Widget> rows =
       pd.profileFields.map((item) => new Text(item.displayValue)).toList();
   return rows;
@@ -33,7 +34,7 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
 
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
@@ -51,23 +52,10 @@ class ProfileBody extends StatelessWidget {
                 fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5)),
         BodyDivider(),
         ContactBody(),
-        Text("Discovering", style: TextStyle(fontWeight: FontWeight.bold)),
-        Container(
-            child: Wrap(
-          spacing: 5.0,
-          runSpacing: 3.0,
-          children: <Widget>[getHobbies(context, pd, "discover")],
-        )),
-        SizedBox(
-          height: 15,
-        ),
-        Text("Sharing", style: TextStyle(fontWeight: FontWeight.bold)),
-        Container(
-            child: Wrap(
-          spacing: 5.0,
-          runSpacing: 3.0,
-          children: <Widget>[getHobbies(context, pd, "share")],
-        )),
+        ProfileHobbies(
+            hobbies: pd.hobbyContainers, direction: HobbyDirection.discover),
+        ProfileHobbies(
+            hobbies: pd.hobbyContainers, direction: HobbyDirection.share),
         BodyDivider(),
         Text("5km away"),
         SizedBox(
@@ -82,10 +70,52 @@ class ProfileBody extends StatelessWidget {
   }
 }
 
+class ProfileHobbies extends StatelessWidget {
+  const ProfileHobbies({
+    Key key,
+    @required this.direction,
+    @required this.hobbies,
+  }) : super(key: key);
+
+  final HobbyDirection direction;
+  final List<HobbyContainer> hobbies;
+
+  @override
+  Widget build(BuildContext context) {
+    String title;
+
+    switch (direction) {
+      case HobbyDirection.share:
+        title = "Sharing";
+        break;
+      case HobbyDirection.discover:
+        title = "Discovering";
+        break;
+      default:
+        title = "";
+        break;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        SizedBox(
+          height: 8,
+        ),
+        Center(child: HobbyChips(hobbies: hobbies, hobbyCategory: direction, alignment: WrapAlignment.center,)),
+        SizedBox(
+          height: 16,
+        ),
+      ],
+    );
+  }
+}
+
 class ContactBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     final String email = getProfileField(pd, "email");
     final String phone = getProfileField(pd, "phone");
 
@@ -95,7 +125,9 @@ class ContactBody extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        SizedBox(height: 8,),
+        SizedBox(
+          height: 8,
+        ),
         contactEntry("Email", email),
         contactEntry("Phone", phone),
         BodyDivider(),
@@ -104,19 +136,27 @@ class ContactBody extends StatelessWidget {
   }
 }
 
-Widget contactEntry (String name, String entry){
-  if(entry == null) return Container();
+Widget contactEntry(String name, String entry) {
+  if (entry == null) return Container();
   return Column(
     children: <Widget>[
       Row(
-                children: <Widget>[Text(name + ": ", style: bodyBold(),), Text(entry)],
-              ),
-              SizedBox(height: 8,),
+        children: <Widget>[
+          Text(
+            name + ": ",
+            style: bodyBold(),
+          ),
+          Text(entry)
+        ],
+      ),
+      SizedBox(
+        height: 8,
+      ),
     ],
   );
 }
 
-TextStyle bodyBold(){
+TextStyle bodyBold() {
   return TextStyle(fontWeight: FontWeight.bold);
 }
 
@@ -127,41 +167,4 @@ class BodyDivider extends StatelessWidget {
       color: Colors.grey,
     );
   }
-}
-
-Widget getHobbies(BuildContext context, ProfileData profile, String container) {
-  List<Widget> list = new List<Widget>();
-  // print(profile.hobbyContainers.toString());
-  if (profile.hobbyContainers != null) {
-    for (HobbyContainer hc in profile.hobbyContainers) {
-      print(hc.container.toString());
-      if (hc.container == container) {
-        for (HobbyData hobby in hc.hobbies) {
-          list.add(getHobbyChip(context, hobby));
-        }
-      }
-    }
-  }
-  return Padding(
-    padding: const EdgeInsets.only(top: 8),
-    child: new Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: list,
-    ),
-  );
-}
-
-Widget getHobbyChip(BuildContext context, HobbyData hobby) {
-  return ClipRRect(
-    borderRadius: BorderRadius.all(Radius.circular(32)),
-    child: Container(
-      color: Color(0xfff2f2f2),
-      child: Padding(
-          // padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
-          padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
-          // child: new Text(hobby.name, style: Theme.of(context).textTheme.body1),
-          child: new Text(hobby.name)),
-    ),
-  );
 }

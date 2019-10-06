@@ -20,7 +20,7 @@ def test_index(client):
 #  Not implemented
 def test_user_request(client):
     response = client.get('/user/recs', follow_redirects=True)
-    assert response.status_code == 501
+    assert response.status_code == 200
 
 
 #  Not implemented

@@ -21,14 +21,15 @@ def update_profile(subject, uid):
     )
 
 
-def build_profile_data(rows, permission):
+def build_profile_data(row, permission):
     assert type(permission) is int
     assert permission <= 2
-    row = rows.first()
+    # row = rows.first()
     assert row is not None, "Query retrieved no rows to build profile."
 
     profile_fields = []
-    permission_keys = [['bio', 'age', 'location'],
+    # permission_keys = [['bio', 'age', 'location'],
+    permission_keys = [['bio', 'location'],
                        ['phone', 'email'],
                        ['birth-date']
                        ]
@@ -68,7 +69,7 @@ def retrieve_profile(subject):
         ''', subject
     )
 
-    return build_profile_data(rows, 2)
+    return build_profile_data(rows.first(), 2)
 
 
 # @brief Verifies the user is in the database
