@@ -4,7 +4,6 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 import 'package:flutter/material.dart';
 
-
 enum HobbyDirection {
   none,
   match,
@@ -35,7 +34,8 @@ class HobbyChips extends StatelessWidget {
 
     // any request using hobby chips should have a user profile container request
     // to compare the hobbies to.
-    UserProfileContainer upc = RequestProvider.of<UserProfileContainer>(context);
+    UserProfileContainer upc =
+        RequestProvider.of<UserProfileContainer>(context);
 
     if (upc == null) return Container();
 
@@ -77,24 +77,28 @@ class HobbyChips extends StatelessWidget {
 
     // highlight all hobbies in this share
     // that I am looking to discover
-    for (HobbyInfo share in listShare) {
-      for (int i = 0; i < listMyDiscover.length; i++) {
-        HobbyData mine = listMyDiscover[i];
-        if (share.hobby == mine) {
-          share.direction = HobbyDirection.discover;
-          share.index = i;
+    if (listMyDiscover != null) {
+      for (HobbyInfo share in listShare) {
+        for (int i = 0; i < listMyDiscover.length; i++) {
+          HobbyData mine = listMyDiscover[i];
+          if (share.hobby == mine) {
+            share.direction = HobbyDirection.discover;
+            share.index = i;
+          }
         }
       }
     }
 
     // highlight all hobbies in this discover
     // that I am looking to share
-    for (HobbyInfo discover in listDiscover) {
-      for (int i = 0; i < listMyShare.length; i++) {
-        HobbyData mine = listMyShare[i];
-        if (discover.hobby == mine) {
-          discover.direction = HobbyDirection.share;
-          discover.index = i;
+    if (listMyShare != null) {
+      for (HobbyInfo discover in listDiscover) {
+        for (int i = 0; i < listMyShare.length; i++) {
+          HobbyData mine = listMyShare[i];
+          if (discover.hobby == mine) {
+            discover.direction = HobbyDirection.share;
+            discover.index = i;
+          }
         }
       }
     }
@@ -119,7 +123,6 @@ class HobbyChips extends StatelessWidget {
         }
       }
     }
-
 
     List<Widget> list = new List<Widget>();
     List<HobbyInfo> toProccess;
