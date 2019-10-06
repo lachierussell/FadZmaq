@@ -135,15 +135,25 @@ def update_hobbies(uid):
         request_data = json.loads(request.get_data())
         hobbies.update_user_hobbies(uid, request_data)
         return "Success", 200
-    except IOError as e:
+    except Exception as e:
         return "Update hobbies failed " + str(e), 500
 
 
-# @brief Route for retrieving all current hobbies available.
-@route_bp.route('/hobbies', methods=['GET'])
-def get_hobbies():
-    return jsonify(hobbies.get_hobby_list()), 200
+@route_bp.route('/profile/ping', methods=['POST'])
+@auth_required
+def ping_location(uid):
+    try:
+        data = json.loads(request.get_data())
+        data = data['location']
+        profile.set_location(uid, data['lat'], data['long'])
+        return 'Ping Set', 204
+    except Exception as e:
+        return 'FAILED', 500
 
+
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# ACCOUNT
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 
 # @brief Creates a new account for a user if it does not already exist
 # Creates a new account with the users firebase token for uid.
@@ -165,6 +175,44 @@ def create_account():
         return "Authentication failed: " + str(e), 401
 
 
+@route_bp.route('/account', methods=['DELETE'])
+@auth_required
+def delete_account(uid):
+    try:
+        profile.delete_account(uid)
+        return "Success", 204
+    except Exception as e:
+        return "We don't let users delete others accounts", 403
+
+
+@route_bp.route('/account/settings', methods=['GET'])
+@auth_required
+def get_settings(uid):
+    try:
+        return jsonify(profile.retrieve_settings(uid)), 200
+    except Exception as e:
+        return "Settings not retrieved", 500
+
+
+@route_bp.route('/account/settings', methods=['POST'])
+@auth_required
+def update_settings(uid):
+    try:
+        data = json.loads(request.get_data())
+        setting = data['distance_setting']
+        print(setting)
+        profile.update_settings(uid, setting)
+        return 'Success', 204
+    except Exception as e:
+        return 'Failed', 500
+
+
+# @brief Route for retrieving all current hobbies available.
+@route_bp.route('/hobbies', methods=['GET'])
+def get_hobbies():
+    return jsonify(hobbies.get_hobby_list()), 200
+
+
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # MATCHES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -177,7 +225,7 @@ def get_matches(uid):
     try:
         return jsonify(matches.get_matches(uid)), 200
     except ValueError as e:
-        return 'Failed:' + str(e), 204
+        return 'Failed:' + str(e), 403
 
 
 # @brief Retrieves a specific matches profile data
@@ -194,21 +242,27 @@ def get_matched_user(uid, id):
 @route_bp.route('/matches/<string:id>', methods=['DELETE'])
 @auth_required
 def unmatch_user(uid, id):
-    return "User unmatched", 501
+    try:
+        matches.unmatch(uid, id)
+        return "User unmatched", 204
+    except Exception as e:
+        return "Unmatch failed: " + str(e), 403
 
 
 # @brief Rates a user negatively
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
-    return "Thumbs down!", 501
+    matches.rate_user(uid, id, False)
+    return "Thumbs down!", 204
 
 
 # @brief Rates a user positively
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
-    return "Thumbs up!", 501
+    matches.rate_user(uid, id, True)
+    return "Thumbs up!", 204
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -219,12 +273,12 @@ def rate_user_up(uid, id):
 @route_bp.route('/like/<string:id>', methods=['POST'])
 @auth_required
 def like_user(uid, id):
-    recs.like_user(uid, id, True)
-    return "User liked", 501
+    return recs.like_user(uid, id, True), 204
 
 
 # @brief Pass on a user
 @route_bp.route('/pass/<string:id>', methods=['POST'])
 @auth_required
 def pass_user(uid, id):
-    return "User passed", 501
+    recs.like_user(uid, id, False)
+    return "User passed", 204

@@ -27,6 +27,7 @@ def get_matches(subject):
             FROM matches
             WHERE user_a = %s
                OR user_b = %s
+               AND NOT matches.unmatch
         )
         AND profile.user_id != %s
         OR profile.user_id IN (
@@ -34,6 +35,7 @@ def get_matches(subject):
             FROM matches
             WHERE user_a = %s
                OR user_b = %s
+               AND NOT matches.unmatch
         )
         AND profile.user_id != %s;
         ''', subject, subject, subject, subject, subject, subject
@@ -74,3 +76,27 @@ def get_match_by_id(uid, id):
     return build_profile_data(rows, 1)
 
 
+# Un-matches two users by setting their matched column to false.
+def unmatch(uid, id):
+    rows = db.get_db().execute(
+        '''
+        UPDATE matches
+        SET unmatch = TRUE
+        WHERE user_a = %s
+            AND user_b = %s
+          OR user_a = %s
+            AND user_b = %s;
+        ''', uid, id, id, uid
+    )
+
+
+# Rates a user Thumbs up or down
+# @param value  True is thumbs up
+# @param uid    My id
+# @param id     id of the user being rated/
+def rate_user(uid, id, value):
+    db.get_db().execute(
+        '''
+        INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
+        ''', id, uid, value
+    )

@@ -41,12 +41,12 @@ def test_get_close_db(api):
 
 # # Only tests that the sql command can be executed
 # # We still need to check the data is accurate
-#def test_retrieve_profile(api):
-#   with api.app_context():
-#       db.retrieve_profile('26ab0db90d72e28ad0ba1e22ee510510')
+# def test_retrieve_profile(api):
+#    with api.app_context():
+#        db.retrieve_profile('26ab0db90d72e28ad0ba1e22ee510510')
 #
 # #Only tests that the sql command can be executed
 # #We still need to check the data is accurate
-#def test_get_hobbies(api):
-#    with api.app_context():
-#        db.get_hobbies('26ab0db90d72e28ad0ba1e22ee510510')
+# def test_get_hobbies(api):
+#     with api.app_context():
+#         db.get_hobbies('26ab0db90d72e28ad0ba1e22ee510510')
