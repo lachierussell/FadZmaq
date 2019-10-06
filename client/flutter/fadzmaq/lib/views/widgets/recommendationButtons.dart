@@ -1,7 +1,11 @@
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/models/likeResult.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/widgets/matchDialog.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 enum LikePass { like, pass }
 
@@ -18,7 +22,9 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String url = type == LikePass.like ? "like/" + profile.userId : "pass/" + profile.userId;
+    final String url = type == LikePass.like
+        ? "like/" + profile.userId
+        : "pass/" + profile.userId;
     final Color color = type == LikePass.like ? Colors.green : Colors.red;
     final IconData icon = type == LikePass.like ? Icons.done : Icons.clear;
     final double leftPad = type == LikePass.like ? 0 : 50;
@@ -38,12 +44,25 @@ class LikeButton extends StatelessWidget {
           backgroundColor: Colors.white,
           heroTag: null,
           onPressed: () {
-            // TODO this should be the result of a potential future
-            if (type == LikePass.like) matchPopup(context, profile);
+            // return the result of this button press to recommendations page
+            // TODO this should be more specific information
             Navigator.pop(context, profile.userId);
           },
         ),
       ),
     );
   }
+
+
 }
+  void asyncMatchPopup(BuildContext context, ProfileData profile) async {
+
+    print("asyncMatchPopup");
+    http.Response response = await postAsync(context, "like/" + profile.userId);
+
+    if (response != null) {
+      LikeResult.fromJson(json.decode(response.body), context, profile);
+    }else{
+      print("asyncMatchPopup NULL!");
+    }
+  }

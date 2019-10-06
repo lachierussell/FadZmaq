@@ -56,7 +56,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
         data: widget.model,
         child: widget.builder(context),
       );
-    // No model, request one
+      // No model, request one
     } else {
       return FutureBuilder(
         future: _future,
@@ -120,12 +120,13 @@ Future<http.Response> httpPost(String url, {var json}) async {
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-  try{
-    if(json != null)
-      return await http.post(url, headers: {"Authorization": result.token}, body: json);
-     else
+  try {
+    if (json != null)
+      return await http.post(url,
+          headers: {"Authorization": result.token}, body: json);
+    else
       return await http.post(url, headers: {"Authorization": result.token});
-  } catch (e){
+  } catch (e) {
     return e;
   }
 }

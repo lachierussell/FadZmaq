@@ -4,6 +4,7 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/recommendations.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
+import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
 import 'package:flutter/material.dart';
 
 /// Entry in the recommendation list
@@ -42,6 +43,10 @@ class RecommendationEntry extends StatelessWidget {
         ),
       ),
     );
+
+    
+
+    asyncMatchPopup(context, profile);
 
     // make changes according to the result
     // in this case remove the recommendation we have just liked/disliked

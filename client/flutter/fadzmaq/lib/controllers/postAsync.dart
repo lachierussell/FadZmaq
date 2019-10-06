@@ -7,14 +7,17 @@ import 'package:http/http.dart' as http;
 /// Shows snackbar on timeout or errorous status code
 ///
 /// Asynchrounous, does not wait for a response
-void postAsync(BuildContext context, String url, {var json}) async {
+Future<http.Response> postAsync(BuildContext context, String url, {var json}) async {
   url = AppConfig.of(context).server + url;
 
   httpPost(url, json:json).then(( value) {
     errorSnack(context, "snack: " + value.statusCode.toString());
+    return value;
   }).catchError((error) {
     errorSnack(context, "snack: " + error.toString());
   });
+
+  return null;
 }
 
 void errorSnack(BuildContext context, String s) {
