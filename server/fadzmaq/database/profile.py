@@ -35,8 +35,8 @@ def build_profile_data(row, permission):
                        ]
     for perm in range(0, permission):
         for key in permission_keys[perm]:
-            if key == 'location':
-                continue  # TODO: Add this to query and calculate on db
+            if key == 'location' and permission == 2:
+                continue
             profile_fields.append(
                 {
                     "name": key,

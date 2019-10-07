@@ -264,7 +264,7 @@ WHERE distance_tables.distance < (
 $distances$
     LANGUAGE SQL;
 
-
+-- Made by
 CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
                                               lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
     RETURNS FLOAT AS
@@ -316,9 +316,12 @@ FROM distance_table(from_user) dt
                     ON dt.user_id = hc.user_id
          INNER JOIN compatible_rating(from_user) rc
                     ON dt.user_id = rc.user_id
+WHERE dt.user_id NOT IN (SELECT user_to FROM votes WHERE user_from = from_user)
 $matching_algorithm$
     LANGUAGE SQL;
 
+
+-- INSERT INTO votes (vote, user_from, user_to) VALUES (TRUE,'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510' );
 
 SELECT *
 FROM matching_algorithm('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
