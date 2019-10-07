@@ -23,3 +23,8 @@ def like_user(uid, id, vote):
         notify_match()
         return {"match": True}
     return {"match": False}
+
+
+def get_recommendations(uid):
+
+    pass

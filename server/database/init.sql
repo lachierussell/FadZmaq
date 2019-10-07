@@ -22,9 +22,6 @@ DROP TABLE IF EXISTS location_data;
 DROP TABLE IF EXISTS profile CASCADE;
 DROP TYPE IF EXISTS HOBBY_SWAP;
 
--- TODO reinstate this in sprint 3
--- DROP FUNCTION IF EXISTS match;
-
 DROP TRIGGER IF EXISTS make_match ON votes;
 DROP FUNCTION IF EXISTS rate_user;
 DROP FUNCTION IF EXISTS match;
@@ -163,6 +160,25 @@ CREATE TRIGGER rate BEFORE INSERT ON rating
     FOR EACH ROW EXECUTE PROCEDURE rate_user();
 
 INSERT INTO rating (user_to, user_from, rate_value) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'false');
+
+
+
+-- Count number of hobbies for filtering / compatibility score
+SELECT COUNT(me.hobby_id)
+FROM user_hobbies me
+    INNER JOIN user_hobbies you
+    ON me.hobby_id = you.hobby_id
+    AND me.swap != you.swap
+WHERE me.user_id = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
+AND you.user_id = 'OQezYUwFC2P2JOP81nicQR4qZRB3';
+
+
+SELECT user_id, distance AS (
+    SELECT lat -
+    FROM location_data
+)
+FROM profile
+
 
 --------------------------------------------
 --  ----------------------------------------
