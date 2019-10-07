@@ -43,6 +43,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<FirebaseUser> _handleSignIn() async {
+    
+    setState(() {
+      _isButtonDisabled = true;
+    });
+    
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
