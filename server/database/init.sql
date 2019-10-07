@@ -226,9 +226,9 @@ CREATE OR REPLACE FUNCTION distance_table(from_user VARCHAR)
             )
 AS
 $distances$
-SELECT *
+SELECT DISTINCT(user_id), distance
 FROM (
-         SELECT DISTINCT(geo_tables.user_id),
+         SELECT geo_tables.user_id,
                         calculate_distance(geo_tables.ml,
                                            geo_tables.mlo,
                                            geo_tables.lat,
@@ -276,26 +276,21 @@ DECLARE
     theta    FLOAT;
     radtheta FLOAT;
 BEGIN
-    IF lat1 = lat2 OR lon1 = lon2
-    THEN
-        RETURN dist;
-    ELSE
-        radlat1 = pi() * lat1 / 180;
-        radlat2 = pi() * lat2 / 180;
-        theta = lon1 - lon2;
-        radtheta = pi() * theta / 180;
-        dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
+    radlat1 = (pi() * lat1) / 180;
+    radlat2 = (pi() * lat2) / 180;
+    theta = lon1 - lon2;
+    radtheta = (pi() * theta) / 180;
+    dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
 
-        IF dist > 1 THEN dist = 1; END IF;
+    IF dist > 1 THEN dist = 1; END IF;
 
-        dist = acos(dist);
-        dist = dist * 180 / pi();
-        dist = dist * 60 * 1.1515;
+    dist = acos(dist);
+    dist = dist * 180 / pi();
+    dist = dist * 60 * 1.1515;
 
-        dist = dist * 1.609344;
-
-        RETURN dist;
-    END IF;
+    dist = dist * 1.609344;
+    dist = ROUND(dist :: numeric, 0);
+    RETURN dist :: DOUBLE PRECISION;
 END;
 $dist$ LANGUAGE plpgsql;
 
@@ -323,8 +318,7 @@ $matching_algorithm$
 
 -- INSERT INTO votes (vote, user_from, user_to) VALUES (TRUE,'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510' );
 
-SELECT *
-FROM matching_algorithm('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+
 --------------------------------------------
 --  ----------------------------------------
 --  Dummy Data
@@ -569,21 +563,21 @@ VALUES ('48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1', 
 
 -- FAKE LOCATION  -31.98, 115.82 UWA
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('26ab0db90d72e28ad0ba1e22ee510510', -31.98, 115.82);
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', -31.95, 115.81);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', -31.98, 115.82);
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', -31.98, 115.83);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('6d7fce9fee471194aa8b5b6e47267f03', -31.98, 115.82);
+VALUES ('6d7fce9fee471194aa8b5b6e47267f03', -31.97, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', -31.98, 115.82);
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', -31.95, 115.87);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('48a24b70a0b376535542b996af517398', -31.98, 115.82);
+VALUES ('48a24b70a0b376535542b996af517398', -31.88, 115.76);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2'    , -31.98, 115.82);
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2'    , -31.89, 115.79);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3'    , -31.98, 115.82);
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3'    , -31.92, 115.83);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1'    , -31.98, 115.82);
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1'    , -31.96, 115.85);
 
 
 -- TEST FUNCTION CALLS
@@ -596,3 +590,6 @@ FROM distance_table('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
 
 SELECT *
 FROM compatible_rating('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+
+SELECT *
+FROM matching_algorithm('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
