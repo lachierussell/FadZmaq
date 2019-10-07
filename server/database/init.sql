@@ -29,19 +29,20 @@ DROP FUNCTION IF EXISTS match;
 
 CREATE TABLE IF NOT EXISTS profile
 (
-    user_id  VARCHAR      NOT NULL UNIQUE PRIMARY KEY,
-    nickname VARCHAR(35)  NOT NULL,
-    bio      VARCHAR(400) DEFAULT NULL,
-    dob      TIMESTAMP    DEFAULT NULL,
-    email    VARCHAR(255) UNIQUE NOT NULL,
-    phone    VARCHAR      UNIQUE,
-    photo    VARCHAR      DEFAULT NULL,
+    user_id          VARCHAR                 NOT NULL UNIQUE PRIMARY KEY,
+    nickname         VARCHAR(35)             NOT NULL,
+    bio              VARCHAR(400) DEFAULT NULL,
+    dob              TIMESTAMP    DEFAULT NULL,
+    email            VARCHAR(255) UNIQUE     NOT NULL,
+    phone            VARCHAR UNIQUE,
+    photo            VARCHAR      DEFAULT NULL,
     distance_setting INT          DEFAULT 20 NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS matches
 (
-    match_id SERIAL  NOT NULL CONSTRAINT matches_pk PRIMARY KEY,
+    match_id SERIAL  NOT NULL
+        CONSTRAINT matches_pk PRIMARY KEY,
     user_a   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
     user_b   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
     time     TIME,
@@ -73,17 +74,17 @@ CREATE TABLE IF NOT EXISTS user_hobbies
 
 CREATE TABLE IF NOT EXISTS location_data
 (
-    user_id     VARCHAR NOT NULL REFERENCES profile (user_id),
-    lat         FLOAT NOT NULL,
-    long        FLOAT NOT NULL,
-    ping_time   TIME DEFAULT now()
+    user_id   VARCHAR NOT NULL REFERENCES profile (user_id),
+    lat       FLOAT   NOT NULL,
+    long      FLOAT   NOT NULL,
+    ping_time TIME DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS rating
 (
-    user_to     VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
-    user_from   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
-    rate_value  BOOLEAN NOT NULL
+    user_to    VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
+    user_from  VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
+    rate_value BOOLEAN NOT NULL
 );
 
 
@@ -97,30 +98,33 @@ CREATE TABLE IF NOT EXISTS rating
 CREATE OR REPLACE FUNCTION match()
     RETURNS TRIGGER
     LANGUAGE plpgsql
-    AS
+AS
 $make_match$
 BEGIN
-    IF ( (
+    IF ((
         SELECT v.user_from
         FROM votes v
-        WHERE NEW.vote
+        WHERE new.vote
           AND v.vote
           AND v.user_to = new.user_from
           AND new.user_to = v.user_from
         LIMIT 1
-         ) NOTNULL
-    ) THEN
+    ) NOTNULL
+        ) THEN
         INSERT INTO matches (user_a, user_b, time)
-          VALUES (NEW.user_from, NEW.user_to, now());
-        DELETE FROM votes WHERE user_to = NEW.user_from;
+        VALUES (new.user_from, new.user_to, now());
+        DELETE FROM votes WHERE user_to = new.user_from;
         RETURN NULL;
     END IF;
-    RETURN NEW;
+    RETURN new;
 END;
 $make_match$;
 
-CREATE TRIGGER make_match BEFORE INSERT OR UPDATE ON votes
-    FOR EACH ROW EXECUTE PROCEDURE match();
+CREATE TRIGGER make_match
+    BEFORE INSERT OR UPDATE
+    ON votes
+    FOR EACH ROW
+EXECUTE PROCEDURE match();
 
 CREATE OR REPLACE FUNCTION rate_user()
     RETURNS TRIGGER
@@ -131,94 +135,144 @@ BEGIN
         SELECT user_a
         FROM matches
         WHERE user_a = new.user_from
-          AND user_b = new.user_to
-        OR user_a = new.user_to
-          AND user_b = new.user_from
+            AND user_b = new.user_to
+           OR user_a = new.user_to
+            AND user_b = new.user_from
         LIMIT 1
-        ) IS NULL
+    ) IS NULL
     THEN
         RETURN NULL;
     END IF;
     IF (
-       (SELECT rt.user_from
-        FROM rating rt
-        WHERE rt.user_from = new.user_from
-          AND rt.user_to = new.user_to
-        LIMIT 1
-       ) IS NOT NULL
-    ) THEN
-        UPDATE rating SET rate_value=new.rate_value
+        (SELECT rt.user_from
+         FROM rating rt
+         WHERE rt.user_from = new.user_from
+           AND rt.user_to = new.user_to
+         LIMIT 1
+        ) IS NOT NULL
+        ) THEN
+        UPDATE rating
+        SET rate_value=new.rate_value
         WHERE user_from = new.user_from
-        AND user_to = new.user_to;
+          AND user_to = new.user_to;
         RETURN NULL;
     END IF;
     RETURN new;
 END;
 $rate$;
 
-CREATE TRIGGER rate BEFORE INSERT ON rating
-    FOR EACH ROW EXECUTE PROCEDURE rate_user();
+CREATE TRIGGER rate
+    BEFORE INSERT
+    ON rating
+    FOR EACH ROW
+EXECUTE PROCEDURE rate_user();
 
-INSERT INTO rating (user_to, user_from, rate_value) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'false');
-
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'false');
 
 
 -- Count number of hobbies for filtering / compatibility score
+
+CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR) RETURNS TABLE (user_id VARCHAR, shared_hobbies INT) AS
+    $compatability_score$
+
+
+    $compatability_score$ LANGUAGE SQL;
+
+
 SELECT COUNT(me.hobby_id)
 FROM user_hobbies me
-    INNER JOIN user_hobbies you
-    ON me.hobby_id = you.hobby_id
-    AND me.swap != you.swap
+         INNER JOIN user_hobbies you
+                    ON me.hobby_id = you.hobby_id
+                        AND me.swap != you.swap
 WHERE me.user_id = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
-AND you.user_id = 'OQezYUwFC2P2JOP81nicQR4qZRB3';
+  AND you.user_id = 'OQezYUwFC2P2JOP81nicQR4qZRB3';
 
 
-SELECT user_id,
-       (
-           SELECT calculate_distance(distance_table.a, b, c, d, 'K')
-           FROM (
-                    SELECT me.lat a, me.long b, you.lat c, you.long d
-                    FROM location_data me
-                             JOIN location_data you
-                                  ON you.user_id = 'OQezYUwFC2P2JOP81nicQR4qZRB3'
-                                      AND me.user_id = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
-                ) distance_table
-       )
-FROM profile;
+SELECT *
+FROM distance_table('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
 
+
+CREATE OR REPLACE FUNCTION distance_table(from_user VARCHAR)
+    RETURNS TABLE
+            (
+                user_id  VARCHAR,
+                distance DOUBLE PRECISION
+            )
+AS
+$distances$
+SELECT *
+FROM (
+         SELECT DISTINCT(geo_tables.user_id),
+                        calculate_distance(geo_tables.ml,
+                                           geo_tables.mlo,
+                                           geo_tables.lat,
+                                           geo_tables.long
+                            ) :: DOUBLE PRECISION AS distance
+         FROM (
+                  SELECT user_id,
+                         lat,
+                         long,
+                         (
+                             SELECT lat
+                             FROM location_data
+                             WHERE user_id = from_user
+                             ORDER BY ping_time
+                             LIMIT 1
+                         ) ml,
+                         (
+                             SELECT long
+                             FROM location_data
+                             WHERE user_id = from_user
+                             ORDER BY ping_time
+                             LIMIT 1
+                         ) mlo
+                  FROM location_data
+                  ORDER BY ping_time
+              ) geo_tables
+     ) distance_tables
+WHERE distance_tables.distance < (
+    SELECT distance_setting
+    FROM profile
+    WHERE user_id = from_user
+)
+$distances$
+    LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
- lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION, units varchar)
-RETURNS float AS $dist$
-    DECLARE
-        dist float = 0;
-        radlat1 float;
-        radlat2 float;
-        theta float;
-        radtheta float;
-    BEGIN
-        IF lat1 = lat2 OR lon1 = lon2
-            THEN RETURN dist;
-        ELSE
-            radlat1 = pi() * lat1 / 180;
-            radlat2 = pi() * lat2 / 180;
-            theta = lon1 - lon2;
-            radtheta = pi() * theta / 180;
-            dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
+                                              lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
+    RETURNS FLOAT AS
+$dist$
+DECLARE
+    dist     FLOAT = 0;
+    radlat1  FLOAT;
+    radlat2  FLOAT;
+    theta    FLOAT;
+    radtheta FLOAT;
+BEGIN
+    IF lat1 = lat2 OR lon1 = lon2
+    THEN
+        RETURN dist;
+    ELSE
+        radlat1 = pi() * lat1 / 180;
+        radlat2 = pi() * lat2 / 180;
+        theta = lon1 - lon2;
+        radtheta = pi() * theta / 180;
+        dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
 
-            IF dist > 1 THEN dist = 1; END IF;
+        IF dist > 1 THEN dist = 1; END IF;
 
-            dist = acos(dist);
-            dist = dist * 180 / pi();
-            dist = dist * 60 * 1.1515;
+        dist = acos(dist);
+        dist = dist * 180 / pi();
+        dist = dist * 60 * 1.1515;
 
-            IF units = 'K' THEN dist = dist * 1.609344; END IF;
-            IF units = 'N' THEN dist = dist * 0.8684; END IF;
+        dist = dist * 1.609344;
 
-            RETURN dist;
-        END IF;
-    END;
+        RETURN dist;
+    END IF;
+END;
 $dist$ LANGUAGE plpgsql;
+
 
 --------------------------------------------
 --  ----------------------------------------
@@ -228,65 +282,87 @@ $dist$ LANGUAGE plpgsql;
 
 -- DOB IN USA (month/day/year)
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
-VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '1999-09-04', '0423199199', 'b026324c6904b2a9cb4b88d6d61c81d1',
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/AV0A6306_Sean_Bean.jpg/468px-AV0A6306_Sean_Bean.jpg');
+VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '1999-09-04', '0423199199',
+        'b026324c6904b2a9cb4b88d6d61c81d1',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/AV0A6306_Sean_Bean.jpg/468px-AV0A6306_Sean_Bean.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
-VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '1999-10-4', '0423239199', '26ab0db90d72e28ad0ba1e22ee510510',
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Good_Omens_panel_at_NYCC_%2860841%29a.jpg/1024px-Good_Omens_panel_at_NYCC_%2860841%29a.jpg');
+VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '1999-10-4', '0423239199',
+        '26ab0db90d72e28ad0ba1e22ee510510',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Good_Omens_panel_at_NYCC_%2860841%29a.jpg/1024px-Good_Omens_panel_at_NYCC_%2860841%29a.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Boating admirer', 'Smith', 'smith@email.com', '1970-12-5', '0413239199', '6d7fce9fee471194aa8b5b6e47267f03',
- 'https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2' ||
- '_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg');
+        'https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2' ||
+        '_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Boxing champion', 'Judy', 'judy@email.com', '1980-10-3', '0404239188', '48a24b70a0b376535542b996af517398',
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg/800px-Jeffrey_Wright_by_Gage_Skidmore_3.jpg');
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg/800px-Jeffrey_Wright_by_Gage_Skidmore_3.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
-VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '1980-09-14', '0415239188', '1dcca23355272056f04fe8bf20edfce0',
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg');
+VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '1980-09-14', '0415239188',
+        '1dcca23355272056f04fe8bf20edfce0',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg');
 
 -- Inserting user data for ourselves --
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
-VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'Lachie', 'Mountain biker but wanting to try out rock climbing!', '1999-09-14', 'lachie.russell@gmail.com',
-        '04152122188', 'https://www.russell-systems.cc/other/48a825f8953a416e22525ac737975ee2785c3088448f665df3f0e13c4955241e.jpg');
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'Lachie', 'Mountain biker but wanting to try out rock climbing!', '1999-09-14',
+        'lachie.russell@gmail.com',
+        '04152122188',
+        'https://www.russell-systems.cc/other/48a825f8953a416e22525ac737975ee2785c3088448f665df3f0e13c4955241e.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
-VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'Jordan', 'Jordan has a background in graphic design and user experience. He ' ||
-                                                  'will help with how the app looks, feels and overall use.',
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'Jordan',
+        'Jordan has a background in graphic design and user experience. He ' ||
+        'will help with how the app looks, feels and overall use.',
         '1990-05-13', 'jordashrussell@gmail.com',
-        '0400100300', 'https://www.russell-systems.cc/other/f75c35fbefffb759903f4de04fbc168eccaea0619b1f3611a2ee6f2872b397c7.jpg');
+        '0400100300',
+        'https://www.russell-systems.cc/other/f75c35fbefffb759903f4de04fbc168eccaea0619b1f3611a2ee6f2872b397c7.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
 VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'Seharsh', 'Seharsh has developed a number of mobile apps and has the most' ||
                                                    ' front end experience of the team.  His experience puts him in ' ||
                                                    'the position to help with technical and design decisions relating ' ||
                                                    'to the mobile platform.'
-                                                   , '1998-04-24', 'seharshs05@gmail.com',
-        '0400100400', 'https://www.russell-systems.cc/other/3ef06fabbfa1be08fcd50dded3450258e357e08e8d75f0aa544ca69e7808ff3b.jpg');
+           , '1998-04-24', 'seharshs05@gmail.com',
+        '0400100400',
+        'https://www.russell-systems.cc/other/3ef06fabbfa1be08fcd50dded3450258e357e08e8d75f0aa544ca69e7808ff3b.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
-VALUES ('HJtnPGdccnbqsR1V0hWSJe9AWFx1', 'Thiren', 'Thiren is the primary contact point for the team, he will organise' ||
-                                                  ' our meetings keep track of a technical queries and responses on ' ||
-                                                  'behalf of the team.', '1998-09-8', '22239906@student.uwa.edu.au',
-        '0400100500', 'https://www.russell-systems.cc/other/ceac483c49a4b8c2c03e4eb3b7e213b8746b996bb7dd30468e0ea6044710a648.jpg');
+VALUES ('HJtnPGdccnbqsR1V0hWSJe9AWFx1', 'Thiren',
+        'Thiren is the primary contact point for the team, he will organise' ||
+        ' our meetings keep track of a technical queries and responses on ' ||
+        'behalf of the team.', '1998-09-8', '22239906@student.uwa.edu.au',
+        '0400100500',
+        'https://www.russell-systems.cc/other/ceac483c49a4b8c2c03e4eb3b7e213b8746b996bb7dd30468e0ea6044710a648.jpg');
 
 
-INSERT INTO hobbies (name) VALUES ('Boxing');
-INSERT INTO hobbies (name) VALUES ('Boating');
-INSERT INTO hobbies (name) VALUES ('Rock Climbing');
-INSERT INTO hobbies (name) VALUES ('Hiking');
-INSERT INTO hobbies (name) VALUES ('Golf');
-INSERT INTO hobbies (name) VALUES ('Surfing');
-INSERT INTO hobbies (name) VALUES ('Cycling');
+INSERT INTO hobbies (name)
+VALUES ('Boxing');
+INSERT INTO hobbies (name)
+VALUES ('Boating');
+INSERT INTO hobbies (name)
+VALUES ('Rock Climbing');
+INSERT INTO hobbies (name)
+VALUES ('Hiking');
+INSERT INTO hobbies (name)
+VALUES ('Golf');
+INSERT INTO hobbies (name)
+VALUES ('Surfing');
+INSERT INTO hobbies (name)
+VALUES ('Cycling');
 
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 3, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 2, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 5, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 3, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 4, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 3, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 2, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 3, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 4, 'discover');
 
 -- Test data for matches (John has three, a few others have one with him)
 INSERT INTO matches (user_a, user_b)
@@ -314,16 +390,25 @@ VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now());
 INSERT INTO matches (user_a, user_b, time)
 VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now());
 
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 2, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 3, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 6, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 2, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 3, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 6, 'discover');
 
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 5, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 6, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 4, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 6, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 1, 'share');
 
 -- Jordan
 INSERT INTO matches (user_a, user_b, time)
@@ -337,15 +422,23 @@ VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'C0j9nlTcBaWXmNACgwtnNds0Q3A2', now());
 INSERT INTO matches (user_a, user_b, time)
 VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now());
 
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 6, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 3, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 4, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 6, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 3, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 4, 'discover');
 
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 7, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 5, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 6, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 7, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 6, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 2, 'share');
 
 -- Seharsh
 INSERT INTO matches (user_a, user_b, time)
@@ -359,37 +452,66 @@ VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'OQezYUwFC2P2JOP81nicQR4qZRB3', now());
 INSERT INTO matches (user_a, user_b, time)
 VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 'HJtnPGdccnbqsR1V0hWSJe9AWFx1', now());
 
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 1, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 6, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 3, 'discover');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 4, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 1, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 6, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 3, 'discover');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 4, 'discover');
 
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 1, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 5, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 6, 'share');
-INSERT INTO user_hobbies (user_id, hobby_id, swap) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 2, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 1, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 5, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 6, 'share');
+INSERT INTO user_hobbies (user_id, hobby_id, swap)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 2, 'share');
 
 -- FAKE VOTES
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '48a24b70a0b376535542b996af517398');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), False, 'b026324c6904b2a9cb4b88d6d61c81d1', '6d7fce9fee471194aa8b5b6e47267f03');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '26ab0db90d72e28ad0ba1e22ee510510');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce9fee471194aa8b5b6e47267f03', 'b026324c6904b2a9cb4b88d6d61c81d1');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, 'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, 'b026324c6904b2a9cb4b88d6d61c81d1', '48a24b70a0b376535542b996af517398');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), FALSE, 'b026324c6904b2a9cb4b88d6d61c81d1', '6d7fce9fee471194aa8b5b6e47267f03');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '6d7fce9fee471194aa8b5b6e47267f03', '26ab0db90d72e28ad0ba1e22ee510510');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '6d7fce9fee471194aa8b5b6e47267f03', '48a24b70a0b376535542b996af517398');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '6d7fce9fee471194aa8b5b6e47267f03', 'b026324c6904b2a9cb4b88d6d61c81d1');
 
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510'); -- Repeat match
-INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, 'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510'); -- Repeat match
+INSERT INTO votes (time, vote, user_from, user_to)
+VALUES (now(), TRUE, '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
 
 
 -- FAKE LOCATION
-INSERT INTO location_data (user_id, lat, long) VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 32.01, 35.06);
-INSERT INTO location_data (user_id, lat, long) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 32.01, 34.50);
-INSERT INTO location_data (user_id, lat, long) VALUES ('6d7fce9fee471194aa8b5b6e47267f03', 33.01, 22.57);
-INSERT INTO location_data (user_id, lat, long) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 35.01, 93.30);
-INSERT INTO location_data (user_id, lat, long) VALUES ('48a24b70a0b376535542b996af517398', 37.01, 83.00);
-INSERT INTO location_data (user_id, lat, long) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 31.01, 23.00);
-INSERT INTO location_data (user_id, lat, long) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 36.01, 34.00);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 32.01, 35.06);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 32.01, 34.50);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('6d7fce9fee471194aa8b5b6e47267f03', 33.01, 22.57);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 35.01, 93.30);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('48a24b70a0b376535542b996af517398', 37.01, 83.00);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 31.01, 23.00);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 36.01, 34.00);
+INSERT INTO location_data (user_id, lat, long)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 36.01, 34.00);
