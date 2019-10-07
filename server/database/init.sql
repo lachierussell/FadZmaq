@@ -310,17 +310,18 @@ CREATE OR REPLACE FUNCTION matching_algorithm(from_user VARCHAR)
             )
 AS
 $matching_algorithm$
-    SELECT dt.user_id, dt.distance, hc.compat hobbies, rc.rank score
-    FROM distance_table(from_user) dt
-    INNER JOIN compatibility(from_user) hc
-      ON dt.user_id = hc.user_id
-    INNER JOIN compatible_rating(from_user) rc
-      ON dt.user_id = rc.user_id
+SELECT dt.user_id, dt.distance, hc.compat hobbies, rc.rank score
+FROM distance_table(from_user) dt
+         INNER JOIN compatibility(from_user) hc
+                    ON dt.user_id = hc.user_id
+         INNER JOIN compatible_rating(from_user) rc
+                    ON dt.user_id = rc.user_id
 $matching_algorithm$
     LANGUAGE SQL;
 
 
-SELECT * FROM matching_algorithm('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+SELECT *
+FROM matching_algorithm('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
 --------------------------------------------
 --  ----------------------------------------
 --  Dummy Data
@@ -563,23 +564,23 @@ VALUES ('48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03', 
 INSERT INTO rating (user_to, user_from, rate_value)
 VALUES ('48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
 
--- FAKE LOCATION
+-- FAKE LOCATION  -31.98, 115.82 UWA
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 32.01, 35.06);
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', -31.98, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 32.01, 34.50);
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', -31.98, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('6d7fce9fee471194aa8b5b6e47267f03', 33.01, 22.57);
+VALUES ('6d7fce9fee471194aa8b5b6e47267f03', -31.98, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 35.01, 93.30);
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', -31.98, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('48a24b70a0b376535542b996af517398', 37.01, 83.00);
+VALUES ('48a24b70a0b376535542b996af517398', -31.98, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 31.01, 23.00);
+VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2'    , -31.98, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 36.01, 34.00);
+VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3'    , -31.98, 115.82);
 INSERT INTO location_data (user_id, lat, long)
-VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 36.01, 34.00);
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1'    , -31.98, 115.82);
 
 
 -- TEST FUNCTION CALLS
