@@ -79,7 +79,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
             } else {
               // TODO make this handle better
               return Text("Error with HTTP request: " +
-                  snapshot.data.statusCode.toString());
+                  '${snapshot.data.statusCode.toString()} ' + ' ${snapshot.data.body.toString()}');
             }
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");

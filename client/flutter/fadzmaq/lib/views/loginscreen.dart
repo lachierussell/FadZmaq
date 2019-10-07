@@ -28,6 +28,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
+    _signout();
+    
+
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setState(() {
         _currentUser = account;
@@ -41,12 +44,12 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
+
   Future<FirebaseUser> _handleSignIn() async {
-    
     setState(() {
       _isButtonDisabled = true;
     });
-    
+
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -72,6 +75,11 @@ class _LoginScreenState extends State<LoginScreen> {
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
+  void _signout() async {
+    await FirebaseAuth.instance.signOut();
+    await _googleSignIn.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     ConfigResource config = AppConfig.of(context);
@@ -82,23 +90,25 @@ class _LoginScreenState extends State<LoginScreen> {
         //   title: Text("Login"),
         // ),
         body: Center(
-          child: Container(
-            alignment: Alignment.bottomCenter,
-            constraints: BoxConstraints(
-                maxHeight: 300.0,
-                maxWidth: 200.0,
-                minWidth: 150.0,
-                minHeight: 150.0),
-            child: ListView(
-              children: <Widget>[
-                Center(
-                  child: Icon(
-                    Icons.account_box,
-                    size: 130,
-                  ),
-                ),
-                Center(
-                  child: _isButtonDisabled ? CircularProgressIndicator() : RaisedButton (
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        constraints: BoxConstraints(
+            maxHeight: 300.0,
+            maxWidth: 200.0,
+            minWidth: 150.0,
+            minHeight: 150.0),
+        child: ListView(
+          children: <Widget>[
+            Center(
+              child: Icon(
+                Icons.account_box,
+                size: 130,
+              ),
+            ),
+            Center(
+              child: _isButtonDisabled
+                  ? CircularProgressIndicator()
+                  : RaisedButton(
                       child: (Text("Login With Google")),
                       onPressed: () async {
                         // _handleSignIn().then((FirebaseUser user) {
@@ -110,28 +120,34 @@ class _LoginScreenState extends State<LoginScreen> {
                         // await sleep1();
 
                         if (user != null) {
+                          FirebaseAuth auth = FirebaseAuth.instance;
+                          FirebaseUser user = await auth.currentUser();
+                          IdTokenResult result = await user.getIdToken();
+
                           // a quick check to the server to see if we have an account already
                           // fetch response code will use Firebase Authentication to send our token
                           String url = "matches";
                           // TODO check for timeout here
                           http.Response response = await httpGet(config.server + url);
                           int code = response.statusCode;
-                              
+
+                          String resonse = response.body.toString();
+
+                          print("A " + '$code' + " " + '$resonse');
 
                           // 401: no user account
-                          if (code == 401) {
+                          if (code == 404) {
                             // TODO make this better, its a bit of a hack at the moment
 
                             // Get our id token from firebase
                             FirebaseAuth auth = FirebaseAuth.instance;
                             FirebaseUser user = await auth.currentUser();
-                            IdTokenResult result = await user.getIdToken();
-
+                            
                             var names = user.displayName.split(" ");
                             String name = names[0];
 
                             // put together our post request for a new account
-                            String json = '{"new_user":{"email":"' +
+                            String _json = '{"new_user":{"email":"' +
                                 user.email +
                                 '", "name":"' +
                                 name +
@@ -139,19 +155,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // print(json);
                             // post to account with our auth
-                            http.Response response = await http.post(
-                              config.server + "account",
-                              headers: {"Authorization": result.token},
-                              body: json,
+                            http.Response response = await httpPost(
+                              config.server + "account",json:_json
                             );
 
                             // update our code
                             code = response.statusCode;
 
+                            String resonsee = response.body.toString();
+
+                            print("B " + '$code' + " " + '$resonsee');
+
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 // builder: (context) => UserPreferencesPage(),
-                                builder: (context) => EditProfilePage(),
+                                builder: (context) => LandingPage(),
                               ),
                             );
                           }
@@ -171,11 +189,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         // }).catchError((e) => print(e));
                       }),
-                ),
-              ],
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    ));
   }
 
   // TODO remove me
