@@ -131,7 +131,7 @@ class EditProfileState extends State<EditProfile> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post(server + "profile", _fbKey.currentState.value);
+                          httpPost(server + "profile", json:_fbKey.currentState.value);
 
                           Navigator.pop(context);
                         } else {

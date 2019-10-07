@@ -42,7 +42,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   void didChangeDependencies() {
     if (widget.model == null && _future == null) {
       String server = AppConfig.of(context).server + widget.url;
-      _future = fetchResponse(server);
+      _future = httpGet(server);
     }
 
     super.didChangeDependencies();
@@ -56,7 +56,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
         data: widget.model,
         child: widget.builder(context),
       );
-    // No model, request one
+      // No model, request one
     } else {
       return FutureBuilder(
         future: _future,
@@ -95,32 +95,46 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
   }
 }
 
-/// Only cares about the reponse code
-/// This is used for checking whether a user has logged in
-Future<int> fetchResponseCode(String url) async {
+// /// Only cares about the reponse code
+// /// This is used for checking whether a user has logged in
+// Future<int> fetchResponseCode(String url) async {
+//   FirebaseAuth auth = FirebaseAuth.instance;
+//   FirebaseUser user = await auth.currentUser();
+//   IdTokenResult result = await user.getIdToken();
+
+//   http.Response response;
+
+//   try {
+//     response = await http.get(
+//       url,
+//       headers: {"Authorization": result.token},
+//     );
+//   } catch (e) {
+//     return e;
+//   }
+//   return response.statusCode;
+// }
+
+Future<http.Response> httpPost(String url, {var json}) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
 
-  final response = await http.get(
-    url,
-    headers: {"Authorization": result.token},
-  );
-  return response.statusCode;
-}
-
-Future post(String url, var Json) async {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseUser user = await auth.currentUser();
-  IdTokenResult result = await user.getIdToken();
-
-  http.post(url, headers: {"Authorization": result.token}, body: Json);
+  try {
+    if (json != null)
+      return await http.post(url,
+          headers: {"Authorization": result.token}, body: json);
+    else
+      return await http.post(url, headers: {"Authorization": result.token});
+  } catch (e) {
+    return e;
+  }
 }
 
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user
-Future fetchResponse(String url) async {
+Future httpGet(String url) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();

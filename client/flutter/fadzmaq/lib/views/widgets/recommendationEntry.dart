@@ -4,6 +4,7 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/recommendations.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
+import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
 import 'package:flutter/material.dart';
 
 /// Entry in the recommendation list
@@ -31,7 +32,7 @@ class RecommendationEntry extends StatelessWidget {
 
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
-    final userId = await Navigator.push(
+    final LikePass type = await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ProfilePage(
@@ -43,9 +44,14 @@ class RecommendationEntry extends StatelessWidget {
       ),
     );
 
+    if (type == LikePass.like) {
+      asyncMatchPopup(context, profile);
+    }
+
     // make changes according to the result
     // in this case remove the recommendation we have just liked/disliked
-    recommendationList.removeItem(userId);
+
+    recommendationList.removeItem(profile.userId);
   }
 
   Widget _recommendationEntry(BuildContext context, ProfileData profile) {

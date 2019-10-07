@@ -8,9 +8,31 @@
 
 import fadzmaq.database.connection as db
 from fadzmaq.api.notifications import notify_match
-
+from fadzmaq.database.profile import retrieve_profile
 
 def like_user(uid, id, vote):
+
+    # for testing remove me later!
+    import random
+    if random.choice([0, 1]) == 1:
+        matches = []
+        # use our own id while we're using placeholder recommendations
+        matches.append(retrieve_profile(uid))
+        # matches.append(retrieve_profile(id))
+        return {
+            "match": True,
+            "matched": matches,
+        }
+    else:
+        return {
+            "match": False,
+            "matched":[],
+        }
+
+
+    ########################################################
+
+
     rows = db.get_db().execute(
         '''
         INSERT INTO votes (time, vote, user_from, user_to) 
@@ -21,10 +43,16 @@ def like_user(uid, id, vote):
     if rows.first() is None:
         print('MATCH')
         notify_match()
-        return {"match": True}
-    return {"match": False}
 
+        matches = []
+        matches.append(retrieve_profile(id))
+        return {
+            "match": True,
+            "matched": matches,
+            }
+    else:
+        return {
+            "match": False,
+            "matched":[],
+            }
 
-def get_recommendations(uid):
-
-    pass

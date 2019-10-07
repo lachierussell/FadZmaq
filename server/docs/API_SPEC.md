@@ -481,16 +481,24 @@ None
 // POST
 none
 // Receive
-{ "match": true }
+{
+    "match": true,
+    "matched": [
+        // List containering the profile container
+    ],
+}
 ```
 
 ### /pass/`id`
 
-```
+```json
 // POST
 none
 // Receive
-{ "match": false }
+{
+    "match": false,
+    "matched": [],
+}
 ```
 
 ### /matches/thumbs/up/`id`

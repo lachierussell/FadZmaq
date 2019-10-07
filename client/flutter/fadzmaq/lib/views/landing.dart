@@ -3,6 +3,8 @@ import 'package:fadzmaq/views/preferences.dart';
 import 'package:fadzmaq/views/recommendations.dart';
 import 'package:flutter/material.dart';
 
+final GlobalKey mainScaffold = GlobalKey();
+
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -11,6 +13,7 @@ class LandingPage extends StatelessWidget {
         initialIndex: 1,
         length: 3,
         child: Scaffold(
+          key: mainScaffold,
           appBar: AppBar(
             backgroundColor: Theme.of(context).primaryColor,
             flexibleSpace: new Column(
