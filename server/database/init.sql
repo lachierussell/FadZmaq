@@ -173,12 +173,52 @@ WHERE me.user_id = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
 AND you.user_id = 'OQezYUwFC2P2JOP81nicQR4qZRB3';
 
 
-SELECT user_id, distance AS (
-    SELECT lat -
-    FROM location_data
-)
-FROM profile
+SELECT user_id,
+       (
+           SELECT calculate_distance(distance_table.a, b, c, d, 'K')
+           FROM (
+                    SELECT me.lat a, me.long b, you.lat c, you.long d
+                    FROM location_data me
+                             JOIN location_data you
+                                  ON you.user_id = 'OQezYUwFC2P2JOP81nicQR4qZRB3'
+                                      AND me.user_id = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
+                ) distance_table
+       )
+FROM profile;
 
+
+CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
+ lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION, units varchar)
+RETURNS float AS $dist$
+    DECLARE
+        dist float = 0;
+        radlat1 float;
+        radlat2 float;
+        theta float;
+        radtheta float;
+    BEGIN
+        IF lat1 = lat2 OR lon1 = lon2
+            THEN RETURN dist;
+        ELSE
+            radlat1 = pi() * lat1 / 180;
+            radlat2 = pi() * lat2 / 180;
+            theta = lon1 - lon2;
+            radtheta = pi() * theta / 180;
+            dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
+
+            IF dist > 1 THEN dist = 1; END IF;
+
+            dist = acos(dist);
+            dist = dist * 180 / pi();
+            dist = dist * 60 * 1.1515;
+
+            IF units = 'K' THEN dist = dist * 1.609344; END IF;
+            IF units = 'N' THEN dist = dist * 0.8684; END IF;
+
+            RETURN dist;
+        END IF;
+    END;
+$dist$ LANGUAGE plpgsql;
 
 --------------------------------------------
 --  ----------------------------------------
@@ -343,3 +383,13 @@ INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '6d7fce
 
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e22ee510510'); -- Repeat match
 INSERT INTO votes (time, vote, user_from, user_to) VALUES (now(), True,  '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
+
+
+-- FAKE LOCATION
+INSERT INTO location_data (user_id, lat, long) VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 32.01, 35.06);
+INSERT INTO location_data (user_id, lat, long) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 32.01, 34.50);
+INSERT INTO location_data (user_id, lat, long) VALUES ('6d7fce9fee471194aa8b5b6e47267f03', 33.01, 22.57);
+INSERT INTO location_data (user_id, lat, long) VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 35.01, 93.30);
+INSERT INTO location_data (user_id, lat, long) VALUES ('48a24b70a0b376535542b996af517398', 37.01, 83.00);
+INSERT INTO location_data (user_id, lat, long) VALUES ('C0j9nlTcBaWXmNACgwtnNds0Q3A2', 31.01, 23.00);
+INSERT INTO location_data (user_id, lat, long) VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 36.01, 34.00);
