@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 
@@ -6,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:fadzmaq/models/app_config.dart';
-import 'package:fadzmaq/main.dart';
+
 
 class HomePageRupert extends StatefulWidget {
   HomePageRupert({Key key, this.title}) : super(key: key);

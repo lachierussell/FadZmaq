@@ -1,18 +1,9 @@
-import 'dart:convert';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
-import 'package:fadzmaq/views/landing.dart';
-import 'package:fadzmaq/views/preferences.dart';
-import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:intl/intl.dart';
-import 'package:fadzmaq/main.dart';
-import 'package:flutter/material.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fadzmaq/models/app_config.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -34,7 +25,7 @@ class EditProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
-      body: GetRequest<ProfileData>(
+      body: GetRequest<ProfileContainer>(
         url: "profile",
         builder: (context) {
           return new EditProfile();
@@ -80,7 +71,7 @@ class EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     String server = AppConfig.of(context).server;
 
     // check for id 1 (about me) and grab the display value
@@ -115,11 +106,11 @@ class EditProfileState extends State<EditProfile> {
                         decoration: InputDecoration(labelText: "Nickname")),
                     FormBuilderTextField(
                         attribute: "email",
-                       initialValue: contactEmail,
+                        initialValue: contactEmail,
                         decoration: InputDecoration(labelText: "email")),
                     FormBuilderTextField(
                         attribute: "phone",
-                       initialValue: contactPhone,
+                        initialValue: contactPhone,
                         decoration: InputDecoration(labelText: "phone")),
                     FormBuilderTextField(
                         attribute: "bio",
@@ -140,10 +131,9 @@ class EditProfileState extends State<EditProfile> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post(server + "profile", _fbKey.currentState.value);
+                          httpPost(server + "profile", json:_fbKey.currentState.value);
 
                           Navigator.pop(context);
-
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");
