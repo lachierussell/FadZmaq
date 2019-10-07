@@ -12,7 +12,9 @@ class RecommendationsData {
 RecommendationsData _recommendationsFromJson(Map<String, dynamic> json) {
   var recommendationsJson = json['recommendations'] as List;
   List<RecommendationContainer> recommendations = recommendationsJson != null
-      ? recommendationsJson.map((i) => RecommendationContainer.fromJson(i)).toList()
+      ? recommendationsJson
+          .map((i) => RecommendationContainer.fromJson(i))
+          .toList()
       : null;
 
   return RecommendationsData(
@@ -30,8 +32,6 @@ class RecommendationContainer {
   });
 
   factory RecommendationContainer.fromJson(Map<String, dynamic> json) {
-
-
     var userJson = json['user'];
     // print("USERJSON: " + userJson.toString());
     ProfileData user = userJson != null ? ProfileData.fromJson(userJson) : null;
@@ -40,5 +40,16 @@ class RecommendationContainer {
       rank: json['rank'],
       user: user,
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is RecommendationContainer && user.userId == other.user.userId;
+  }
+
+  @override
+  int get hashCode {
+    return user.userId.hashCode;
   }
 }

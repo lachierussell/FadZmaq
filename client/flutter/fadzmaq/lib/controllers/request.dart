@@ -134,7 +134,11 @@ Future<http.Response> httpPost(String url, {var json}) async {
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user
-Future httpGet(String url) async {
+Future<http.Response> httpGet(String url, {var json}) async {
+
+  //json not used in get request, is there to interchange with post request
+  // TODO really these could be merged
+
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();

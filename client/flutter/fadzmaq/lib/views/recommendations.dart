@@ -1,9 +1,14 @@
+import 'dart:math';
+
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'package:fadzmaq/views/widgets/recommendationEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class RecommendationsPage extends StatelessWidget {
   const RecommendationsPage([Key key]) : super(key: key);
@@ -49,6 +54,10 @@ class RecommendationsListState extends State<RecommendationsList> {
     print("build recommendations");
 
     if (recommendationsList.length > 0) {
+
+      // never more than 10 entries shown
+      int numEntries = min(10, recommendationsList.length);
+
       return ListView.separated(
         separatorBuilder: (context, index) {
           return Divider(
@@ -57,7 +66,7 @@ class RecommendationsListState extends State<RecommendationsList> {
             endIndent: 10,
           );
         },
-        itemCount: recommendationsList.length,
+        itemCount: numEntries,
         itemBuilder: _listItemBuilder,
       );
     } else {
@@ -72,5 +81,30 @@ class RecommendationsListState extends State<RecommendationsList> {
 
   void removeItem(String id) {
     recommendationsList.removeWhere((container) => container.user.userId == id);
+
+    if (recommendationsList.length <= 3) {
+      updateList();
+    }
+  }
+
+  void updateList() async {
+    http.Response response = await postAsync(context, "user/recs", useGet: true);
+    if (response == null) return;
+
+    var rd = RecommendationsData.fromJson(json.decode(response.body));
+    if (rd == null) return;
+
+    List<RecommendationContainer> newList = rd.recommendations;
+
+    // We don't reorder the list in rank (start or finish) as added
+    // entries may end up with the same rank or higher as others
+    // we expect incoming recommendations to be at the end of the list,
+    // and we expect the order of the seen recommendations to remain unchanged
+    for(RecommendationContainer pc in newList){
+      if(!recommendationsList.contains(pc)){
+        recommendationsList.add(pc);
+      }
+    }
+
   }
 }
