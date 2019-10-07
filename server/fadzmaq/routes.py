@@ -83,12 +83,22 @@ def verify_user(uid):
         raise ValueError("User does not exist")  # pragma: no cover
 
 
+# # @brief Retrieves user recommendations
+# @route_bp.route('/user/recs', methods=['GET'])
+# @auth_required
+# def recommendations(uid):
+#     print(uid)
+#     return jsonify(recs_data.recs), 200
+
 # @brief Retrieves user recommendations
+# @returns A json formatted list of the users recommendations.
 @route_bp.route('/user/recs', methods=['GET'])
 @auth_required
-def recommendations(uid):
-    print(uid)
-    return jsonify(recs_data.recs), 200
+def get_recommendations(uid):
+    try:
+        return jsonify(recs.get_recommendations(uid)), 200
+    except ValueError as e:
+        return 'Failed:' + str(e), 403
 
 
 # @brief Retries a users profile by their id
@@ -282,3 +292,27 @@ def like_user(uid, id):
 def pass_user(uid, id):
     recs.like_user(uid, id, False)
     return "User passed", 200
+
+
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# VOTES
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+from tests import random_account_gen
+
+@route_bp.route('/test/add_users', methods=['POST'])
+def test_add_users():
+    # try:
+    data = json.loads(request.get_data())
+    print(data)
+    num = data['number']
+
+    random_account_gen.make_random_accounts(int(num))
+
+    return 'Added users', 200
+    # except ValueError as e:
+    #     print('failed ' + str(e))
+    #     return 'failed ' + str(e), 500
+    # except Exception as e:
+    #     print("failed: " + str(e))
+    #     return "failed: " + str(e), 401
