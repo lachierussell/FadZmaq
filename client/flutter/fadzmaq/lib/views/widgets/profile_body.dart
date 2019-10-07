@@ -50,6 +50,7 @@ class ProfileBody extends StatelessWidget {
         Text(profileName,
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5)),
+        Row(children :<Widget> [IconButton(icon : Icon(Icons.thumb_up), onPressed: check, color: Colors.pink,),IconButton(icon : Icon(Icons.thumb_down), onPressed: check, color: Colors.blueAccent)]) ,
         BodyDivider(),
         ContactBody(),
         ProfileHobbies(
@@ -158,6 +159,10 @@ Widget contactEntry(String name, String entry) {
 
 TextStyle bodyBold() {
   return TextStyle(fontWeight: FontWeight.bold);
+}
+
+void check() {
+  print("check");
 }
 
 class BodyDivider extends StatelessWidget {
