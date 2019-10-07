@@ -1,7 +1,6 @@
 import 'package:fadzmaq/views/createprofilescreen.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/splashscreen.dart';
-import 'package:fadzmaq/views/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/preferences.dart';
 

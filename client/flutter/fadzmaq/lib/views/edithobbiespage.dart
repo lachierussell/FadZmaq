@@ -1,13 +1,8 @@
 import 'dart:convert';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/profile.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:intl/intl.dart';
-import 'package:fadzmaq/main.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/controllers/request.dart';
 
@@ -33,7 +28,7 @@ class EditHobbyPage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: GetRequest<ProfileData>(
+      body: GetRequest<ProfileContainer>(
         url: "profile",
         builder: (context) {
           finalIsShare = isShare;
@@ -127,7 +122,7 @@ class _EditHobbyPageState extends State<EditHobby> {
     var x = ["Surfing", "Summer"];
     // List<FormBuilderFieldOption> y = function(x);
     AllHobbiesData hb = RequestProvider.of<AllHobbiesData>(context);
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     List<String> hobbies = List();
     print("here");
     if (pd.hobbyContainers != null) {
@@ -194,7 +189,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post(AppConfig.of(context).server + "profile/hobbies", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
+                          httpPost(AppConfig.of(context).server + "profile/hobbies", json:utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
                           Navigator.pop(context);
                         } else {
                           print(_fbKey.currentState.value);

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
-import 'package:fadzmaq/views/preferences.dart';
 import 'package:fadzmaq/controllers/request.dart';
 
 import 'package:http/http.dart' as http;
@@ -114,8 +113,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           // a quick check to the server to see if we have an account already
                           // fetch response code will use Firebase Authentication to send our token
                           String url = "matches";
-                          int code =
-                              await fetchResponseCode(config.server + url);
+                          // TODO check for timeout here
+                          http.Response response = await httpGet(config.server + url);
+                          int code = response.statusCode;
+                              
 
                           // 401: no user account
                           if (code == 401) {

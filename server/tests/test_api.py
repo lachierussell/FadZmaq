@@ -20,7 +20,7 @@ def test_index(client):
 #  Not implemented
 def test_user_request(client):
     response = client.get('/user/recs', follow_redirects=True)
-    assert response.status_code == 501
+    assert response.status_code == 200
 
 
 #  Not implemented
@@ -69,24 +69,24 @@ def test_match_request_by_id(client):
 
 def test_match_delete_by_id(client):
     response = client.delete('/matches/b026324c6904b2a9cb4b88d6d61c81d1', follow_redirects=True)
-    assert response.status_code == 501
+    assert response.status_code == 204
 
 
 def test_match_thumb_down(client):
     response = client.post('/matches/thumbs/down/b026324c6904b2a9cb4b88d6d61c81d1', follow_redirects=True)
-    assert response.status_code == 501
+    assert response.status_code == 204
 
 
 def test_match_thumb_up(client):
     response = client.post('/matches/thumbs/up/b026324c6904b2a9cb4b88d6d61c81d1', follow_redirects=True)
-    assert response.status_code == 501
+    assert response.status_code == 204
 
 
 def test_like(client):
     response = client.post('/like/b026324c6904b2a9cb4b88d6d61c81d1', follow_redirects=True)
-    assert response.status_code == 501
+    assert response.status_code == 200
 
 
 def test_pass(client):
     response = client.post('/pass/b026324c6904b2a9cb4b88d6d61c81d1', follow_redirects=True)
-    assert response.status_code == 501
+    assert response.status_code == 200
