@@ -21,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  bool _isButtonDisabled = false;
+
   GoogleSignInAccount _currentUser;
 
   @override
@@ -92,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Center(
-                  child: RaisedButton(
+                  child: _isButtonDisabled ? CircularProgressIndicator() : RaisedButton (
                       child: (Text("Login With Google")),
                       onPressed: () async {
                         // _handleSignIn().then((FirebaseUser user) {
