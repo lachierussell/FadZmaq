@@ -115,7 +115,8 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 //   return response.statusCode;
 // }
 
-Future<http.Response> httpPost(String url, {var json}) async {
+// this has to be a typeless future to pass errors
+Future httpPost(String url, {var json}) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
@@ -134,7 +135,8 @@ Future<http.Response> httpPost(String url, {var json}) async {
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user
-Future<http.Response> httpGet(String url, {var json}) async {
+/// this has to be a typeless future to pass errors
+Future httpGet(String url, {var json}) async {
 
   //json not used in get request, is there to interchange with post request
   // TODO really these could be merged

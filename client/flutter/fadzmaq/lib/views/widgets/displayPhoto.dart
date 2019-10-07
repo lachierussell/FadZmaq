@@ -23,6 +23,7 @@ class DisplayPhoto extends StatelessWidget {
         width: dimension,
         imageUrl: url,
         fit: BoxFit.cover,
+        alignment: Alignment.topCenter,
         // placeholder: (context, url) => new CircularProgressIndicator(),
         errorWidget: (context, url, error) => new Icon(Icons.error),
       ),
