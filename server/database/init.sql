@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS rating
 (
     user_to    VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
     user_from  VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
-    rate_value INT NOT NULL
+    rate_value INT     NOT NULL
 );
 
 --------------------------------------------
@@ -165,47 +165,41 @@ CREATE TRIGGER rate
     FOR EACH ROW
 EXECUTE PROCEDURE rate_user();
 
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 0);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'OQezYUwFC2P2JOP81nicQR4qZRB3', 1);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '6d7fce9fee471194aa8b5b6e47267f03', 0);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', '6d7fce9fee471194aa8b5b6e47267f03', 0);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03', 0);
-INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
 
-CREATE OR REPLACE FUNCTION compatible_rating(from_user VARCHAR) RETURNS TABLE (user_id VARCHAR, rank FLOAT) AS
+CREATE OR REPLACE FUNCTION compatible_rating(from_user VARCHAR)
+    RETURNS TABLE
+            (
+                user_id VARCHAR,
+                rank    FLOAT
+            )
+AS
 $compatible_rating$
-SELECT user_to, their_rank -
-(
-    SELECT AVG(rate_value :: FLOAT) my_rank
-    FROM rating
-    WHERE user_to = from_user
-    GROUP BY user_to
-) rank
+SELECT user_to,
+       their_rank -
+       (
+           SELECT AVG(rate_value :: FLOAT) my_rank
+           FROM rating
+           WHERE user_to = from_user
+           GROUP BY user_to
+       ) rank
 FROM (
-    SELECT user_to, AVG(rate_value :: FLOAT) their_rank
-    FROM rating
-    GROUP BY user_to
-) not_me
+         SELECT user_to, AVG(rate_value :: FLOAT) their_rank
+         FROM rating
+         GROUP BY user_to
+     ) not_me
 ORDER BY rank DESC;
 $compatible_rating$
-LANGUAGE SQL;
+    LANGUAGE SQL;
 
-SELECT * FROM compatible_rating('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
 
 -- Count number of hobbies for filtering / compatibility score
-CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR) RETURNS TABLE (user_id VARCHAR, compat BIGINT) AS
+CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR)
+    RETURNS TABLE
+            (
+                user_id VARCHAR,
+                compat  BIGINT
+            )
+AS
 $compatability_score$
 SELECT DISTINCT(user_id),
                (
@@ -221,7 +215,7 @@ FROM user_hobbies
 WHERE user_id != from_user
 ORDER BY compat DESC;
 $compatability_score$
-LANGUAGE SQL;
+    LANGUAGE SQL;
 
 
 CREATE OR REPLACE FUNCTION distance_table(from_user VARCHAR)
@@ -306,16 +300,27 @@ END;
 $dist$ LANGUAGE plpgsql;
 
 
--- TEST FUNCTION CALLS
+CREATE OR REPLACE FUNCTION matching_algorithm(from_user VARCHAR)
+    RETURNS TABLE
+            (
+                user_id  VARCHAR,
+                distance DOUBLE PRECISION,
+                hobbies  BIGINT,
+                score    DOUBLE PRECISION
+            )
+AS
+$matching_algorithm$
+    SELECT dt.user_id, dt.distance, hc.compat hobbies, rc.rank score
+    FROM distance_table(from_user) dt
+    INNER JOIN compatibility(from_user) hc
+      ON dt.user_id = hc.user_id
+    INNER JOIN compatible_rating(from_user) rc
+      ON dt.user_id = rc.user_id
+$matching_algorithm$
+    LANGUAGE SQL;
 
-SELECT *
-FROM compatibility('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
 
-SELECT *
-FROM distance_table('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
-
-
-
+SELECT * FROM matching_algorithm('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
 --------------------------------------------
 --  ----------------------------------------
 --  Dummy Data
@@ -539,6 +544,24 @@ VALUES (now(), TRUE, 'b026324c6904b2a9cb4b88d6d61c81d1', '26ab0db90d72e28ad0ba1e
 INSERT INTO votes (time, vote, user_from, user_to)
 VALUES (now(), TRUE, '26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1');
 
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'OQezYUwFC2P2JOP81nicQR4qZRB3', 1);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '6d7fce9fee471194aa8b5b6e47267f03', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', '6d7fce9fee471194aa8b5b6e47267f03', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
 
 -- FAKE LOCATION
 INSERT INTO location_data (user_id, lat, long)
@@ -557,3 +580,15 @@ INSERT INTO location_data (user_id, lat, long)
 VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 36.01, 34.00);
 INSERT INTO location_data (user_id, lat, long)
 VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 36.01, 34.00);
+
+
+-- TEST FUNCTION CALLS
+
+SELECT *
+FROM compatibility('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+
+SELECT *
+FROM distance_table('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+
+SELECT *
+FROM compatible_rating('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
