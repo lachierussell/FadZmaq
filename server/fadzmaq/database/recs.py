@@ -8,6 +8,7 @@
 
 import fadzmaq.database.connection as db
 from fadzmaq.api.notifications import notify_match
+from fadzmaq.database.profile import retrieve_profile
 from fadzmaq.database.profile import build_profile_data
 
 
