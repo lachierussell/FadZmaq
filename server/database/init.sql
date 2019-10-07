@@ -171,26 +171,31 @@ INSERT INTO rating (user_to, user_from, rate_value)
 VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'false');
 
 
+CREATE OR REPLACE FUNCTION compatible_rating(from_user VARCHAR) RETURNS TABLE (user_id VARCHAR, rank FLOAT) AS
+$compatible_rating$
+    
+$compatible_rating$
+LANGUAGE SQL;
+
+
 -- Count number of hobbies for filtering / compatibility score
-
-CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR) RETURNS TABLE (user_id VARCHAR, shared_hobbies INT) AS
-    $compatability_score$
-
-
-    $compatability_score$ LANGUAGE SQL;
-
-
-SELECT COUNT(me.hobby_id)
-FROM user_hobbies me
-         INNER JOIN user_hobbies you
-                    ON me.hobby_id = you.hobby_id
-                        AND me.swap != you.swap
-WHERE me.user_id = 'TMnFU6BmQoV8kSMoYYGLJDu8qSy1'
-  AND you.user_id = 'OQezYUwFC2P2JOP81nicQR4qZRB3';
-
-
-SELECT *
-FROM distance_table('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR) RETURNS TABLE (user_id VARCHAR, compat BIGINT) AS
+$compatability_score$
+SELECT DISTINCT(user_id),
+               (
+                   SELECT COUNT(me.hobby_id) compat
+                   FROM user_hobbies me
+                            INNER JOIN user_hobbies you
+                                       ON me.hobby_id = you.hobby_id
+                                           AND me.swap != you.swap
+                   WHERE me.user_id = from_user
+                     AND you.user_id = user_hobbies.user_id
+               ) compat
+FROM user_hobbies
+WHERE user_id != from_user
+ORDER BY compat DESC;
+$compatability_score$
+LANGUAGE SQL;
 
 
 CREATE OR REPLACE FUNCTION distance_table(from_user VARCHAR)
@@ -228,7 +233,7 @@ FROM (
                              LIMIT 1
                          ) mlo
                   FROM location_data
-                  ORDER BY ping_time
+                  ORDER BY ping_time DESC
               ) geo_tables
      ) distance_tables
 WHERE distance_tables.distance < (
@@ -238,6 +243,7 @@ WHERE distance_tables.distance < (
 )
 $distances$
     LANGUAGE SQL;
+
 
 CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
                                               lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
@@ -272,6 +278,16 @@ BEGIN
     END IF;
 END;
 $dist$ LANGUAGE plpgsql;
+
+
+-- TEST FUNCTION CALLS
+
+SELECT *
+FROM compatibility('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+
+SELECT *
+FROM distance_table('TMnFU6BmQoV8kSMoYYGLJDu8qSy1');
+
 
 
 --------------------------------------------
