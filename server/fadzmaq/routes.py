@@ -253,7 +253,7 @@ def unmatch_user(uid, id):
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
-    matches.rate_user(uid, id, False)
+    matches.rate_user(uid, id, 0)
     return "Thumbs down!", 204
 
 
@@ -261,7 +261,7 @@ def rate_user_down(uid, id):
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
-    matches.rate_user(uid, id, True)
+    matches.rate_user(uid, id, 1)
     return "Thumbs up!", 204
 
 

@@ -11,7 +11,6 @@
 -- @author Thiren Naidoo         22257963@student.uwa.edu.au
 -- @author Lachlan Russell       22414249@student.uwa.edu.au
 
-
 DROP TABLE IF EXISTS user_hobbies;
 DROP TABLE IF EXISTS matches;
 DROP VIEW IF EXISTS matches_v;
@@ -84,9 +83,8 @@ CREATE TABLE IF NOT EXISTS rating
 (
     user_to    VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
     user_from  VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
-    rate_value BOOLEAN NOT NULL
+    rate_value INT NOT NULL
 );
-
 
 --------------------------------------------
 --  ----------------------------------------
@@ -168,12 +166,33 @@ CREATE TRIGGER rate
 EXECUTE PROCEDURE rate_user();
 
 INSERT INTO rating (user_to, user_from, rate_value)
-VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 'false');
-
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '6d7fce9fee471194aa8b5b6e47267f03', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', '6d7fce9fee471194aa8b5b6e47267f03', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('26ab0db90d72e28ad0ba1e22ee510510', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', '6d7fce9fee471194aa8b5b6e47267f03', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('48a24b70a0b376535542b996af517398', '6d7fce9fee471194aa8b5b6e47267f03', 0);
+INSERT INTO rating (user_to, user_from, rate_value)
+VALUES ('48a24b70a0b376535542b996af517398', 'b026324c6904b2a9cb4b88d6d61c81d1', 1);
 
 CREATE OR REPLACE FUNCTION compatible_rating(from_user VARCHAR) RETURNS TABLE (user_id VARCHAR, rank FLOAT) AS
 $compatible_rating$
-    
+    SELECT user_to, (
+        SELECT AVG(r.rate_value) rank
+        FROM rating r
+        WHERE r.user_to = user_to
+    )
+    FROM rating
+
 $compatible_rating$
 LANGUAGE SQL;
 
