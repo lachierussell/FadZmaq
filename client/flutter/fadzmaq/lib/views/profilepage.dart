@@ -50,7 +50,7 @@ class ProfilePage extends StatelessWidget {
             url: "profile",
             model: userData,
             builder: (context) {
-              return ProfilePageState(type: type, profile: profile);
+              return ProfilePageState(type: type);
             },
           );
         },
@@ -60,13 +60,13 @@ class ProfilePage extends StatelessWidget {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    LikeButton(id: profile.userId, type: LikePass.pass),
+                    LikeButton(profile: profile, type: LikePass.pass),
                     Expanded(
                       child: Container(
                         height: 10,
                       ),
                     ),
-                    LikeButton(id: profile.userId, type: LikePass.like),
+                    LikeButton(profile: profile, type: LikePass.like),
                   ],
                 )
               : null,
@@ -77,16 +77,18 @@ class ProfilePage extends StatelessWidget {
 
 class ProfilePageState extends StatelessWidget {
   final ProfileType type;
-  final ProfileData profile;
 
   ProfilePageState({
     @required this.type,
-    @required this.profile,
-  })  : assert(type != null),
-        assert(profile != null);
+  })  : assert(type != null);
 
   @override
   Widget build(BuildContext context) {
+
+
+  ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
+  ProfileData profile = pc.profile;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(

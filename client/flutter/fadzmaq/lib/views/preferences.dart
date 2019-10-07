@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
@@ -142,6 +143,13 @@ class UserPreferencesState extends State {
                     child: RaisedButton(
                       onPressed: logOut,
                       child: Text("Log out"),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: (){ postAsync(context, "profile");},
+                      child: Text("Post Request Test"),
                     ),
                   ),
                 ],

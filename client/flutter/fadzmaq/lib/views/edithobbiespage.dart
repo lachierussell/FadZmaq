@@ -189,7 +189,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post(AppConfig.of(context).server + "profile/hobbies", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
+                          httpPost(AppConfig.of(context).server + "profile/hobbies", json:utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
                           Navigator.pop(context);
                         } else {
                           print(_fbKey.currentState.value);
