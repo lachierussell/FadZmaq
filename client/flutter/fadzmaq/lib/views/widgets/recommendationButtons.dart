@@ -68,7 +68,7 @@ void asyncMatchPopup(BuildContext context, ProfileData profile) async {
     if (response != null) {
       // print("RESPONSE! " + response.body);
       LikeResult lr = LikeResult.fromJson(
-          json.decode(response.body), context, profile, upc.profile);
+          json.decode(response.body));
 
       if (lr.match == true && lr.matched != null && lr.matched.length > 0) {
         matchPopup(context, lr.matched.first.profile, upc.profile);
