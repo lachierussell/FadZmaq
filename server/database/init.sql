@@ -289,7 +289,7 @@ BEGIN
     dist = dist * 60 * 1.1515;
 
     dist = dist * 1.609344;
-    dist = ROUND(dist :: numeric, 0);
+    dist = ROUND((dist / 5) :: numeric, 0) * 5; -- Round to nearest 5
     RETURN dist :: DOUBLE PRECISION;
 END;
 $dist$ LANGUAGE plpgsql;
