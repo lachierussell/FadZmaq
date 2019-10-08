@@ -3,13 +3,17 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as prefix1;
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -75,6 +79,36 @@ class UserPreferencesState extends State {
     // );
   }
 
+//show alert dialog
+  void _Dialog() async {
+    return showDialog(
+      context: context,
+      barrierDismissible: false, // user must tap button for close dialog!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Are you sure?'),
+          content: const Text(
+              'Please be aware that this action will delete your data too, but you can still log in with this account next time.'),
+          actions: <Widget>[
+            FlatButton(
+              child: const Text('CANCEL'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: const Text('ACCEPT'),
+              onPressed: (){
+                deleteUser();
+                Navigator.of(context).pop();
+              }
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget page() {
     /// the [GetRequest<ProfileData>] for this page
     /// note [url] is matches and the [builder] creates the below children
@@ -92,67 +126,81 @@ class UserPreferencesState extends State {
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
                 // crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  new PreferenceButtons(),
-                  Column(
-                    children: <Widget>[
-                      Text("Distance: $_roundDist"),
-                      Row(
-                        children: <Widget>[
-                          Text("Distance"),
-                          Expanded(
-                            child: Slider(
-                              min: 10,
-                              max: 200,
-                              // value: 50,
-                              onChanged: (newDist) {
-                                setState(() {
-                                  int rounded = (newDist / 5).round() * 5;
-                                  _locationDistance = newDist;
-                                  _roundDist = rounded;
-                                });
-                              },
-                              // onChangeEnd: (newDist){
-                              //   setState(() {
-                              //     int rounded = (newDist / 5).round() * 5;
-                              //     _locationDistance = rounded as double;
-                              //     _roundDist = rounded;
-                              //   });
-                              // },
-                              value: _locationDistance,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    new PreferenceButtons(),
+                    Column(
+                      children: <Widget>[
+                        Text("Distance: $_roundDist"),
+                        Row(
+                          children: <Widget>[
+                            Text("Distance"),
+                            Expanded(
+                              child: Slider(
+                                min: 10,
+                                max: 200,
+                                // value: 50,
+                                onChanged: (newDist) {
+                                  setState(() {
+                                    int rounded = (newDist / 5).round() * 5;
+                                    _locationDistance = newDist;
+                                    _roundDist = rounded;
+                                  });
+                                },
+                                // onChangeEnd: (newDist){
+                                //   setState(() {
+                                //     int rounded = (newDist / 5).round() * 5;
+                                //     _locationDistance = rounded as double;
+                                //     _roundDist = rounded;
+                                //   });
+                                // },
+                                value: _locationDistance,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Text("Notifications"),
+                        Switch(
+                          onChanged: (b) {
+                            setState(() => _notificationsBool = b);
+                          },
+                          value: _notificationsBool,
+                        ),
+                      ],
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        onPressed: logOut,
+                        child: Text("Log out"),
                       ),
-                    ],
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Text("Notifications"),
-                      Switch(
-                        onChanged: (b) {
-                          setState(() => _notificationsBool = b);
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          postAsync(context, "profile");
                         },
-                        value: _notificationsBool,
+                        child: Text("Post Request Test"),
                       ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: logOut,
-                      child: Text("Log out"),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: (){ postAsync(context, "profile");},
-                      child: Text("Post Request Test"),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: 8.0,
+                        horizontal: 20.0,
+                      ),
+                      child: RaisedButton(
+                        onPressed: _Dialog,
+                        child: Text("Delete Account",
+                          style: TextStyle(color: Colors.red),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+                  ]
               ),
             ),
           ),
@@ -169,6 +217,23 @@ class UserPreferencesState extends State {
 
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+
+void deleteUser() async {
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    GoogleSignIn _googleSignIn = GoogleSignIn();
+    _googleSignIn.signOut();
+    if (user == null) {
+      throw('No user');
+    } else {
+      user.delete().then((result) {
+        return true;
+      }).catchError((e) {
+        return false;
+      });
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LoginScreen()));
+    }
   }
 }
 
