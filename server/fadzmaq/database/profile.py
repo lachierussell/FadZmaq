@@ -14,10 +14,10 @@ def update_profile(subject, uid):
     rows = db.get_db().execute(
         '''
         UPDATE profile
-        SET nickname= %s, bio= %s, email= %s, phone= %s
+        SET nickname= %s, bio= %s, email= %s, phone= %s, photo= %s
         WHERE user_id= %s;
         ''', subject.values['nickname'], subject.values['bio'], subject.values['email'],
-        subject.values['phone'], uid
+        subject.values['phone'], subject.values['photo'], uid
     )
 
 
