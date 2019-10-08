@@ -61,17 +61,21 @@ def get_matches(subject):
 # @brief Gets a match by id
 def get_match_by_id(uid, id):
     print(uid, id)
+    # EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age # If we need age calculation
     rows = db.get_db().execute(
         '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
+        SELECT *,
+        CASE WHEN rating.rate_value is NULL THEN -1 ELSE rating.rate_value END AS rating
         FROM profile
-            WHERE user_id = %s
-            AND user_id IN (
-                SELECT user_id FROM matches
-                WHERE user_a = %s
-                        AND user_b = %s
-                    OR user_b = %s
-                        AND user_a = %s
+        FULL OUTER JOIN rating 
+          ON user_id = user_to
+        WHERE user_id = %s
+        AND user_id IN (
+            SELECT user_id FROM matches
+            WHERE user_a = %s
+                    AND user_b = %s
+                OR user_b = %s
+                    AND user_a = %s
         );
         ''', id, uid, id, uid, id
     )
@@ -97,8 +101,25 @@ def unmatch(uid, id):
 # @param uid    My id
 # @param id     id of the user being rated/
 def rate_user(uid, id, value):
-    db.get_db().execute(
-        '''
-        INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
-        ''', id, uid, value
-    )
+    if value is None:
+        row = db.get_db().execute(
+            '''
+            SELECT COUNT(*) as c
+            FROM rating 
+            WHERE user_from = %s
+              AND user_to = %s;
+            ''', uid, id
+        ).first()
+        if row['c'] > 0:
+            db.get_db().execute(
+                '''
+                DELETE FROM rating WHERE user_from = %s AND user_to = %s;
+                ''', uid, id
+            )
+            print('deleted')
+    else:
+        db.get_db().execute(
+            '''
+            INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
+            ''', id, uid, int(value)
+        )

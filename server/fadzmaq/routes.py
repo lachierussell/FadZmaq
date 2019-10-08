@@ -265,6 +265,14 @@ def rate_user_up(uid, id):
     return "Thumbs up!", 204
 
 
+# @brief Removes a user rating
+@route_bp.route('/matches/thumbs/<string:id>', methods=['DELETE'])
+@auth_required
+def rate_user_delete(uid, id):
+    matches.rate_user(uid, id, None)
+    return "Removed", 204
+
+
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
 # VOTES
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
