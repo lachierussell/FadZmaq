@@ -22,12 +22,11 @@ def get_matches(subject):
     rows = db.get_db().execute(
         '''
         SELECT *,
-         CASE WHEN rating.rate_value is NULL 
-         THEN -1 
-         ELSE rating.rate_value 
+         CASE WHEN r.rate_value is NULL THEN -1 ELSE r.rate_value 
          END AS rating
         FROM profile
-        FULL OUTER JOIN rating ON user_id = user_to
+        FULL OUTER JOIN rating r 
+          ON user_id = user_to
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
