@@ -35,7 +35,7 @@ class RecommendationsList extends StatefulWidget {
 }
 
 class RecommendationsListState extends State<RecommendationsList> {
-  List<RecommendationContainer> recommendationsList;
+  List<ProfileContainer> recommendationsList;
 
   @override
   void didChangeDependencies() {
@@ -76,11 +76,11 @@ class RecommendationsListState extends State<RecommendationsList> {
 
   Widget _listItemBuilder(BuildContext context, int index) {
     return RecommendationEntry(
-        profile: recommendationsList[index].user, recommendationList: this);
+        profile: recommendationsList[index].profile, recommendationList: this);
   }
 
   void removeItem(String id) {
-    recommendationsList.removeWhere((container) => container.user.userId == id);
+    recommendationsList.removeWhere((container) => container.profile.userId == id);
 
     if (recommendationsList.length <= 3) {
       updateList();
@@ -94,13 +94,13 @@ class RecommendationsListState extends State<RecommendationsList> {
     var rd = RecommendationsData.fromJson(json.decode(response.body));
     if (rd == null) return;
 
-    List<RecommendationContainer> newList = rd.recommendations;
+    List<ProfileContainer> newList = rd.recommendations;
 
     // We don't reorder the list in rank (start or finish) as added
     // entries may end up with the same rank or higher as others
     // we expect incoming recommendations to be at the end of the list,
     // and we expect the order of the seen recommendations to remain unchanged
-    for(RecommendationContainer pc in newList){
+    for(ProfileContainer pc in newList){
       if(!recommendationsList.contains(pc)){
         recommendationsList.add(pc);
       }
