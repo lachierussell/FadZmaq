@@ -21,7 +21,13 @@ from fadzmaq.database.profile import build_profile_data
 def get_matches(subject):
     rows = db.get_db().execute(
         '''
-        SELECT * FROM profile
+        SELECT *,
+         CASE WHEN rating.rate_value is NULL 
+         THEN -1 
+         ELSE rating.rate_value 
+         END AS rating
+        FROM profile
+        FULL OUTER JOIN rating ON user_id = user_to
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
@@ -50,7 +56,6 @@ def get_matches(subject):
         #     'photo': row['photo'],
         #     'hobbies': get_matched_hobbies(subject, row['user_id'])
         # })
-
         matches.append(build_profile_data(row, 2))
 
     return {
