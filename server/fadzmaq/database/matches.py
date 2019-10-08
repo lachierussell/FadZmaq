@@ -61,17 +61,21 @@ def get_matches(subject):
 # @brief Gets a match by id
 def get_match_by_id(uid, id):
     print(uid, id)
+    # EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age # If we need age calculation
     rows = db.get_db().execute(
         '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
+        SELECT *,
+        CASE WHEN rating.rate_value is NULL THEN -1 ELSE rating.rate_value END AS rating
         FROM profile
-            WHERE user_id = %s
-            AND user_id IN (
-                SELECT user_id FROM matches
-                WHERE user_a = %s
-                        AND user_b = %s
-                    OR user_b = %s
-                        AND user_a = %s
+        FULL OUTER JOIN rating 
+          ON user_id = user_to
+        WHERE user_id = %s
+        AND user_id IN (
+            SELECT user_id FROM matches
+            WHERE user_a = %s
+                    AND user_b = %s
+                OR user_b = %s
+                    AND user_a = %s
         );
         ''', id, uid, id, uid, id
     )

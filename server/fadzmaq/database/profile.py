@@ -49,6 +49,7 @@ def build_profile_data(row, permission):
             'user_id': row['user_id'],
             'name': row['nickname'],
             'photo_location': row['photo'],
+            'rating': row['rating'],
             'profile_fields': profile_fields,
             'hobbies': get_hobbies(row['user_id'])
         }
@@ -63,7 +64,7 @@ def retrieve_profile(subject):
     # Retrieves user info.
     rows = db.get_db().execute(
         '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        SELECT *, -1 as rating
         FROM profile 
         WHERE user_id = %s
         ''', subject
