@@ -101,8 +101,25 @@ def unmatch(uid, id):
 # @param uid    My id
 # @param id     id of the user being rated/
 def rate_user(uid, id, value):
-    db.get_db().execute(
-        '''
-        INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
-        ''', id, uid, value
-    )
+    if value is None:
+        row = db.get_db().execute(
+            '''
+            SELECT COUNT(*) as c
+            FROM rating 
+            WHERE user_from = %s
+              AND user_to = %s;
+            ''', uid, id
+        ).first()
+        if row['c'] > 0:
+            db.get_db().execute(
+                '''
+                DELETE FROM rating WHERE user_from = %s AND user_to = %s;
+                ''', uid, id
+            )
+            print('deleted')
+    else:
+        db.get_db().execute(
+            '''
+            INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
+            ''', id, uid, int(value)
+        )
