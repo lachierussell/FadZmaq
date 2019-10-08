@@ -4,7 +4,9 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/controllers/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
+import 'package:fadzmaq/models/profile.dart';
 
+enum ProfileType { own, match, recommendation }
 /// Helper (method?) to the ProfileFieldWidget.
 /// Builds a list of Text from the Profile data.
 /// @param context  The BuildContext from the ProfileFieldWidget
@@ -28,14 +30,15 @@ class ProfileFieldWidget extends StatelessWidget {
 }
 
 class ProfileBody extends StatelessWidget {
+  final String type ="";
   const ProfileBody({
-    Key key,
+    Key key, String type,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-
+    print(type);
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
     // final String profileAge = pd.age != null ? pd.age : "-";
@@ -50,7 +53,8 @@ class ProfileBody extends StatelessWidget {
         Text(profileName,
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5)),
-        Row(children :<Widget> [IconButton(icon : Icon(Icons.thumb_up), onPressed: check, color: Colors.pink,),IconButton(icon : Icon(Icons.thumb_down), onPressed: check, color: Colors.blueAccent)]) ,
+
+        type != "match" ? Row( children :<Widget> [IconButton(icon : Icon(Icons.thumb_up), onPressed: check, color: Colors.pink,),IconButton(icon : Icon(Icons.thumb_down), onPressed: check, color: Colors.blueAccent)]) : Row() ,
         BodyDivider(),
         ContactBody(),
         ProfileHobbies(
