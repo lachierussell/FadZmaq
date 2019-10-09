@@ -59,12 +59,16 @@ def like_user(uid, id, vote):
 
 
 def calculate_compatibility(row):
-
     dist = row['distance']
     hobbies = row['hobbies']
     rating = row['score']
-
-    compatibility = (dist - hobbies) * (1 - rating)
+    #1.5 is the slow growth rate of having more hobbies
+    hobbiesFactor = (hobbies**1.5)
+    #Increase 2 to increase effect of rating
+    ratingFactor = (2**(1-rating))
+    #This slows down the exponential function significantly, we want the furthest people to impact rating
+    distanceFactor = (5**(0.03 * dist))
+    compatibility = (hobbiesFactor - distanceFactor) * ratingFactor
 
     return compatibility
 
