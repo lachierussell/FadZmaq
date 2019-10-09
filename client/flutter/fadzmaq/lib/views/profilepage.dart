@@ -115,7 +115,7 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, right: 16),
-                    child: ProfileBody(type: this.type.toString(),),
+                    child: ProfileBody(type: this.type,),
                   ),
                   type == ProfileType.recommendation
                       ? SizedBox(height: 140)
