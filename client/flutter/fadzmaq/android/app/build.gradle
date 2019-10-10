@@ -33,7 +33,6 @@ android {
     packagingOptions {
         exclude 'META-INF/proguard/androidx-annotations.pro'
     }
-
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.team26.fadzmaq"
@@ -56,6 +55,8 @@ android {
 flutter {
     source '../..'
 }
+
+
 
 dependencies {
     testImplementation 'junit:junit:4.12'
