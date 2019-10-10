@@ -1,7 +1,5 @@
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
-import 'package:fadzmaq/views/preferences.dart';
-import 'package:fadzmaq/views/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -77,7 +75,7 @@ class SplashScreenState extends State<SplashScreen> {
     print(map);
     return map;
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Container(

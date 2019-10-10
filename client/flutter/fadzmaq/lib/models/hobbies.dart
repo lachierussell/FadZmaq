@@ -1,3 +1,5 @@
+import 'package:fadzmaq/views/widgets/hobbyChip.dart';
+
 class AllHobbiesData {
   List<HobbyData> hobbies;
 
@@ -22,13 +24,25 @@ class HobbyData {
   final int id;
   final String name;
 
-  HobbyData({this.id, this.name});
+  const HobbyData({this.id, this.name});
 
   factory HobbyData.fromJson(Map<String, dynamic> json) {
     return HobbyData(
       id: json['id'],
       name: json['name'],
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is HobbyData && id == other.id ||
+        other is HobbyInfo && id == other.hobby.id;
+  }
+
+  @override
+  int get hashCode {
+    return id;
   }
 }
 
