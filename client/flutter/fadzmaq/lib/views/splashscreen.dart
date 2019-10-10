@@ -3,10 +3,7 @@ import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:fadzmaq/models/app_config.dart';
 import 'package:location/location.dart';
-import 'package:fadzmaq/controllers/request.dart';
-import 'dart:convert';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -18,6 +15,8 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+
+    // var token = await user.getIdToken();
     super.initState();
 
     // loadData();
@@ -32,15 +31,13 @@ class SplashScreenState extends State<SplashScreen> {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
     if (user != null) {
-
       var location = new Location();
       var currentLocation;
 // Platform messages may fail, so we use a try/catch PlatformException.
-        currentLocation = await location.getLocation();
-        print(currentLocation['latitude']);
+      currentLocation = await location.getLocation();
+      print(currentLocation['latitude']);
       print(currentLocation['longitude']);
-       // var token = await user.getIdToken();
-      post(AppConfig.of(context).server + "profile/ping", utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
+      // var token = await user.getIdToken();
       // printWrapped(token.token);
 
       // String url = "matches";
@@ -68,28 +65,20 @@ class SplashScreenState extends State<SplashScreen> {
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
-  Map compileJson(var x) {
-    Map map = {
-      'hobbies': [{'container': discoverOrShare() , "hobbies": deriveResult(x) }
-      ]};
-    print(map);
-    return map;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).accentColor,
       child: Center(
           child: Icon(
-        Icons.swap_horizontal_circle,
-        color: Colors.white,
-        size: 221,
-      )
-          // child: CircularProgressIndicator(
-          //   valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
-          // ),
-          ),
+            Icons.swap_horizontal_circle,
+            color: Colors.white,
+            size: 221,
+          )
+        // child: CircularProgressIndicator(
+        //   valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+        // ),
+      ),
     );
   }
 }

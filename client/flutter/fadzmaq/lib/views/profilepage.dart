@@ -6,9 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:location/location.dart';
-
-
 
 enum ProfileType { own, match, recommendation }
 
@@ -42,7 +39,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // As we only pass profile data we convert it into a container
     final ProfileContainer container =
-        (profile != null) ? ProfileContainer(profile: profile) : null;
+    (profile != null) ? ProfileContainer(profile: profile) : null;
 
     return Scaffold(
       body: GetRequest<ProfileContainer>(
@@ -59,20 +56,20 @@ class ProfilePage extends StatelessWidget {
         },
       ),
       floatingActionButton:
-          profile != null && type == ProfileType.recommendation
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    LikeButton(profile: profile, type: LikePass.pass),
-                    Expanded(
-                      child: Container(
-                        height: 10,
-                      ),
-                    ),
-                    LikeButton(profile: profile, type: LikePass.like),
-                  ],
-                )
-              : null,
+      profile != null && type == ProfileType.recommendation
+          ? Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          LikeButton(profile: profile, type: LikePass.pass),
+          Expanded(
+            child: Container(
+              height: 10,
+            ),
+          ),
+          LikeButton(profile: profile, type: LikePass.like),
+        ],
+      )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
@@ -88,17 +85,9 @@ class ProfilePageState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var location = new Location();
 
-    // Platform messages may fail, so we use a try/catch PlatformException.
-
-    // putting these up here in case of nulls
-    // right now just putting dash instead of the value
-    // final String profileAge = pd.age != null ? pd.age : "-";
-    final String profileName = pd.age != null ? pd.name : "-";
-
-  ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
-  ProfileData profile = pc.profile;
+    ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
+    ProfileData profile = pc.profile;
 
     return Scaffold(
       body: SingleChildScrollView(
