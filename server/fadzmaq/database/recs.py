@@ -61,14 +61,14 @@ def get_recommendations(uid):
 
     rows = db.get_db().execute(
         '''
-        SELECT * FROM matching_algorithm(%s)
+        SELECT * FROM matching_algorithm(%s);
         ''', uid
     )
     for row in rows:
         entry = [row['user_id'], calculate_compatibility(row)]
         top_users.append(tuple(entry))
 
-    top_users.sort(key=lambda top: top_users[1], reverse=True)
+    top_users.sort(key=lambda top_users: top_users[1], reverse=True)
     top_users = top_users[:20]
     print(top_users)
 
@@ -84,8 +84,8 @@ def get_recommendations(uid):
 def get_recommendation_profile(user_id, my_id):
     row = db.get_db().execute(
         '''
-        SELECT *, (
-             SELECT * FROM distance_table(%s)
+        SELECT *, -1 as rating, (
+             SELECT distance FROM distance_table(%s)
              WHERE user_id = %s
         )
         FROM profile

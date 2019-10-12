@@ -35,7 +35,7 @@ def build_profile_data(row, permission):
                        ]
     for perm in range(0, permission):
         for key in permission_keys[perm]:
-            if key == 'location' and permission == 2:
+            if key == 'location':
                 continue
             profile_fields.append(
                 {

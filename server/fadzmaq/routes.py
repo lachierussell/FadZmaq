@@ -309,15 +309,10 @@ def pass_user(uid, id):
 from tests import random_account_gen
 
 
-@route_bp.route('/test/add_users', methods=['POST'])
-def test_add_users():
+@route_bp.route('/test/add_users/<int:num>', methods=['POST'])
+def test_add_users(num):
     # try:
-    data = json.loads(request.get_data())
-    print(data)
-    num = data['number']
-
     random_account_gen.make_random_accounts(int(num))
-
     return 'Added users', 200
     # except ValueError as e:
     #     print('failed ' + str(e))
