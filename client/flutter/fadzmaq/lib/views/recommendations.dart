@@ -30,7 +30,7 @@ class RecommendationsList extends StatefulWidget {
 }
 
 class RecommendationsListState extends State<RecommendationsList> {
-  List<RecommendationContainer> recommendationsList;
+  List<ProfileContainer> recommendationsList;
 
   @override
   void didChangeDependencies() {
@@ -67,10 +67,10 @@ class RecommendationsListState extends State<RecommendationsList> {
 
   Widget _listItemBuilder(BuildContext context, int index) {
     return RecommendationEntry(
-        profile: recommendationsList[index].user, recommendationList: this);
+        profile: recommendationsList[index].profile, recommendationList: this);
   }
 
   void removeItem(String id) {
-    recommendationsList.removeWhere((container) => container.user.userId == id);
+    recommendationsList.removeWhere((container) => container.profile.userId == id);
   }
 }

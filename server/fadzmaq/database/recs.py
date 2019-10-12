@@ -13,49 +13,36 @@ from fadzmaq.database.profile import build_profile_data
 
 
 def like_user(uid, id, vote):
-
-    # for testing remove me later!
     import random
-    if random.choice([0, 1]) == 1:
-        matches = []
-        # use our own id while we're using placeholder recommendations
-        matches.append(retrieve_profile(uid))
-        # matches.append(retrieve_profile(id))
+    if id.startswith('testaccount') and random.choice([0,0,1]) == 1:
+        test = db.get_db().execute(
+            '''
+            INSERT INTO votes (time, vote, user_from, user_to) 
+            VALUES (now(), %s, %s, %s)
+            RETURNING *;
+            ''', vote, id, uid
+        )
+
+    rows = db.get_db().execute(
+        '''
+        INSERT INTO votes (time, vote, user_from, user_to) 
+        VALUES (now(), %s, %s, %s)
+        RETURNING *;
+        ''', vote, uid, id
+    )
+    if rows.first() is None:
+        print('MATCH')
+        notify_match()
+        matches = [retrieve_profile(id)]
         return {
             "match": True,
             "matched": matches,
-        }
+            }
     else:
         return {
             "match": False,
-            "matched": [],
-        }
-
-    ########################################################
-    # # CAN THIS BE REMOVED?
-    #
-    # rows = db.get_db().execute(
-    #     '''
-    #     INSERT INTO votes (time, vote, user_from, user_to)
-    #     VALUES (now(), %s, %s, %s)
-    #     RETURNING *;
-    #     ''', vote, uid, id
-    # )
-    # if rows.first() is None:
-    #     print('MATCH')
-    #     notify_match()
-    #
-    #     matches = []
-    #     matches.append(retrieve_profile(id))
-    #     return {
-    #         "match": True,
-    #         "matched": matches,
-    #         }
-    # else:
-    #     return {
-    #         "match": False,
-    #         "matched":[],
-    #         }
+            "matched":[],
+            }
 
 
 def calculate_compatibility(row):
@@ -71,6 +58,7 @@ def calculate_compatibility(row):
 
 def get_recommendations(uid):
     top_users = []
+
     rows = db.get_db().execute(
         '''
         SELECT * FROM matching_algorithm(%s)
@@ -88,7 +76,9 @@ def get_recommendations(uid):
     for user in top_users:
         recommendations.append(get_recommendation_profile(user[0], uid))
 
-    return recommendations
+    return {
+        "recommendations": recommendations
+    }
 
 
 def get_recommendation_profile(user_id, my_id):
