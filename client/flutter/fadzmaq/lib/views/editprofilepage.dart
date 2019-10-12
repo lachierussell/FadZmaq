@@ -1,4 +1,5 @@
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,7 @@ class EditProfilePage extends StatelessWidget {
         title: Text('Edit Profile'),
       ),
       body: GetRequest<ProfileContainer>(
-        url: "profile",
+        url: Globals.profileURL,
         builder: (context) {
           return new EditProfile();
         },
@@ -131,7 +132,7 @@ class EditProfileState extends State<EditProfile> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          httpPost(server + "profile", json:_fbKey.currentState.value);
+                          httpPost(server + Globals.profileURL, json:_fbKey.currentState.value);
 
                           Navigator.pop(context);
                         } else {

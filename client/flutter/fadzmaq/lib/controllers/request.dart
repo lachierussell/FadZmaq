@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/models/matches.dart';
+import 'package:fadzmaq/models/matches.dart' as prefix0;
+import 'package:fadzmaq/models/recommendations.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +47,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
     if (widget.model == null && _future == null) {
       String server = AppConfig.of(context).server + widget.url;
       _future = httpGet(server);
+      // _future = httpGetCachePhoto(context,server);
     }
 
     super.didChangeDependencies();
@@ -137,7 +142,6 @@ Future httpPost(String url, {var json}) async {
 /// the current user
 /// this has to be a typeless future to pass errors
 Future httpGet(String url, {var json}) async {
-
   //json not used in get request, is there to interchange with post request
   // TODO really these could be merged
 
@@ -154,6 +158,7 @@ Future httpGet(String url, {var json}) async {
     return e;
   }
 }
+
 
 // /// temp for testing
 // Future sleep1() {

@@ -1,5 +1,6 @@
 import 'dart:math';
-
+import 'package:fadzmaq/controllers/globals.dart';
+import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
@@ -16,10 +17,10 @@ class RecommendationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetRequest<RecommendationsData>(
-        url: "user/recs",
+        url: Globals.recsURL,
         builder: (context) {
           return GetRequest<UserProfileContainer>(
-              url: "profile",
+              url: Globals.profileURL,
               builder: (context) {
                 return RecommendationsList();
               });
@@ -43,6 +44,8 @@ class RecommendationsListState extends State<RecommendationsList> {
       RecommendationsData recommendationsData =
           RequestProvider.of<RecommendationsData>(context);
 
+      cacheRecommendationPhotos(context, recommendationsData);
+
       recommendationsList = recommendationsData.recommendations;
     }
 
@@ -54,7 +57,6 @@ class RecommendationsListState extends State<RecommendationsList> {
     print("build recommendations");
 
     if (recommendationsList.length > 0) {
-
       // never more than 10 entries shown
       int numEntries = min(10, recommendationsList.length);
 
@@ -80,31 +82,35 @@ class RecommendationsListState extends State<RecommendationsList> {
   }
 
   void removeItem(String id) {
-    recommendationsList.removeWhere((container) => container.profile.userId == id);
+    recommendationsList
+        .removeWhere((container) => container.profile.userId == id);
 
-    if (recommendationsList.length <= 3) {
+    if (recommendationsList.length <= 15) {
       updateList();
     }
   }
 
   void updateList() async {
-    http.Response response = await postAsync(context, "user/recs", useGet: true);
+    http.Response response =
+        await postAsync(context, Globals.recsURL, useGet: true);
     if (response == null) return;
 
     var rd = RecommendationsData.fromJson(json.decode(response.body));
     if (rd == null) return;
 
+    cacheRecommendationPhotos(context, rd);
+
     List<ProfileContainer> newList = rd.recommendations;
+    if (recommendationsList == null) return;
 
     // We don't reorder the list in rank (start or finish) as added
     // entries may end up with the same rank or higher as others
     // we expect incoming recommendations to be at the end of the list,
     // and we expect the order of the seen recommendations to remain unchanged
-    for(ProfileContainer pc in newList){
-      if(!recommendationsList.contains(pc)){
+    for (ProfileContainer pc in newList) {
+      if (!recommendationsList.contains(pc)) {
         recommendationsList.add(pc);
       }
     }
-
   }
 }
