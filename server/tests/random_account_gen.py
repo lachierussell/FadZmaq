@@ -111,13 +111,8 @@ def random_hobby_request():
         'hobbies': random_hobbies(all_hobby_list),
     }
 
-    hobbiesList = []
-
-    hobbiesList.append(share_list)
-    hobbiesList.append(discover_list)
-
     hobbies_list = {
-        'hobbies': hobbiesList
+        'hobbies': [share_list, discover_list]
     }
 
     return hobbies_list

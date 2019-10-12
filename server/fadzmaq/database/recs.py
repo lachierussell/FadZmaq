@@ -93,4 +93,4 @@ def get_recommendation_profile(user_id, my_id):
         ''', my_id, user_id, user_id
     ).first()
 
-    build_profile_data(row, 1)
+    return build_profile_data(row, 1)
