@@ -3,6 +3,9 @@ import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:fadzmaq/controllers/request.dart';
+import 'dart:convert';
+import 'package:fadzmaq/models/app_config.dart';
 import 'package:location/location.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -35,11 +38,10 @@ class SplashScreenState extends State<SplashScreen> {
       var currentLocation;
 // Platform messages may fail, so we use a try/catch PlatformException.
       currentLocation = await location.getLocation();
-      print(currentLocation['latitude']);
-      print(currentLocation['longitude']);
+
       // var token = await user.getIdToken();
       // printWrapped(token.token);
-
+      httpPost(AppConfig.of(context).server + "profile/ping", json:utf8.encode(json.encode(compileJson(currentLocation))));
       // String url = "matches";
       // int code =
       //     await fetchResponseCode(config.server + url);
@@ -64,6 +66,15 @@ class SplashScreenState extends State<SplashScreen> {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
+
+  Map compileJson(var x) {
+    Map map = {
+      'location': [{'lat': x['latitude'] , "long": x['longitude'] }
+      ]};
+    print(map);
+    return map;
+  }
+
 
   @override
   Widget build(BuildContext context) {
