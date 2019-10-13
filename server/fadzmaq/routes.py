@@ -8,7 +8,7 @@
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
-from flask import jsonify, request, Blueprint
+from flask import jsonify, request, Blueprint, current_app
 import fadzmaq
 from fadzmaq.api import recs_data
 from fadzmaq.database import profile, recs, matches, hobbies
@@ -301,22 +301,11 @@ def pass_user(uid, id):
     recs.like_user(uid, id, False)
     return "User passed", 200
 
-
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-# VOTES
-# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
-
-from tests import random_account_gen
-
-
-@route_bp.route('/test/add_users/<int:num>', methods=['POST'])
-def test_add_users(num):
-    # try:
-    random_account_gen.make_random_accounts(int(num))
-    return 'Added users', 200
-    # except ValueError as e:
-    #     print('failed ' + str(e))
-    #     return 'failed ' + str(e), 500
-    # except Exception as e:
-    #     print("failed: " + str(e))
-    #     return "failed: " + str(e), 401
+#
+# from tests import random_account_gen
+#
+#
+# @route_bp.route('/test/add_users/<int:num>', methods=['POST'])
+# def test_add_users(num):
+#     random_account_gen.make_random_accounts(int(num), cred=current_app.config['DATABASE_URI'])
+#     return 'Added users', 200

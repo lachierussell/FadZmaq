@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 
 enum ProfileType { own, match, recommendation }
 
@@ -47,7 +47,7 @@ class ProfilePage extends StatelessWidget {
         model: container,
         builder: (context) {
           return GetRequest<UserProfileContainer>(
-            url: "profile",
+            url: Globals.profileURL,
             model: userData,
             builder: (context) {
               return ProfilePageState(type: type);
@@ -80,21 +80,18 @@ class ProfilePageState extends StatelessWidget {
 
   ProfilePageState({
     @required this.type,
-  })  : assert(type != null);
+  }) : assert(type != null);
 
   @override
   Widget build(BuildContext context) {
-
-
-  ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
-  ProfileData profile = pc.profile;
+    ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
+    ProfileData profile = pc.profile;
 
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[
             Container(
-              // margin: const EdgeInsets.only(top: 80),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -107,7 +104,10 @@ class ProfilePageState extends StatelessWidget {
                         height: MediaQuery.of(context).size.shortestSide,
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child: DisplayPhoto(url: profile.photo),
+                          child: DisplayPhoto(
+                            url: profile.photo,
+                            dimension: MediaQuery.of(context).size.shortestSide,
+                          ),
                         ),
                       ),
                     ),

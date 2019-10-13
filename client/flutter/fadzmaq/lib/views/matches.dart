@@ -1,3 +1,5 @@
+import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/widgets/matchEntry.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +13,10 @@ class MatchesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetRequest<MatchesData>(
-        url: "matches",
+        url: Globals.matchesURL,
         builder: (context) {
           return GetRequest<UserProfileContainer>(
-              url: "profile",
+              url: Globals.profileURL,
               builder: (context) {
                 return MatchesList();
               });
@@ -28,6 +30,8 @@ class MatchesList extends StatelessWidget {
     MatchesData matchesData = RequestProvider.of<MatchesData>(context);
     // print(matchesData.toString());
     // print(matchesData.matches.toString());
+
+    cacheMatchPhotos(context, matchesData);
 
     print("build matches");
 
