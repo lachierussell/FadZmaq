@@ -21,11 +21,11 @@ from fadzmaq.database.profile import build_profile_data
 def get_matches(subject):
     rows = db.get_db().execute(
         '''
-        SELECT *,
+        SELECT DISTINCT(profile.user_id), *,
          CASE WHEN r.rate_value is NULL THEN -1 ELSE r.rate_value 
          END AS rating
         FROM profile
-        FULL OUTER JOIN rating r 
+        LEFT JOIN rating r 
           ON user_id = user_to
         WHERE profile.user_id IN (
             SELECT user_a
@@ -49,12 +49,6 @@ def get_matches(subject):
     matches = []
 
     for row in rows:
-        # matches.append({
-        #     'id': row['user_id'],
-        #     'name': row['nickname'],
-        #     'photo': row['photo'],
-        #     'hobbies': get_matched_hobbies(subject, row['user_id'])
-        # })
         matches.append(build_profile_data(row, 2))
 
     return {

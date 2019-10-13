@@ -305,13 +305,14 @@ CREATE OR REPLACE FUNCTION matching_algorithm(from_user VARCHAR)
             )
 AS
 $matching_algorithm$
-SELECT dt.user_id, dt.distance, hc.compat hobbies, rc.rank score
+SELECT DISTINCT(dt.user_id), dt.distance, hc.compat hobbies, rc.rank score
 FROM distance_table(from_user) dt
-         INNER JOIN compatibility(from_user) hc
+         LEFT OUTER JOIN compatibility(from_user) hc
                     ON dt.user_id = hc.user_id
-         INNER JOIN compatible_rating(from_user) rc
+         LEFT OUTER JOIN compatible_rating(from_user) rc
                     ON dt.user_id = rc.user_id
-WHERE dt.user_id NOT IN (SELECT user_to FROM votes WHERE user_from = from_user)
+WHERE dt.user_id
+          NOT IN (SELECT user_to FROM votes WHERE user_from = from_user)
 $matching_algorithm$
     LANGUAGE SQL;
 

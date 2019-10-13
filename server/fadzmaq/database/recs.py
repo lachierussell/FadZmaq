@@ -13,9 +13,14 @@ from fadzmaq.database.profile import build_profile_data
 
 
 def like_user(uid, id, vote):
+    ######
+    # TESTING
+    # REMOVE FOR PRODUCTION
+    #####
+    # Initialises random matches
     import random
     if id.startswith('testaccount') and random.choice([0,0,1]) == 1:
-        test = db.get_db().execute(
+        db.get_db().execute(
             '''
             INSERT INTO votes (time, vote, user_from, user_to) 
             VALUES (now(), %s, %s, %s)
@@ -23,6 +28,7 @@ def like_user(uid, id, vote):
             ''', vote, id, uid
         )
 
+    # End of testing block
     rows = db.get_db().execute(
         '''
         INSERT INTO votes (time, vote, user_from, user_to) 
@@ -41,7 +47,7 @@ def like_user(uid, id, vote):
     else:
         return {
             "match": False,
-            "matched":[],
+            "matched": [],
             }
 
 
@@ -51,8 +57,14 @@ def calculate_compatibility(row):
     hobbies = row['hobbies']
     rating = row['score']
 
-    compatibility = (dist - hobbies) * (1 - rating)
+    if rating is None:
+        rating = 0
+    if dist is None:
+        dist = 10
+    if hobbies is None:
+        hobbies = 0
 
+    compatibility = (dist - hobbies) * (1 - rating)
     return compatibility
 
 
@@ -68,7 +80,7 @@ def get_recommendations(uid):
         entry = [row['user_id'], calculate_compatibility(row)]
         top_users.append(tuple(entry))
 
-    top_users.sort(key=lambda top_users: top_users[1], reverse=True)
+    top_users.sort(key=lambda top: top[1], reverse=True)
     top_users = top_users[:20]
     print(top_users)
 
@@ -87,6 +99,7 @@ def get_recommendation_profile(user_id, my_id):
         SELECT *, -1 as rating, (
              SELECT distance FROM distance_table(%s)
              WHERE user_id = %s
+             LIMIT 1
         )
         FROM profile
         WHERE user_id = %s;

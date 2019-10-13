@@ -52,20 +52,24 @@ def random_id():
     characters = string.ascii_letters + string.digits
     return 'testaccount' + ''.join(random.choice(characters) for i in range(15))
 
+
 email_domains = [
     "@live.com",
     "@gmail.com",
     "@hotmail.com", 
 ]
 
+
 def random_email(name):
     return name + ''.join(random.choice(string.digits) for i in range(4)) + random.choice(email_domains)
+
 
 # to do implment
 def random_phone():
     return '042'.join(random.choice(string.digits) for i in range(7))
 
 # todo bio
+
 
 def random_name(is_female):
     if is_female:
@@ -119,9 +123,9 @@ def random_hobby_request():
 
 
 # Random coordinates around perth
-def random_lat():
+def random_long():
     return round(random.uniform(115.75, 116.00), 2)
 
 
-def random_long():
+def random_lat():
     return round(random.uniform(-31.67, -32.17), 2)
