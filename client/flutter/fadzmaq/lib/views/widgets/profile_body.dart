@@ -5,7 +5,8 @@ import 'package:fadzmaq/controllers/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/profilepage.dart';
-
+import 'package:http/http.dart';
+import 'package:fadzmaq/models/app_config.dart';
 
 /// Helper (method?) to the ProfileFieldWidget.
 /// Builds a list of Text from the Profile data.
@@ -39,14 +40,14 @@ class ProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-    print(type);
+    
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
     // final String profileAge = pd.age != null ? pd.age : "-";
     final String profileName = pd.name != null ? pd.name : "-";
-    final String rating = getProfileField(pd, "rating");
+    final int rating = pd.rating;
     final String bio = getProfileField(pd, "bio");
-
+    print(rating);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -55,7 +56,7 @@ class ProfileBody extends StatelessWidget {
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5)),
 
-        type == ProfileType.match ? Row( children :<Widget> [IconButton(icon : Icon(Icons.thumb_up), onPressed: check, color: Colors.pink,),IconButton(icon : Icon(Icons.thumb_down), onPressed: check, color: Colors.blueAccent)]) : Row() ,
+        type == ProfileType.match ? Row( children :<Widget> [IconButton(icon : Icon(Icons.thumb_up), onPressed: (){onThumbsUp(context, rating, pd.userId);}, color: returnColor(rating, 1),),IconButton(icon : Icon(Icons.thumb_down), onPressed: (){onThumbsDown(context, rating, pd.userId);}, color: returnColor(rating, -1))]) : Row() ,
         BodyDivider(),
         ContactBody(),
         ProfileHobbies(
@@ -166,8 +167,27 @@ TextStyle bodyBold() {
   return TextStyle(fontWeight: FontWeight.bold);
 }
 
-void check() {
-  print("check");
+void onThumbsUp(BuildContext context, int rating, String userId) {
+  print("thumbsup");
+  if (rating != 1) {
+    post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
+    Navigator.pop(context);
+  }
+}
+
+Color returnColor(int rating, int thumbs) {
+  if(rating == thumbs) {
+    return Colors.pink;
+  }
+  return Colors.blue;
+}
+
+void onThumbsDown(BuildContext context, int rating, String userId) {
+  print("thumbsdown");
+  if (rating != -1) {
+    post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
+    Navigator.pop(context);
+  }
 }
 
 class BodyDivider extends StatelessWidget {
