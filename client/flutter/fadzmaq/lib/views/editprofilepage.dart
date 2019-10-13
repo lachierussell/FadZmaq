@@ -20,7 +20,6 @@ import 'package:fadzmaq/models/app_config.dart';
 import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
 
-
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
 
@@ -79,6 +78,8 @@ class EditProfileState extends State<EditProfile> {
 
   String imgurl;
 
+  String imgurlForm;
+
   final FirebaseStorage storage =
       new FirebaseStorage(storageBucket: 'gs://fadzmaq1.appspot.com/');
 
@@ -115,7 +116,12 @@ class EditProfileState extends State<EditProfile> {
 
     setState(() {
       imgurl = url;
+      imgurlForm = imgurl;
     });
+  }
+
+  String returnImageURL() {
+    return imgurl;
   }
 
   var data;
@@ -166,7 +172,11 @@ class EditProfileState extends State<EditProfile> {
                           : Image.file(_image1),
                       onPressed: getImage1,
                     ),
-
+                    FormBuilderTextField(
+                        attribute: "photo",
+                        initialValue: imgurlForm,
+                        readOnly: true,
+                        decoration: InputDecoration(labelText: "")),
                     FormBuilderTextField(
                         attribute: "nickname",
                         initialValue: pd.name,
@@ -197,8 +207,10 @@ class EditProfileState extends State<EditProfile> {
                       ),
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
-                          print(_fbKey.currentState.value);
-                          httpPost(server + "profile", json:_fbKey.currentState.value);
+                          _fbKey.currentState.value.addAll({"photo": imgurl});
+                          print("Sending" + '${_fbKey.currentState.value}');
+                          httpPost(server + "profile",
+                              json: _fbKey.currentState.value);
 
                           Navigator.pop(context);
                         } else {

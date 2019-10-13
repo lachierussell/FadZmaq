@@ -106,6 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Center(
+              child: Text("First Time Users: Please click the settings tab to modify your profile")
+            ),
+            Center(
               child: _isButtonDisabled
                   ? CircularProgressIndicator()
                   : RaisedButton(
