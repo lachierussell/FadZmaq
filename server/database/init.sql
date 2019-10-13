@@ -218,6 +218,37 @@ $compatability_score$
     LANGUAGE SQL;
 
 
+-- Made by
+CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
+                                              lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
+    RETURNS FLOAT AS
+$dist$
+DECLARE
+    dist     FLOAT = 0;
+    radlat1  FLOAT;
+    radlat2  FLOAT;
+    theta    FLOAT;
+    radtheta FLOAT;
+BEGIN
+    radlat1 = (pi() * lat1) / 180;
+    radlat2 = (pi() * lat2) / 180;
+    theta = lon1 - lon2;
+    radtheta = (pi() * theta) / 180;
+    dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
+
+    IF dist > 1 THEN dist = 1; END IF;
+
+    dist = acos(dist);
+    dist = dist * 180 / pi();
+    dist = dist * 60 * 1.1515;
+
+    dist = dist * 1.609344;
+    dist = ROUND((dist / 5) :: numeric, 0) * 5; -- Round to nearest 5
+    RETURN dist :: DOUBLE PRECISION;
+END;
+$dist$ LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE FUNCTION distance_table(from_user VARCHAR)
     RETURNS TABLE
             (
@@ -263,36 +294,6 @@ WHERE distance_tables.distance < (
 )
 $distances$
     LANGUAGE SQL;
-
--- Made by
-CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
-                                              lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
-    RETURNS FLOAT AS
-$dist$
-DECLARE
-    dist     FLOAT = 0;
-    radlat1  FLOAT;
-    radlat2  FLOAT;
-    theta    FLOAT;
-    radtheta FLOAT;
-BEGIN
-    radlat1 = (pi() * lat1) / 180;
-    radlat2 = (pi() * lat2) / 180;
-    theta = lon1 - lon2;
-    radtheta = (pi() * theta) / 180;
-    dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
-
-    IF dist > 1 THEN dist = 1; END IF;
-
-    dist = acos(dist);
-    dist = dist * 180 / pi();
-    dist = dist * 60 * 1.1515;
-
-    dist = dist * 1.609344;
-    dist = ROUND((dist / 5) :: numeric, 0) * 5; -- Round to nearest 5
-    RETURN dist :: DOUBLE PRECISION;
-END;
-$dist$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION matching_algorithm(from_user VARCHAR)
