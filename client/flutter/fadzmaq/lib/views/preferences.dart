@@ -18,6 +18,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as prefix1;
+import 'dart:convert';
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -119,13 +120,18 @@ class UserPreferencesState extends State {
                         Expanded(
                           child: Slider(
                             min: 10,
-                            max: 200,
+                            max: 120,
                             // value: 50,
                             onChanged: (newDist) {
                               setState(() {
                                 int rounded = (newDist / 5).round() * 5;
                                 _locationDistance = newDist;
                                 _roundDist = rounded;
+
+                                AccountSettings newSetting = AccountSettings(distanceSetting: _roundDist);
+
+                                // TODO give this a delay
+                                postAsync(context, Globals.settingsURL, json: json.encode(newSetting.toJson()));
                               });
                             },
                             // onChangeEnd: (newDist){
