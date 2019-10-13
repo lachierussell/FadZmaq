@@ -18,7 +18,7 @@ void deleteUser(BuildContext context) async {
   // uncomment the below when a patch is available
   // https://github.com/flutter/flutter/issues/37681
   
-  // GoogleSignIn googleSignIn = GoogleSignIn();
+  GoogleSignIn googleSignIn = GoogleSignIn();
 
   // FirebaseAuth auth = FirebaseAuth.instance;
   // FirebaseUser user = await auth.currentUser();
@@ -41,7 +41,7 @@ void deleteUser(BuildContext context) async {
   // await user.reauthenticateWithCredential(credential);
 
   // await user.delete();
-  // await googleSignIn.signOut();
+  await googleSignIn.signOut();
 
   Navigator.of(context)
       .pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
