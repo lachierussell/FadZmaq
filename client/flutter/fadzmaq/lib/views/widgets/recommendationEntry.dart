@@ -1,3 +1,5 @@
+import 'package:fadzmaq/controllers/globals.dart';
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -44,14 +46,15 @@ class RecommendationEntry extends StatelessWidget {
       ),
     );
 
-    if (type == LikePass.like) {
-      asyncMatchPopup(context, profile);
-    }
-
     // make changes according to the result
     // in this case remove the recommendation we have just liked/disliked
-
-    recommendationList.removeItem(profile.userId);
+    if (type == LikePass.like) {
+      asyncMatchPopup(context, profile);
+      recommendationList.removeItem(profile.userId);
+    } else if (type == LikePass.pass) {
+      postAsync(context, "pass/" + profile.userId);
+      recommendationList.removeItem(profile.userId);
+    }
   }
 
   Widget _recommendationEntry(BuildContext context, ProfileData profile) {
@@ -70,7 +73,7 @@ class RecommendationEntry extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: DisplayPhoto(
                   url: profile.photo,
-                  dimension: 160,
+                  dimension: Globals.recThumbDim,
                 ),
               ),
             ),

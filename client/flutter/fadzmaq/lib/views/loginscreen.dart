@@ -1,10 +1,12 @@
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/cache.dart';
 
 import 'package:http/http.dart' as http;
 
@@ -102,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (user != null) {
                           // a quick check to the server to see if we have an account already
                           // fetch response code will use Firebase Authentication to send our token
-                          String url = "matches";
+                          String url = Globals.matchesURL;
                           // TODO check for timeout here
                           http.Response response = await httpGet(config.server + url);
                           int code = response.statusCode;
@@ -142,6 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // success with the server
                           // go to main page (perferences at the moment)
                           if (code == 200) {
+                            await cacheImages(context);
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 // builder: (context) => UserPreferencesPage(),

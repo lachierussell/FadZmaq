@@ -1,8 +1,10 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' as prefix0;
 import 'package:flutter/material.dart';
@@ -36,23 +38,6 @@ class TestWidget extends StatelessWidget {
     ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
 
     return Text(profile.name);
-  }
-}
-
-class ProfilePic extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
-    return SizedBox(
-      height: 200,
-      width: 200,
-      child: CachedNetworkImage(
-        imageUrl: profile.photo,
-        fit: BoxFit.cover,
-        // placeholder: (context, url) => new CircularProgressIndicator(),
-        errorWidget: (context, url, error) => new Icon(Icons.error),
-      ),
-    );
   }
 }
 
@@ -118,7 +103,7 @@ class UserPreferencesState extends State {
     /// this is a [builder] because [children] are initialised independent to heirachy
     /// only [builder] waits for the parent to initialise
     return GetRequest<ProfileContainer>(
-      url: "profile",
+      url: Globals.profileURL,
       builder: (context) {
         return SingleChildScrollView(
           // color: Colors.grey,
@@ -239,8 +224,14 @@ class PreferenceButtons extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              ProfilePic(),
-              // Text("Rowan Atkinson"),
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: DisplayPhoto(
+                  url: profile.photo,
+                  dimension: Globals.recThumbDim,
+                ),
+              ),
+
 
               /// here we see [TestWidget], it accesses the
               /// [RequestProvider<T>] created by [GetRequest<T>]
@@ -259,8 +250,11 @@ class PreferenceButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ProfilePage(url: "profile", profile: profile, type: ProfileType.own,)),
+                    builder: (context) => ProfilePage(
+                          url: Globals.profileURL,
+                          profile: profile,
+                          type: ProfileType.own,
+                        )),
               );
             },
             child: Text("View Profile"),
@@ -272,8 +266,7 @@ class PreferenceButtons extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) => EditProfilePage()),
+                MaterialPageRoute(builder: (context) => EditProfilePage()),
               );
             },
             child: Text("Edit Profile"),
@@ -286,12 +279,10 @@ class PreferenceButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        EditHobbyPage2(isShare: false)),
+                    builder: (context) => EditHobbyPage2(isShare: false)),
               );
             },
-            child:
-                Text("Choose hobbies that you want to discover"),
+            child: Text("Choose hobbies that you want to discover"),
           ),
         ),
         Padding(
@@ -301,8 +292,7 @@ class PreferenceButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        EditHobbyPage2(isShare: true)),
+                    builder: (context) => EditHobbyPage2(isShare: true)),
               );
             },
             child: Text("Choose hobbies that you want to share"),

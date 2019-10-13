@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/models/matches.dart';
+import 'package:fadzmaq/models/matches.dart' as prefix0;
+import 'package:fadzmaq/models/recommendations.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +47,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
     if (widget.model == null && _future == null) {
       String server = AppConfig.of(context).server + widget.url;
       _future = httpGet(server);
+      // _future = httpGetCachePhoto(context,server);
     }
 
     super.didChangeDependencies();
@@ -115,7 +120,8 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
 //   return response.statusCode;
 // }
 
-Future<http.Response> httpPost(String url, {var json}) async {
+// this has to be a typeless future to pass errors
+Future httpPost(String url, {var json}) async {
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
@@ -134,7 +140,11 @@ Future<http.Response> httpPost(String url, {var json}) async {
 /// returns a [http.Response] for a given [url]
 /// async operation which includes authorisation headers for
 /// the current user
-Future httpGet(String url) async {
+/// this has to be a typeless future to pass errors
+Future httpGet(String url, {var json}) async {
+  //json not used in get request, is there to interchange with post request
+  // TODO really these could be merged
+
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
   IdTokenResult result = await user.getIdToken();
@@ -148,6 +158,7 @@ Future httpGet(String url) async {
     return e;
   }
 }
+
 
 // /// temp for testing
 // Future sleep1() {
