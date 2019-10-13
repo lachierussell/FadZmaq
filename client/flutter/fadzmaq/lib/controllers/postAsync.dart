@@ -16,8 +16,9 @@ Future<http.Response> postAsync(BuildContext context, String url,
   // this is here so we can catch errors for the popup, but return the response as a null
   http.Response response;
 
+  // swap depending on what we got in
+  // TODO merge httpGet and httpPost
   Function swapFunction;
-
   if (useGet) {
     swapFunction = httpGet;
   } else {
@@ -25,7 +26,6 @@ Future<http.Response> postAsync(BuildContext context, String url,
   }
 
   Future request;
-
   request = swapFunction(url, json: json).then((value) {
     if (value.statusCode != 200) {
       errorSnackRevised("failed!: " + value.statusCode.toString());
