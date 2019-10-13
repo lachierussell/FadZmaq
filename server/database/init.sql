@@ -74,6 +74,7 @@ CREATE TABLE IF NOT EXISTS user_hobbies
 CREATE TABLE IF NOT EXISTS location_data
 (
     user_id   VARCHAR NOT NULL REFERENCES profile (user_id),
+    device_id VARCHAR,
     lat       FLOAT   NOT NULL,
     long      FLOAT   NOT NULL,
     ping_time TIME DEFAULT now()
