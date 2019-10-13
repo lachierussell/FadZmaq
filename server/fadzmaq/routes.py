@@ -83,12 +83,22 @@ def verify_user(uid):
         raise ValueError("User does not exist")  # pragma: no cover
 
 
+# # @brief Retrieves user recommendations
+# @route_bp.route('/user/recs', methods=['GET'])
+# @auth_required
+# def recommendations(uid):
+#     print(uid)
+#     return jsonify(recs_data.recs), 200
+
 # @brief Retrieves user recommendations
+# @returns A json formatted list of the users recommendations.
 @route_bp.route('/user/recs', methods=['GET'])
 @auth_required
-def recommendations(uid):
-    print(uid)
-    return jsonify(recs_data.recs), 200
+def get_recommendations(uid):
+    try:
+        return jsonify(recs.get_recommendations(uid)), 200
+    except ValueError as e:
+        return 'Failed:' + str(e), 403
 
 
 # @brief Retries a users profile by their id
@@ -253,7 +263,7 @@ def unmatch_user(uid, id):
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
-    matches.rate_user(uid, id, False)
+    matches.rate_user(uid, id, 0)
     return "Thumbs down!", 204
 
 
@@ -261,8 +271,16 @@ def rate_user_down(uid, id):
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
-    matches.rate_user(uid, id, True)
+    matches.rate_user(uid, id, 1)
     return "Thumbs up!", 204
+
+
+# @brief Removes a user rating
+@route_bp.route('/matches/thumbs/<string:id>', methods=['DELETE'])
+@auth_required
+def rate_user_delete(uid, id):
+    matches.rate_user(uid, id, None)
+    return "Removed", 204
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -282,3 +300,23 @@ def like_user(uid, id):
 def pass_user(uid, id):
     recs.like_user(uid, id, False)
     return "User passed", 200
+
+
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# VOTES
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+from tests import random_account_gen
+
+
+@route_bp.route('/test/add_users/<int:num>', methods=['POST'])
+def test_add_users(num):
+    # try:
+    random_account_gen.make_random_accounts(int(num))
+    return 'Added users', 200
+    # except ValueError as e:
+    #     print('failed ' + str(e))
+    #     return 'failed ' + str(e), 500
+    # except Exception as e:
+    #     print("failed: " + str(e))
+    #     return "failed: " + str(e), 401

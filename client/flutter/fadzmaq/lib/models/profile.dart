@@ -1,6 +1,6 @@
 import 'package:fadzmaq/models/hobbies.dart';
 
-class ProfileContainer{
+class ProfileContainer {
   final ProfileData profile;
 
   ProfileContainer({
@@ -9,18 +9,30 @@ class ProfileContainer{
 
   factory ProfileContainer.fromJson(Map<String, dynamic> json) {
     var profileJson = json['profile'];
-    ProfileData profile = profileJson != null ? ProfileData.fromJson(profileJson) : null;
+    ProfileData profile =
+        profileJson != null ? ProfileData.fromJson(profileJson) : null;
 
     return ProfileContainer(
       profile: profile,
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        other is ProfileContainer && profile.userId == other.profile.userId;
+  }
+
+  @override
+  int get hashCode {
+    return profile.userId.hashCode;
   }
 }
 
 // This is used to differential the current user from other profiles
 // The way the inherited request method works makes it complicated to
 // have two similtaneous requests to the same model type
-class UserProfileContainer{
+class UserProfileContainer {
   final ProfileData profile;
 
   UserProfileContainer({
@@ -29,7 +41,8 @@ class UserProfileContainer{
 
   factory UserProfileContainer.fromJson(Map<String, dynamic> json) {
     var profileJson = json['profile'];
-    ProfileData profile = profileJson != null ? ProfileData.fromJson(profileJson) : null;
+    ProfileData profile =
+        profileJson != null ? ProfileData.fromJson(profileJson) : null;
 
     return UserProfileContainer(
       profile: profile,

@@ -12,7 +12,6 @@
 # @author Jordan Russell        [email]
 
 import fadzmaq.database.connection as db
-from fadzmaq.database.hobbies import get_matched_hobbies
 from fadzmaq.database.profile import build_profile_data
 
 
@@ -21,7 +20,13 @@ from fadzmaq.database.profile import build_profile_data
 def get_matches(subject):
     rows = db.get_db().execute(
         '''
-        SELECT * FROM profile
+        SELECT DISTINCT(profile.user_id), nickname, bio, email, phone, photo,
+         CASE WHEN r.rate_value is NULL THEN -1 ELSE r.rate_value
+         END AS rating
+        FROM profile
+        FULL OUTER JOIN rating r
+          ON user_id = user_to
+         AND user_from = %s
         WHERE profile.user_id IN (
             SELECT user_a
             FROM matches
@@ -38,19 +43,11 @@ def get_matches(subject):
                AND NOT matches.unmatch
         )
         AND profile.user_id != %s;
-        ''', subject, subject, subject, subject, subject, subject
+        ''', subject, subject, subject, subject, subject, subject, subject
     )
 
     matches = []
-
     for row in rows:
-        # matches.append({
-        #     'id': row['user_id'],
-        #     'name': row['nickname'],
-        #     'photo': row['photo'],
-        #     'hobbies': get_matched_hobbies(subject, row['user_id'])
-        # })
-
         matches.append(build_profile_data(row, 2))
 
     return {
@@ -61,19 +58,24 @@ def get_matches(subject):
 # @brief Gets a match by id
 def get_match_by_id(uid, id):
     print(uid, id)
+    # EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age # If we need age calculation
     rows = db.get_db().execute(
         '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age
+        SELECT *,
+        CASE WHEN rating.rate_value is NULL THEN -1 ELSE rating.rate_value END AS rating
         FROM profile
-            WHERE user_id = %s
-            AND user_id IN (
-                SELECT user_id FROM matches
-                WHERE user_a = %s
-                        AND user_b = %s
-                    OR user_b = %s
-                        AND user_a = %s
+        FULL OUTER JOIN rating 
+          ON user_id = user_to
+          AND user_from = %s
+        WHERE user_id = %s
+        AND user_id IN (
+            SELECT user_id FROM matches
+            WHERE user_a = %s
+                    AND user_b = %s
+                OR user_b = %s
+                    AND user_a = %s
         );
-        ''', id, uid, id, uid, id
+        ''', uid, id, uid, id, uid, id
     )
     return build_profile_data(rows.first(), 2)
 
@@ -97,8 +99,25 @@ def unmatch(uid, id):
 # @param uid    My id
 # @param id     id of the user being rated/
 def rate_user(uid, id, value):
-    db.get_db().execute(
-        '''
-        INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
-        ''', id, uid, value
-    )
+    if value is None:
+        row = db.get_db().execute(
+            '''
+            SELECT COUNT(*) as c
+            FROM rating 
+            WHERE user_from = %s
+              AND user_to = %s;
+            ''', uid, id
+        ).first()
+        if row['c'] > 0:
+            db.get_db().execute(
+                '''
+                DELETE FROM rating WHERE user_from = %s AND user_to = %s;
+                ''', uid, id
+            )
+            print('deleted')
+    else:
+        db.get_db().execute(
+            '''
+            INSERT INTO rating (user_to, user_from, rate_value) VALUES (%s, %s, %s);
+            ''', id, uid, int(value)
+        )
