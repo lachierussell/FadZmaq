@@ -16,6 +16,7 @@ void deleteUser(BuildContext context) async {
 
   // Deleting a firebase account is not currently supported by flutter
   // uncomment the below when a patch is available
+  // https://github.com/flutter/flutter/issues/37681
   
   // GoogleSignIn googleSignIn = GoogleSignIn();
 
