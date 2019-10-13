@@ -1,6 +1,7 @@
 import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
+import 'package:fadzmaq/views/widgets/localtionPermissionPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -33,35 +34,35 @@ class SplashScreenState extends State<SplashScreen> {
   onDoneLoading() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
-    if (user != null) {
-      var location = new Location();
-      var currentLocation;
-// Platform messages may fail, so we use a try/catch PlatformException.
-      currentLocation = await location.getLocation();
 
-      // var token = await user.getIdToken();
-      // printWrapped(token.token);
-      httpPost(AppConfig.of(context).server + "profile/ping",
-          json: utf8.encode(json.encode(compileJson(currentLocation))));
-      // String url = "matches";
-      // int code =
-      //     await fetchResponseCode(config.server + url);
+    if (user != null) {
+      Location location = new Location();
+      // don't request permission here
+
+      bool hasPermission = await location.hasPermission();
+      if (hasPermission) {
+        LocationData currentLocation = await location.getLocation();
+
+        httpPost(AppConfig.of(context).server + "profile/ping",
+            json: utf8.encode(json.encode(compileJson(currentLocation))));
+      }
 
       // TODO this should all be put after the login screen
       await cacheImages(context);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          // builder: (context) => UserPreferencesPage(),
-          builder: (context) => LandingPage(),
-        ),
-      );
+      if (hasPermission) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => LandingPage()),
+        );
+      } else {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => PermissionPage()),
+        );
+      }
     } else {
       // TODO try for a silent google sign in
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     }
   }

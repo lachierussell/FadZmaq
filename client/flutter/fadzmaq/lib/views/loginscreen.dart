@@ -1,6 +1,7 @@
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/views/landing.dart';
+import 'package:fadzmaq/views/widgets/localtionPermissionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -9,6 +10,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/cache.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -74,94 +76,103 @@ class _LoginScreenState extends State<LoginScreen> {
         //   title: Text("Login"),
         // ),
         body: Center(
-          child: Container(
-            alignment: Alignment.bottomCenter,
-            constraints: BoxConstraints(
-                maxHeight: 300.0,
-                maxWidth: 200.0,
-                minWidth: 150.0,
-                minHeight: 150.0),
-            child: ListView(
-              children: <Widget>[
-                Center(
-                  child: Icon(
-                    Icons.account_box,
-                    size: 130,
-                  ),
-                ),
-                Center(
-                  child: RaisedButton(
-                      child: (Text("Login With Google")),
-                      onPressed: () async {
-                        // _handleSignIn().then((FirebaseUser user) {
-                        // print(user);
-
-                        // TODO add a future builder in here so we show a loading circle during log in
-
-                        FirebaseUser user = await _handleSignIn();
-                        // await sleep1();
-
-                        if (user != null) {
-                          // a quick check to the server to see if we have an account already
-                          // fetch response code will use Firebase Authentication to send our token
-                          String url = Globals.matchesURL;
-                          // TODO check for timeout here
-                          http.Response response = await httpGet(config.server + url);
-                          int code = response.statusCode;
-                              
-
-                          // 401: no user account
-                          if (code == 401) {
-                            // TODO make this better, its a bit of a hack at the moment
-
-                            // Get our id token from firebase
-                            FirebaseAuth auth = FirebaseAuth.instance;
-                            FirebaseUser user = await auth.currentUser();
-                            IdTokenResult result = await user.getIdToken();
-
-                            var names = user.displayName.split(" ");
-                            String name = names[0];
-
-                            // put together our post request for a new account
-                            String json = '{"new_user":{"email":"' +
-                                user.email +
-                                '", "name":"' +
-                                name +
-                                '"}}';
-
-                            // print(json);
-                            // post to account with our auth
-                            http.Response response = await http.post(
-                              config.server + "account",
-                              headers: {"Authorization": result.token},
-                              body: json,
-                            );
-
-                            // update our code
-                            code = response.statusCode;
-                          }
-
-                          // success with the server
-                          // go to main page (perferences at the moment)
-                          if (code == 200) {
-                            await cacheImages(context);
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                // builder: (context) => UserPreferencesPage(),
-                                builder: (context) => LandingPage(),
-                              ),
-                            );
-                          }
-
-                          // TODO error check here
-                        }
-                        // }).catchError((e) => print(e));
-                      }),
-                ),
-              ],
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        constraints: BoxConstraints(
+            maxHeight: 300.0,
+            maxWidth: 200.0,
+            minWidth: 150.0,
+            minHeight: 150.0),
+        child: ListView(
+          children: <Widget>[
+            Center(
+              child: Icon(
+                Icons.account_box,
+                size: 130,
+              ),
             ),
-          ),
-        ));
+            Center(
+              child: RaisedButton(
+                  child: (Text("Login With Google")),
+                  onPressed: () async {
+                    // _handleSignIn().then((FirebaseUser user) {
+                    // print(user);
+
+                    // TODO add a future builder in here so we show a loading circle during log in
+
+                    FirebaseUser user = await _handleSignIn();
+                    // await sleep1();
+
+                    if (user != null) {
+                      // a quick check to the server to see if we have an account already
+                      // fetch response code will use Firebase Authentication to send our token
+                      String url = Globals.matchesURL;
+                      // TODO check for timeout here
+                      http.Response response =
+                          await httpGet(config.server + url);
+                      int code = response.statusCode;
+
+                      // 401: no user account
+                      if (code == 401) {
+                        // TODO make this better, its a bit of a hack at the moment
+
+                        // Get our id token from firebase
+                        FirebaseAuth auth = FirebaseAuth.instance;
+                        FirebaseUser user = await auth.currentUser();
+                        IdTokenResult result = await user.getIdToken();
+
+                        var names = user.displayName.split(" ");
+                        String name = names[0];
+
+                        // put together our post request for a new account
+                        String json = '{"new_user":{"email":"' +
+                            user.email +
+                            '", "name":"' +
+                            name +
+                            '"}}';
+
+                        // print(json);
+                        // post to account with our auth
+                        http.Response response = await http.post(
+                          config.server + "account",
+                          headers: {"Authorization": result.token},
+                          body: json,
+                        );
+
+                        // update our code
+                        code = response.statusCode;
+                      }
+
+                      // success with the server
+                      // go to main page (perferences at the moment)
+                      if (code == 200) {
+                        Location location = new Location();
+                        // don't request permission here
+
+                        bool hasPermission = await location.hasPermission();
+                        await cacheImages(context);
+                        if (hasPermission) {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => LandingPage()),
+                          );
+                        } else {
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => PermissionPage()),
+                          );
+                        }
+                      }
+
+                      // TODO error check here
+                    }
+                    // }).catchError((e) => print(e));
+                  }),
+            ),
+          ],
+        ),
+      ),
+    ));
   }
 
   // TODO remove me
