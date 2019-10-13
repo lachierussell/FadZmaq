@@ -1,18 +1,10 @@
-import 'dart:convert';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
-import 'package:fadzmaq/views/landing.dart';
-import 'package:fadzmaq/views/preferences.dart';
-import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:intl/intl.dart';
-import 'package:fadzmaq/main.dart';
-import 'package:flutter/material.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fadzmaq/models/app_config.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -34,8 +26,8 @@ class EditProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
-      body: GetRequest<ProfileData>(
-        url: "profile",
+      body: GetRequest<ProfileContainer>(
+        url: Globals.profileURL,
         builder: (context) {
           return new EditProfile();
         },
@@ -51,10 +43,11 @@ class EditProfile extends StatefulWidget {
   State<StatefulWidget> createState() => new EditProfileState();
 }
 
-String bioFromPD(ProfileData pd) {
+String profileFieldFromString(ProfileData pd, String fieldName) {
   if (pd != null && pd.profileFields != null) {
     for (ProfileField pf in pd.profileFields) {
-      if (pf.id == 1) {
+      // Dart lets us compare stings this way, what a revolution!
+      if (pf.name == fieldName) {
         if (pf.displayValue != null) {
           return pf.displayValue;
         } else {
@@ -79,16 +72,18 @@ class EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileData>(context);
+    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
     String server = AppConfig.of(context).server;
 
     // check for id 1 (about me) and grab the display value
-    String bio = bioFromPD(pd);
+    String bio = profileFieldFromString(pd, "bio");
+    String contactPhone = profileFieldFromString(pd, "phone");
+    String contactEmail = profileFieldFromString(pd, "email");
 
-    final String contact_phone =
-        pd.contactDetails.phone != null ? pd.contactDetails.phone : "";
-    String contact_email =
-        pd.contactDetails.email != null ? pd.contactDetails.email : "";
+//    final String contact_phone =
+//        pd.contactDetails.phone != null ? pd.contactDetails.phone : "";
+//    String contact_email =
+//        pd.contactDetails.email != null ? pd.contactDetails.email : "";
 
     return Scaffold(
       body: Padding(
@@ -112,11 +107,11 @@ class EditProfileState extends State<EditProfile> {
                         decoration: InputDecoration(labelText: "Nickname")),
                     FormBuilderTextField(
                         attribute: "email",
-                        initialValue: contact_email,
+                        initialValue: contactEmail,
                         decoration: InputDecoration(labelText: "email")),
                     FormBuilderTextField(
                         attribute: "phone",
-                        initialValue: contact_phone,
+                        initialValue: contactPhone,
                         decoration: InputDecoration(labelText: "phone")),
                     FormBuilderTextField(
                         attribute: "bio",
@@ -137,14 +132,9 @@ class EditProfileState extends State<EditProfile> {
                       onPressed: () {
                         if (_fbKey.currentState.saveAndValidate()) {
                           print(_fbKey.currentState.value);
-                          post(server + "profile", _fbKey.currentState.value);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                // builder: (context) => UserPreferencesPage()),
-                                //TODO this should probably just return to last page through nav?
-                                builder: (context) => LandingPage()),
-                          );
+                          httpPost(server + Globals.profileURL, json:_fbKey.currentState.value);
+
+                          Navigator.pop(context);
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");

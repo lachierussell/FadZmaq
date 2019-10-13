@@ -1,11 +1,9 @@
-import 'dart:typed_data';
-
+import 'package:fadzmaq/controllers/postAsync.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/models/models.dart';
-import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
-import 'package:fadzmaq/views/matches.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -30,26 +28,9 @@ class PreferencesTempApp extends StatelessWidget {
 class TestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileData>(context);
+    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
 
     return Text(profile.name);
-  }
-}
-
-class ProfilePic extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileData>(context);
-    return SizedBox(
-      height: 200,
-      width: 200,
-      child: CachedNetworkImage(
-        imageUrl: profile.photo,
-        fit: BoxFit.cover,
-        // placeholder: (context, url) => new CircularProgressIndicator(),
-        errorWidget: (context, url, error) => new Icon(Icons.error),
-      ),
-    );
   }
 }
 
@@ -84,8 +65,8 @@ class UserPreferencesState extends State {
     /// note [url] is matches and the [builder] creates the below children
     /// this is a [builder] because [children] are initialised independent to heirachy
     /// only [builder] waits for the parent to initialise
-    return GetRequest<ProfileData>(
-      url: "profile",
+    return GetRequest<ProfileContainer>(
+      url: Globals.profileURL,
       builder: (context) {
         return SingleChildScrollView(
           // color: Colors.grey,
@@ -98,89 +79,7 @@ class UserPreferencesState extends State {
                 // crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: <Widget>[
-                        ProfilePic(),
-                        // Text("Rowan Atkinson"),
-
-                        /// here we see [TestWidget], it accesses the
-                        /// [RequestProvider<T>] created by [GetRequest<T>]
-                        /// to access the model data
-                        ///
-                        /// this is all test at the moment, I'll adjust it shortly,
-                        /// but you can hopefully see how its arranged - Jordan
-                        TestWidget(),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  ProfilePage(url: "profile")),
-                        );
-                      },
-                      child: Text("View Profile"),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditProfilePage()),
-                        );
-                      },
-                      child: Text("Edit Profile"),
-                    ),
-                  ),
-                  // Padding(
-                  //   padding: const EdgeInsets.all(8.0),
-                  //   child: RaisedButton(
-                  //     onPressed: () {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(
-                  //             builder: (context) => MatchesPage()),
-                  //       );
-                  //     },
-                  //     child: Text("View Matches"),
-                  //   ),
-                  // ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditHobbyPage()),
-                        );
-                      },
-                      child: Text("Choose hobbies that you want to discover"),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EditHobbyPage()),
-                        );
-                      },
-                      child: Text("Choose hobbies that you want to share"),
-                    ),
-                  ),
+                  new PreferenceButtons(),
                   Column(
                     children: <Widget>[
                       Text("Distance: $_roundDist"),
@@ -231,6 +130,15 @@ class UserPreferencesState extends State {
                       child: Text("Log out"),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: RaisedButton(
+                      onPressed: () {
+                        postAsync(context, Globals.profileURL);
+                      },
+                      child: Text("Post Request Test"),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -248,5 +156,98 @@ class UserPreferencesState extends State {
 
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+}
+
+class PreferenceButtons extends StatelessWidget {
+  const PreferenceButtons({
+    Key key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.all(Radius.circular(10)),
+                child: DisplayPhoto(
+                  url: profile.photo,
+                  dimension: Globals.recThumbDim,
+                ),
+              ),
+
+
+              /// here we see [TestWidget], it accesses the
+              /// [RequestProvider<T>] created by [GetRequest<T>]
+              /// to access the model data
+              ///
+              /// this is all test at the moment, I'll adjust it shortly,
+              /// but you can hopefully see how its arranged - Jordan
+              TestWidget(),
+            ],
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                          url: Globals.profileURL,
+                          profile: profile,
+                          type: ProfileType.own,
+                        )),
+              );
+            },
+            child: Text("View Profile"),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => EditProfilePage()),
+              );
+            },
+            child: Text("Edit Profile"),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditHobbyPage2(isShare: false)),
+              );
+            },
+            child: Text("Choose hobbies that you want to discover"),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: RaisedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => EditHobbyPage2(isShare: true)),
+              );
+            },
+            child: Text("Choose hobbies that you want to share"),
+          ),
+        ),
+      ],
+    );
   }
 }

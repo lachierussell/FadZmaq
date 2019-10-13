@@ -13,13 +13,14 @@ FROM pg_stat_activity;
 
 -- drop everything and start again
 DROP DATABASE IF EXISTS fadzmaq_test ;
-DROP ROLE IF EXISTS test_fadzmaq_admin;
-
 
 -- do creation
 CREATE DATABASE fadzmaq_test;
 
-CREATE ROLE test_fadzmaq_admin WITH PASSWORD 'test_admin_pass' CREATEROLE LOGIN;
-GRANT ALL PRIVILEGES ON DATABASE "fadzmaq_test" TO test_fadzmaq_admin;
+SELECT current_database();
+-- SET ROLE test_fadzmaq_admin;
+\c fadzmaq_test
+SELECT current_database();
+
 
 

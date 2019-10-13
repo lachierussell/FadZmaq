@@ -1,11 +1,9 @@
+import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
-import 'package:fadzmaq/views/preferences.dart';
-import 'package:fadzmaq/views/preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:fadzmaq/controllers/request.dart';
+
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -34,9 +32,12 @@ class SplashScreenState extends State<SplashScreen> {
       // var token = await user.getIdToken();
       // printWrapped(token.token);
 
-      // String url = "matches";
+      // String url = Globals.matchesURL;
       // int code =
       //     await fetchResponseCode(config.server + url);
+
+      // TODO this should all be put after the login screen
+      await cacheImages(context);
 
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(

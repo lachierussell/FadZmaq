@@ -55,13 +55,11 @@ This will install all of the dependancies specified in the `Pipfile` and create 
 To use the server it is necessary to have an instance of PostgreSQL 9.6. Once you have installed PostgreSQL you can configure the database by running. Be careful: These scripts create the main database under the user postgres. 
 
 ```sh
-$	./build_db.sh
-$ 	./build_test_db.sh
+$	make database
 ```
 
 ```powershell
 #	./build_db.bat
-#	./build_test_db.bat
 ```
 
 The main database is named fadzmaq and is owned by user postgres
@@ -132,6 +130,11 @@ I have provided an example output below the command so you can be sure it is wor
 * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)                                                            
 ```
 
+or, on unix
+```
+%   make
+```
+
 ## Testing the server
 
 A basic unit testing suite is available to check the system is running as expected. This does not confirm the system is working 100% but will usually give a good indication something has gone wrong early. 
@@ -147,6 +150,11 @@ tests/test_api.py ...F.F......                                                  
 tests/test_db.py F.FF                                                                         [100%]
 ```
 
+or, on unix
+```
+%   make test
+```
+
 This example output has 5 failed tests.
 
 ## Updating the server
@@ -160,18 +168,21 @@ When you pull from the git repositories, another developer may have added depend
 Then
 
 ```sh
-$	./build_db.sh
-$	./build_test_db.sh
+$   make test
+or
+$   make database
+$   make run
 ```
 
 ```powershell
 #	./build_db.bat			
-#	./build_test_db.bat
 ```
 
 If you ever need to reload the database, this can also be done using psql
 
 ```pseudocode
-%	psql -U postgres -d fadzmaq -f fadzmaq/database/init.sql	
+%	psql -U postgres -d fadzmaq -f fadzmaq/database/init.sql
+or
+%   make database
 ```
 

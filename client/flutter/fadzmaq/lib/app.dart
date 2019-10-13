@@ -1,8 +1,7 @@
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/splashscreen.dart';
-import 'package:fadzmaq/views/homepage.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fadzmaq/views/preferences.dart';
 
 
 // void main() {
@@ -32,7 +31,7 @@ class App extends StatelessWidget {
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
         '/': (context) => SplashScreen(),
-
+        '/preferences': (context) => UserPreferencesPage(),
 
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/login': (context) => LoginScreen(),
