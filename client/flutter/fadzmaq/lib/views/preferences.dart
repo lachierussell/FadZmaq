@@ -2,6 +2,7 @@ import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
+import 'package:fadzmaq/views/widgets/deleteUser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' as prefix0;
 import 'package:flutter/material.dart';
@@ -14,6 +15,8 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as prefix1;
+
+
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -99,7 +102,7 @@ class UserPreferencesState extends State {
             FlatButton(
               child: const Text('ACCEPT'),
               onPressed: (){
-                deleteUser();
+                deleteUser(context);
                 Navigator.of(context).pop();
               }
             ),
@@ -219,22 +222,7 @@ class UserPreferencesState extends State {
         MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
-void deleteUser() async {
-    FirebaseUser user = await FirebaseAuth.instance.currentUser();
-    GoogleSignIn _googleSignIn = GoogleSignIn();
-    _googleSignIn.signOut();
-    if (user == null) {
-      throw('No user');
-    } else {
-      user.delete().then((result) {
-        return true;
-      }).catchError((e) {
-        return false;
-      });
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => LoginScreen()));
-    }
-  }
+
 }
 
 class PreferenceButtons extends StatelessWidget {

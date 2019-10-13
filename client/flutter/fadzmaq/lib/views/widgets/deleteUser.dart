@@ -1,41 +1,13 @@
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
+import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-
-class PreferenceTempApp extends StatelessWidget {
-  const PreferenceTempApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const UserPreferencePage(),
-    );
-  }
-}
-
-class UserPreferencePage extends StatelessWidget {
-  const UserPreferencePage({Key key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('User Preference'),
-      ),
-      body: GetRequest<ProfileContainer>(
-        url: "preference",
-        builder: (context) {
-          return new UserPreferencePage();
-        },
-      ),
-    );
-  }
-}
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class UserPreference extends StatelessWidget {
-
   UserPreference({@required this.onPressed});
 
   final GestureTapCallback onPressed;
@@ -67,5 +39,22 @@ class UserPreference extends StatelessWidget {
       onPressed: onPressed,
       shape: const StadiumBorder(),
     );
+  }
+}
+
+void deleteUser(BuildContext context) async {
+  FirebaseUser user = await FirebaseAuth.instance.currentUser();
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+  _googleSignIn.signOut();
+  if (user == null) {
+    throw ('No user');
+  } else {
+    user.delete().then((result) {
+      return true;
+    }).catchError((e) {
+      return false;
+    });
+    Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 }
