@@ -1,5 +1,4 @@
-import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/models/profile.dart';
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class UserPreference extends StatelessWidget {
-  UserPreference({@required this.onPressed});
+class DeleteButton extends StatelessWidget {
+  DeleteButton({@required this.onPressed});
 
   final GestureTapCallback onPressed;
 
@@ -45,6 +44,7 @@ class UserPreference extends StatelessWidget {
 void deleteUser(BuildContext context) async {
   FirebaseUser user = await FirebaseAuth.instance.currentUser();
   GoogleSignIn _googleSignIn = GoogleSignIn();
+
   _googleSignIn.signOut();
   if (user == null) {
     throw ('No user');
