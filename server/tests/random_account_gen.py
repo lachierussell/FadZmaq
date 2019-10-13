@@ -17,10 +17,11 @@ engine = None
 connection = None
 db_cred = "empty"
 
+
 def make_random_accounts(num, cred):
     global db_cred
     db_cred = cred
-    print("Cred2: "+ db_cred)
+    print("Cred2: " + db_cred)
     for i in range(num):
         make_random_account()
 
@@ -119,6 +120,7 @@ def random_hobby_request():
 # Random coordinates around perth
 def random_lat():
     return round(random.uniform(-31.67, -32.17), 2)
+
 
 def random_long():
     return round(random.uniform(115.75, 116.00), 2)

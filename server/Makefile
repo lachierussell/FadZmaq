@@ -5,9 +5,11 @@ RUN = pipenv run python
 run: 
 	${RUN} fadzmaq.py
 
+users: database
+	${RUN} build_test_users.py 500
+
 test: database
 	${RUN} -m pytest
-
 
 database: database/init.sql database/build_database.sql
 	cat database/build_database.sql database/init.sql \

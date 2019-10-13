@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from tests import random_account_gen 
 
+
 def get_engine():
     if random_account_gen.engine is None:
         # print("new engine")
@@ -18,6 +19,7 @@ def get_db():
 
 def connect_db():
     return get_engine().connect()
+
 
 def close_db():
     if random_account_gen.connection is not None:
