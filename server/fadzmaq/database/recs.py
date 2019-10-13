@@ -44,11 +44,10 @@ def like_user(uid, id, vote):
             "match": True,
             "matched": matches,
             }
-    else:
-        return {
-            "match": False,
-            "matched": [],
-            }
+    return {
+        "match": False,
+        "matched": [],
+        }
 
 
 def calculate_compatibility(row):
@@ -57,6 +56,9 @@ def calculate_compatibility(row):
     hobbies = row['hobbies']
     rating = row['score']
 
+    # Default values for new users.
+    # These values should be tuned for the algorithm
+    # and desired result.
     if rating is None:
         rating = 0
     if dist is None:
