@@ -218,6 +218,37 @@ $compatability_score$
     LANGUAGE SQL;
 
 
+-- Made by
+CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
+                                              lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
+    RETURNS FLOAT AS
+$dist$
+DECLARE
+    dist     FLOAT = 0;
+    radlat1  FLOAT;
+    radlat2  FLOAT;
+    theta    FLOAT;
+    radtheta FLOAT;
+BEGIN
+    radlat1 = (pi() * lat1) / 180;
+    radlat2 = (pi() * lat2) / 180;
+    theta = lon1 - lon2;
+    radtheta = (pi() * theta) / 180;
+    dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
+
+    IF dist > 1 THEN dist = 1; END IF;
+
+    dist = acos(dist);
+    dist = dist * 180 / pi();
+    dist = dist * 60 * 1.1515;
+
+    dist = dist * 1.609344;
+    dist = ROUND((dist / 5) :: numeric, 0) * 5; -- Round to nearest 5
+    RETURN dist :: DOUBLE PRECISION;
+END;
+$dist$ LANGUAGE plpgsql;
+
+
 CREATE OR REPLACE FUNCTION distance_table(from_user VARCHAR)
     RETURNS TABLE
             (
@@ -264,36 +295,6 @@ WHERE distance_tables.distance < (
 $distances$
     LANGUAGE SQL;
 
--- Made by
-CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
-                                              lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
-    RETURNS FLOAT AS
-$dist$
-DECLARE
-    dist     FLOAT = 0;
-    radlat1  FLOAT;
-    radlat2  FLOAT;
-    theta    FLOAT;
-    radtheta FLOAT;
-BEGIN
-    radlat1 = (pi() * lat1) / 180;
-    radlat2 = (pi() * lat2) / 180;
-    theta = lon1 - lon2;
-    radtheta = (pi() * theta) / 180;
-    dist = sin(radlat1) * sin(radlat2) + cos(radlat1) * cos(radlat2) * cos(radtheta);
-
-    IF dist > 1 THEN dist = 1; END IF;
-
-    dist = acos(dist);
-    dist = dist * 180 / pi();
-    dist = dist * 60 * 1.1515;
-
-    dist = dist * 1.609344;
-    dist = ROUND((dist / 5) :: numeric, 0) * 5; -- Round to nearest 5
-    RETURN dist :: DOUBLE PRECISION;
-END;
-$dist$ LANGUAGE plpgsql;
-
 
 CREATE OR REPLACE FUNCTION matching_algorithm(from_user VARCHAR)
     RETURNS TABLE
@@ -305,13 +306,19 @@ CREATE OR REPLACE FUNCTION matching_algorithm(from_user VARCHAR)
             )
 AS
 $matching_algorithm$
-SELECT dt.user_id, dt.distance, hc.compat hobbies, rc.rank score
+SELECT DISTINCT(dt.user_id), dt.distance, hc.compat hobbies, rc.rank score
 FROM distance_table(from_user) dt
-         INNER JOIN compatibility(from_user) hc
+         LEFT OUTER JOIN compatibility(from_user) hc
                     ON dt.user_id = hc.user_id
-         INNER JOIN compatible_rating(from_user) rc
+         LEFT OUTER JOIN compatible_rating(from_user) rc
                     ON dt.user_id = rc.user_id
-WHERE dt.user_id NOT IN (SELECT user_to FROM votes WHERE user_from = from_user)
+WHERE dt.user_id NOT IN (
+              SELECT user_to FROM votes WHERE user_from = from_user
+              UNION
+              SELECT user_a FROM matches WHERE user_b = from_user
+              UNION
+              SELECT user_b FROM matches WHERE user_a = from_user
+    )
 $matching_algorithm$
     LANGUAGE SQL;
 
