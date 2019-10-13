@@ -155,7 +155,7 @@ def ping_location(uid):
     try:
         data = json.loads(request.get_data())
         data = data['location']
-        profile.set_location(uid, data['lat'], data['long'])
+        profile.set_location(uid, data['lat'], data['long'], data['device'])
         return 'Ping Set', 204
     except Exception as e:
         return 'FAILED', 500

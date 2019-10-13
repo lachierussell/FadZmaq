@@ -139,9 +139,9 @@ def update_settings(uid, value):
     )
 
 
-def set_location(uid, lat, long):
+def set_location(uid, lat, long, dev):
     db.get_db().execute(
         '''
-        INSERT INTO location_data (user_id, lat, long) VALUES (%s, %s, %s)
-        ''', uid, float(lat), float(long)
+        INSERT INTO location_data (user_id, lat, long, device_id) VALUES (%s, %s, %s, %s)
+        ''', uid, float(lat), float(long), dev
     )
