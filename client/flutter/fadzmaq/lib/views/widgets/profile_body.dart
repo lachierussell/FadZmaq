@@ -30,9 +30,10 @@ class ProfileFieldWidget extends StatelessWidget {
 }
 
 class ProfileBody extends StatelessWidget {
-  final ProfileType type = null;
+  final ProfileType type;
   const ProfileBody({
-    Key key, ProfileType type,
+    Key key,
+    this.type,
   }) : super(key: key);
 
   @override
