@@ -4,7 +4,6 @@ import 'package:fadzmaq/models/likeResult.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/widgets/matchDialog.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 enum LikePass { like, pass }

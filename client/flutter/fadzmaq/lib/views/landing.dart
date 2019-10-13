@@ -10,7 +10,7 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        initialIndex: 1,
+        initialIndex: 2,
         length: 3,
         child: Scaffold(
           key: mainScaffold,
@@ -22,8 +22,9 @@ class LandingPage extends StatelessWidget {
                 new TabBar(
                   tabs: [
                     new Tab(icon: new Icon(Icons.settings)),
-                    new Tab(icon: new Icon(Icons.people)),
                     new Tab(icon: new Icon(Icons.public)),
+                    new Tab(icon: new Icon(Icons.people)),
+
                   ],
                 ),
               ],
@@ -32,8 +33,8 @@ class LandingPage extends StatelessWidget {
           body: TabBarView(
             children: [
               UserPreferencesPage(),
-              MatchesPage(),
               RecommendationsPage(),
+              MatchesPage(),
             ],
           ),
         ),

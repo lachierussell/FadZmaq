@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
@@ -72,7 +73,7 @@ class RecommendationEntry extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: DisplayPhoto(
                   url: profile.photo,
-                  dimension: 160,
+                  dimension: Globals.recThumbDim,
                 ),
               ),
             ),
