@@ -19,7 +19,7 @@ def like_user(uid, id, vote):
     #####
     # Initialises random matches
     import random
-    if id.startswith('testaccount') and random.choice([0,0,1]) == 1:
+    if id.startswith('testaccount') and random.choice([0, 0, 1]) == 1:
         db.get_db().execute(
             '''
             INSERT INTO votes (time, vote, user_from, user_to) 
@@ -66,7 +66,7 @@ def calculate_compatibility(row):
     if hobbies is None:
         hobbies = 0
 
-    compatibility = (dist - hobbies) * (1 - rating)
+    compatibility = (-dist + hobbies) * (1 - rating)
     return compatibility
 
 

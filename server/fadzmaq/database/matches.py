@@ -12,7 +12,6 @@
 # @author Jordan Russell        [email]
 
 import fadzmaq.database.connection as db
-from fadzmaq.database.hobbies import get_matched_hobbies
 from fadzmaq.database.profile import build_profile_data
 
 

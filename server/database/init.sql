@@ -311,8 +311,13 @@ FROM distance_table(from_user) dt
                     ON dt.user_id = hc.user_id
          LEFT OUTER JOIN compatible_rating(from_user) rc
                     ON dt.user_id = rc.user_id
-WHERE dt.user_id
-          NOT IN (SELECT user_to FROM votes WHERE user_from = from_user)
+WHERE dt.user_id NOT IN (
+              SELECT user_to FROM votes WHERE user_from = from_user
+              UNION
+              SELECT user_a FROM matches WHERE user_b = from_user
+              UNION
+              SELECT user_b FROM matches WHERE user_a = from_user
+    )
 $matching_algorithm$
     LANGUAGE SQL;
 
