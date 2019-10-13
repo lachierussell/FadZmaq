@@ -22,7 +22,7 @@ Future<http.Response> postAsync(BuildContext context, String url,
   if (useGet) {
     swapFunction = httpGet;
   } else if (useDelete) {
-    swapFunction = httpPost;
+    swapFunction = httpDelete;
   } else {
     swapFunction = httpPost;
   }

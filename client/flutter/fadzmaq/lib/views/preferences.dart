@@ -88,7 +88,7 @@ class UserPreferencesState extends State {
               child: const Text('ACCEPT'),
               onPressed: (){
                 deleteUser(context);
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
               }
             ),
           ],
