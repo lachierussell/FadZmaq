@@ -10,7 +10,7 @@ import 'package:flushbar/flushbar.dart';
 ///
 /// Asynchrounous, does not wait for a response
 Future<http.Response> postAsync(BuildContext context, String url,
-    {var json, bool useGet = false}) async {
+    {var json, bool useGet = false, bool useDelete = false}) async {
   url = AppConfig.of(context).server + url;
 
   // this is here so we can catch errors for the popup, but return the response as a null
@@ -21,6 +21,8 @@ Future<http.Response> postAsync(BuildContext context, String url,
   Function swapFunction;
   if (useGet) {
     swapFunction = httpGet;
+  } else if (useDelete) {
+    swapFunction = httpPost;
   } else {
     swapFunction = httpPost;
   }

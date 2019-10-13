@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart' as http;
 
 class DeleteButton extends StatelessWidget {
   DeleteButton({@required this.onPressed});
@@ -45,15 +46,26 @@ void deleteUser(BuildContext context) async {
   FirebaseUser user = await FirebaseAuth.instance.currentUser();
   GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  _googleSignIn.signOut();
-  if (user == null) {
-    throw ('No user');
-  } else {
-    user.delete().then((result) {
-      return true;
-    }).catchError((e) {
-      return false;
-    });
+  final GoogleSignInAuthentication googleAuth =
+      await _googleSignIn.currentUser.authentication;
+
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+
+  try {
+    await user.reauthenticateWithCredential(credential);
+  } catch (e) {
+    return;
+  }
+
+  http.Response response = await postAsync(context, "acount", useDelete: true);
+
+  // Our account on the server has been deleted
+  if (response.statusCode == 200) {
+    user.delete();
+    _googleSignIn.signOut();
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
   }
