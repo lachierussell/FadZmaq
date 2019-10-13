@@ -14,7 +14,14 @@ Future cacheRecommendationPhotos(
     BuildContext context, RecommendationsData rd) async {
   List<Future> futures = List<Future>();
 
+  if (rd == null) return;
+  if (rd.recommendations == null) return;
+
   for (ProfileContainer pc in rd.recommendations) {
+    if (pc == null) continue;
+    if (pc.profile == null) continue;
+    if (pc.profile.photo == null) continue;
+
     futures.add(cachePhotoURL(context, pc.profile.photo));
   }
   await Future.wait(futures);
@@ -24,7 +31,14 @@ Future cacheRecommendationPhotos(
 Future cacheMatchPhotos(BuildContext context, MatchesData matchData) async {
   List<Future> futures = List<Future>();
 
+  if (matchData == null) return;
+  if (matchData.matches == null) return;
+
   for (ProfileContainer pc in matchData.matches) {
+    if (pc == null) continue;
+    if (pc.profile == null) continue;
+    if (pc.profile.photo == null) continue;
+
     futures.add(cachePhotoURL(context, pc.profile.photo));
   }
   await Future.wait(futures);
@@ -32,6 +46,10 @@ Future cacheMatchPhotos(BuildContext context, MatchesData matchData) async {
 
 /// Caches profile photos based on [ProfileContainer]
 Future cacheProfilePhotos(BuildContext context, ProfileContainer pc) async {
+  if (pc == null) return;
+  if (pc.profile == null) return;
+  if (pc.profile.photo == null) return;
+
   await cachePhotoURL(context, pc.profile.photo);
 }
 
@@ -43,7 +61,6 @@ Future<void> cachePhotoURL(BuildContext context, String url) async {
   String matchPhoto = photoThumbURL(context, url, Globals.matchThumbDim);
   String profilePhoto = photoThumbURL(context, url, screenWidth);
 
-  
   // print("cacheing: " + matchPhoto);
   // print("cacheing: " + profilePhoto);
 
@@ -90,8 +107,8 @@ Future cacheImages(BuildContext context) async {
 
   var server = AppConfig.of(context).server;
 
-  futures.add(
-      httpGetCachePhoto<ProfileContainer>(context, server + Globals.profileURL));
+  futures.add(httpGetCachePhoto<ProfileContainer>(
+      context, server + Globals.profileURL));
   futures.add(
       httpGetCachePhoto<MatchesData>(context, server + Globals.matchesURL));
   futures.add(httpGetCachePhoto<RecommendationsData>(
@@ -117,21 +134,17 @@ Future httpGetCachePhoto<T>(BuildContext context, String url) async {
   if (T == MatchesData) {
     MatchesData matchData = MatchesData.fromJson(responseJson);
     await cacheMatchPhotos(context, matchData);
-  }
-
-  else if (T == RecommendationsData) {
+  } else if (T == RecommendationsData) {
     RecommendationsData recommendationsData =
         RecommendationsData.fromJson(responseJson);
     await cacheRecommendationPhotos(context, recommendationsData);
-  }
-
-  else if (T == ProfileContainer) {
+  } else if (T == ProfileContainer) {
     ProfileContainer profileContainer = ProfileContainer.fromJson(responseJson);
     await cacheProfilePhotos(context, profileContainer);
-  }else{
-    throw UnimplementedError("httpGetCachePhoto method called on unspported type");
+  } else {
+    throw UnimplementedError(
+        "httpGetCachePhoto method called on unspported type");
   }
-
 
   return response;
 }
