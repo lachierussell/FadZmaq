@@ -39,7 +39,7 @@ class ProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     // As we only pass profile data we convert it into a container
     final ProfileContainer container =
-        (profile != null) ? ProfileContainer(profile: profile) : null;
+    (profile != null) ? ProfileContainer(profile: profile) : null;
 
     return Scaffold(
       body: GetRequest<ProfileContainer>(
@@ -56,20 +56,20 @@ class ProfilePage extends StatelessWidget {
         },
       ),
       floatingActionButton:
-          profile != null && type == ProfileType.recommendation
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    LikeButton(profile: profile, type: LikePass.pass),
-                    Expanded(
-                      child: Container(
-                        height: 10,
-                      ),
-                    ),
-                    LikeButton(profile: profile, type: LikePass.like),
-                  ],
-                )
-              : null,
+      profile != null && type == ProfileType.recommendation
+          ? Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          LikeButton(profile: profile, type: LikePass.pass),
+          Expanded(
+            child: Container(
+              height: 10,
+            ),
+          ),
+          LikeButton(profile: profile, type: LikePass.like),
+        ],
+      )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
