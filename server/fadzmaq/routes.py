@@ -154,8 +154,8 @@ def update_hobbies(uid):
 def ping_location(uid):
     try:
         data = json.loads(request.get_data())
-        data = data['location']
-        profile.set_location(uid, data['lat'], data['long'], data['device'])
+        loc = data['location']
+        profile.set_location(uid, loc['lat'], loc['long'], data['device'])
         return 'Ping Set', 204
     except Exception as e:
         return 'FAILED', 500

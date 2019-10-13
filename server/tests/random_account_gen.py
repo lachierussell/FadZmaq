@@ -45,7 +45,7 @@ def make_random_account():
     # db stuff
     make_user_test(name, email, uid, photo)
     hobbies.update_user_hobbies(uid, random_hobby_request())
-    profile.set_location(uid, random_lat(), random_long())
+    profile.set_location(uid, random_lat(), random_long(), 'null device')
 
 
 def random_id():
