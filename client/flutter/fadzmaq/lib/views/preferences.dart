@@ -41,8 +41,25 @@ class TestWidget extends StatelessWidget {
   }
 }
 
+class UserPreferencesPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GetRequest<AccountSettings>(
+      url: Globals.settingsURL,
+      builder: (context) {
+        return GetRequest<UserProfileContainer>(
+          url: Globals.profileURL,
+          builder: (context) {
+            return UserPreferences();
+          },
+        );
+      },
+    );
+  }
+}
+
 /// stateful because we have the slider and switches to keep track of
-class UserPreferencesPage extends StatefulWidget {
+class UserPreferences extends StatefulWidget {
   UserPreferencesState createState() {
     return UserPreferencesState();
   }
@@ -56,15 +73,24 @@ class UserPreferencesState extends State {
   bool _notificationsBool = true;
 
   @override
+  void didChangeDependencies() {
+    AccountSettings settings = RequestProvider.of<AccountSettings>(context);
+
+    _locationDistance = settings.distanceSetting.toDouble();
+    _roundDist = settings.distanceSetting;
+
+    if (settings != null) {
+      print(settings.distanceSetting.toString());
+    } else {
+      print("settings null");
+    }
+
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return page();
-
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text('Preferences'),
-    //   ),
-    //   body: page(),
-    // );
   }
 
   Widget page() {
@@ -72,105 +98,95 @@ class UserPreferencesState extends State {
     /// note [url] is matches and the [builder] creates the below children
     /// this is a [builder] because [children] are initialised independent to heirachy
     /// only [builder] waits for the parent to initialise
-    return GetRequest<AccountSettings>(
-      url: Globals.settingsURL,
-      builder: (context) {
-        return GetRequest<UserProfileContainer>(
-          url: Globals.profileURL,
-          builder: (context) {
-            return SingleChildScrollView(
-              // color: Colors.grey,
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.center,
-                      // crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
+    return SingleChildScrollView(
+      // color: Colors.grey,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                new PreferenceButtons(),
+                Column(
+                  children: <Widget>[
+                    Text("Distance: $_roundDist"),
+                    Row(
                       children: <Widget>[
-                        new PreferenceButtons(),
-                        Column(
-                          children: <Widget>[
-                            Text("Distance: $_roundDist"),
-                            Row(
-                              children: <Widget>[
-                                Text("Distance"),
-                                Expanded(
-                                  child: Slider(
-                                    min: 10,
-                                    max: 200,
-                                    // value: 50,
-                                    onChanged: (newDist) {
-                                      setState(() {
-                                        int rounded = (newDist / 5).round() * 5;
-                                        _locationDistance = newDist;
-                                        _roundDist = rounded;
-                                      });
-                                    },
-                                    // onChangeEnd: (newDist){
-                                    //   setState(() {
-                                    //     int rounded = (newDist / 5).round() * 5;
-                                    //     _locationDistance = rounded as double;
-                                    //     _roundDist = rounded;
-                                    //   });
-                                    // },
-                                    value: _locationDistance,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: <Widget>[
-                            Text("Notifications"),
-                            Switch(
-                              onChanged: (b) {
-                                setState(() => _notificationsBool = b);
-                              },
-                              value: _notificationsBool,
-                            ),
-                          ],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            onPressed: logOut,
-                            child: Text("Log out"),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: RaisedButton(
-                            onPressed: () {
-                              postAsync(context, "profile");
+                        Text("Distance"),
+                        Expanded(
+                          child: Slider(
+                            min: 10,
+                            max: 200,
+                            // value: 50,
+                            onChanged: (newDist) {
+                              setState(() {
+                                int rounded = (newDist / 5).round() * 5;
+                                _locationDistance = newDist;
+                                _roundDist = rounded;
+                              });
                             },
-                            child: Text("Post Request Test"),
+                            // onChangeEnd: (newDist){
+                            //   setState(() {
+                            //     int rounded = (newDist / 5).round() * 5;
+                            //     _locationDistance = rounded as double;
+                            //     _roundDist = rounded;
+                            //   });
+                            // },
+                            value: _locationDistance,
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                            vertical: 8.0,
-                            horizontal: 20.0,
-                          ),
-                          child: RaisedButton(
-                            onPressed: () {
-                              deleteDialog(context);
-                            },
-                            child: Text(
-                              "Delete Account",
-                              style: TextStyle(color: Colors.red),
-                            ),
-                          ),
-                        ),
-                      ]),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            );
-          },
-        );
-      },
+                Row(
+                  children: <Widget>[
+                    Text("Notifications"),
+                    Switch(
+                      onChanged: (b) {
+                        setState(() => _notificationsBool = b);
+                      },
+                      value: _notificationsBool,
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(
+                    onPressed: logOut,
+                    child: Text("Log out"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(
+                    onPressed: () {
+                      postAsync(context, "profile");
+                    },
+                    child: Text("Post Request Test"),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 20.0,
+                  ),
+                  child: RaisedButton(
+                    onPressed: () {
+                      deleteDialog(context);
+                    },
+                    child: Text(
+                      "Delete Account",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  ),
+                ),
+              ]),
+        ),
+      ),
     );
   }
 
@@ -194,14 +210,6 @@ class PreferenceButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     ProfileData profile =
         RequestProvider.of<UserProfileContainer>(context).profile;
-
-    AccountSettings settings = RequestProvider.of<AccountSettings>(context);
-
-    if (settings != null) {
-      print(settings.distanceSetting.toString());
-    } else {
-      print("settings null");
-    }
 
     return Column(
       children: <Widget>[
