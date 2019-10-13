@@ -19,7 +19,6 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-
     // var token = await user.getIdToken();
     super.initState();
 
@@ -42,7 +41,8 @@ class SplashScreenState extends State<SplashScreen> {
 
       // var token = await user.getIdToken();
       // printWrapped(token.token);
-      httpPost(AppConfig.of(context).server + "profile/ping", json:utf8.encode(json.encode(compileJson(currentLocation))));
+      httpPost(AppConfig.of(context).server + "profile/ping",
+          json: utf8.encode(json.encode(compileJson(currentLocation))));
       // String url = "matches";
       // int code =
       //     await fetchResponseCode(config.server + url);
@@ -71,14 +71,19 @@ class SplashScreenState extends State<SplashScreen> {
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
-  Map compileJson(var x) {
+  Map compileJson(LocationData locationData) {
+    String lat = locationData.latitude.toStringAsFixed(2);
+    String long = locationData.longitude.toStringAsFixed(2);
+
     Map map = {
-      'location': [{'lat': x['latitude'] , "long": x['longitude'] }
-      ]};
+      'location': {
+        'lat': lat,
+        "long": long,
+      }
+    };
     print(map);
     return map;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -86,14 +91,14 @@ class SplashScreenState extends State<SplashScreen> {
       color: Theme.of(context).accentColor,
       child: Center(
           child: Icon(
-            Icons.swap_horizontal_circle,
-            color: Colors.white,
-            size: 221,
-          )
-        // child: CircularProgressIndicator(
-        //   valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
-        // ),
-      ),
+        Icons.swap_horizontal_circle,
+        color: Colors.white,
+        size: 221,
+      )
+          // child: CircularProgressIndicator(
+          //   valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+          // ),
+          ),
     );
   }
 }
