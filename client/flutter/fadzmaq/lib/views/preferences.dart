@@ -18,8 +18,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as prefix1;
 
-
-
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
 
@@ -67,36 +65,6 @@ class UserPreferencesState extends State {
     // );
   }
 
-//show alert dialog
-  void _Dialog() async {
-    return showDialog(
-      context: context,
-      barrierDismissible: false, // user must tap button for close dialog!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Are you sure?'),
-          content: const Text(
-              'Please be aware that this action will delete your data too, but you can still log in with this account next time.'),
-          actions: <Widget>[
-            FlatButton(
-              child: const Text('CANCEL'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            FlatButton(
-              child: const Text('ACCEPT'),
-              onPressed: (){
-                deleteUser(context);
-                // Navigator.of(context).pop();
-              }
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Widget page() {
     /// the [GetRequest<ProfileData>] for this page
     /// note [url] is matches and the [builder] creates the below children
@@ -112,8 +80,8 @@ class UserPreferencesState extends State {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     new PreferenceButtons(),
@@ -182,14 +150,16 @@ class UserPreferencesState extends State {
                         horizontal: 20.0,
                       ),
                       child: RaisedButton(
-                        onPressed: _Dialog,
-                        child: Text("Delete Account",
+                        onPressed: () {
+                          deleteDialog(context);
+                        },
+                        child: Text(
+                          "Delete Account",
                           style: TextStyle(color: Colors.red),
                         ),
                       ),
                     ),
-                  ]
-              ),
+                  ]),
             ),
           ),
         );
@@ -206,8 +176,6 @@ class UserPreferencesState extends State {
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
   }
-
-
 }
 
 class PreferenceButtons extends StatelessWidget {
@@ -231,7 +199,6 @@ class PreferenceButtons extends StatelessWidget {
                   dimension: Globals.recThumbDim,
                 ),
               ),
-
 
               /// here we see [TestWidget], it accesses the
               /// [RequestProvider<T>] created by [GetRequest<T>]
