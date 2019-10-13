@@ -46,20 +46,24 @@ def random_id():
     characters = string.ascii_letters + string.digits
     return 'testaccount' + ''.join(random.choice(characters) for i in range(15))
 
+
 email_domains = [
     "@live.com",
     "@gmail.com",
     "@hotmail.com", 
 ]
 
+
 def random_email(name):
     return name + ''.join(random.choice(string.digits) for i in range(4)) + random.choice(email_domains)
+
 
 # to do implment
 def random_phone():
     return '042'.join(random.choice(string.digits) for i in range(7))
 
 # todo bio
+
 
 def random_name(is_female):
     if is_female:
@@ -105,13 +109,8 @@ def random_hobby_request():
         'hobbies': random_hobbies(all_hobby_list),
     }
 
-    hobbiesList = []
-
-    hobbiesList.append(share_list)
-    hobbiesList.append(discover_list)
-
     hobbies_list = {
-        'hobbies': hobbiesList
+        'hobbies': [share_list, discover_list]
     }
 
     return hobbies_list

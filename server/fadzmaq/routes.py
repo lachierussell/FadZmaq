@@ -263,7 +263,7 @@ def unmatch_user(uid, id):
 @route_bp.route('/matches/thumbs/down/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_down(uid, id):
-    matches.rate_user(uid, id, False)
+    matches.rate_user(uid, id, 0)
     return "Thumbs down!", 204
 
 
@@ -271,8 +271,16 @@ def rate_user_down(uid, id):
 @route_bp.route('/matches/thumbs/up/<string:id>', methods=['POST'])
 @auth_required
 def rate_user_up(uid, id):
-    matches.rate_user(uid, id, True)
+    matches.rate_user(uid, id, 1)
     return "Thumbs up!", 204
+
+
+# @brief Removes a user rating
+@route_bp.route('/matches/thumbs/<string:id>', methods=['DELETE'])
+@auth_required
+def rate_user_delete(uid, id):
+    matches.rate_user(uid, id, None)
+    return "Removed", 204
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
@@ -300,15 +308,11 @@ def pass_user(uid, id):
 
 from tests import random_account_gen
 
-@route_bp.route('/test/add_users', methods=['POST'])
-def test_add_users():
+
+@route_bp.route('/test/add_users/<int:num>', methods=['POST'])
+def test_add_users(num):
     # try:
-    data = json.loads(request.get_data())
-    print(data)
-    num = data['number']
-
     random_account_gen.make_random_accounts(int(num))
-
     return 'Added users', 200
     # except ValueError as e:
     #     print('failed ' + str(e))
