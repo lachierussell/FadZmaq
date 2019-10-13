@@ -1,6 +1,7 @@
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/profile_body.dart';
 import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
+import 'package:fadzmaq/views/widgets/unmatch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
@@ -15,10 +16,28 @@ class ProfileAppbar extends StatelessWidget {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      // action button
     );
   }
-}
+  Widget  _selectPopup() =>
+      PopupMenuButton(
+        itemBuilder: (context) =>
+        [
+          PopupMenuItem(
+            value: 1,
+            child: Text("Unmatch"),
+          ),
+        ],
+        initialValue: 1,
+        onCanceled: () {
+          print("You have not chose anything.");
+        },
+        onSelected:(context) {
+          unmatchDialog(context);
+        }
+      );
 
+}
 class ProfilePage extends StatelessWidget {
   final String url;
   final ProfileData profile;

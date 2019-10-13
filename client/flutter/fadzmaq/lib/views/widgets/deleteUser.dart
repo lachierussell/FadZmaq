@@ -49,22 +49,22 @@ void deleteUser(BuildContext context) async {
 }
 
 //show alert dialog
-void deleteDialog(BuildContext context) async {
+  void deleteDialog(BuildContext context) async {
   showDialog(
-    context: context,
-    barrierDismissible: false, // user must tap button for close dialog!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Are you sure?'),
-        content: const Text(
-            'Please be aware that this action will delete your data too, but you can still log in with this account next time.'),
-        actions: <Widget>[
-          FlatButton(
-            child: const Text('CANCEL'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
+  context: context,
+  barrierDismissible: false, // user must tap button for close dialog!
+  builder: (BuildContext context) {
+  return AlertDialog(
+  title: Text('Are you sure?'),
+  content: const Text(
+  'Please be aware that this action will delete your data too, but you can still log in with this account next time.'),
+  actions: <Widget>[
+  FlatButton(
+  child: const Text('CANCEL'),
+  onPressed: () {
+  Navigator.of(context).pop();
+  },
+  ),
           FlatButton(
               child: const Text('ACCEPT'),
               onPressed: () {
