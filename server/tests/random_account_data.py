@@ -18,7 +18,7 @@ female_name_list = [
 female_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/4/4e/Tina_Fey_Muppets_Most_Wanted_Premiere_%28cropped%29.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/a/a4/Kate_Mara_by_Gage_Skidmore.jpg/220px-Kate_Mara_by_Gage_Skidmore.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a4/Kate_Mara_by_Gage_Skidmore.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/a/ac/Marisa_Tomei_at_Toronto_Film_Festival_2012.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/0/01/Michelle_Williams_%28Berlinale_2010%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/b/b5/Amy_Adams_%28actress%29.jpg",
@@ -100,7 +100,7 @@ female_photo_list = [
 ]
 
 male_photo_list = [
-    "https://upload.wikimedia.org/wikipedia/commons/6/61/Sam_Neill_2010.jpg/435px-Sam_Neill_2010.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/6/61/Sam_Neill_2010.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/4/41/Joaquin_Phoenix_at_the_2018_Berlin_Film_Festival.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/3/31/Joaquin_Cannes_20002_cropped.jpg",
