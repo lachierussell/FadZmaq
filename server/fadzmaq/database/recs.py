@@ -54,13 +54,7 @@ def calculate_compatibility(row):
     dist = row['distance']
     hobbies = row['hobbies']
     rating = row['score']
-    #1.5 is the slow growth rate of having more hobbies
-    hobbiesFactor = (hobbies**1.5)
-    #Increase 2 to increase effect of rating
-    ratingFactor = (2**(1-rating))
-    #This slows down the exponential function significantly, we want the furthest people to impact rating
-    distanceFactor = (5**(0.03 * dist))
-    compatibility = (hobbiesFactor - distanceFactor) * ratingFactor
+
     # Default values for new users.
     # These values should be tuned for the algorithm
     # and desired result.
@@ -70,15 +64,18 @@ def calculate_compatibility(row):
         dist = 10
     if hobbies is None:
         hobbies = 0
-      #1.5 is the slow growth rate of having more hobbies
-    hobbiesFactor = (hobbies**1.5)
-    #Increase 2 to increase effect of rating
-    ratingFactor = (2**(1-rating))
-    #This slows down the exponential function significantly, we want the furthest people to impact rating
-    distanceFactor = (5**(0.03 * dist))
-    compatibility = (hobbiesFactor - distanceFactor) * ratingFactor
 
-    return compatibility
+    # 1.5 is the slow growth rate of having more hobbies
+    hobbies_factor = (hobbies ** 1.5)
+
+    # Increase 2 to increase effect of rating
+    rating_factor = (2 ** (1 - rating))
+
+    # This slows down the exponential function significantly,
+    # we want the furthest people to impact rating
+    distance_factor = (5 ** (0.03 * dist))
+
+    return (hobbies_factor - distance_factor) * rating_factor
 
 
 def get_recommendations(uid):
