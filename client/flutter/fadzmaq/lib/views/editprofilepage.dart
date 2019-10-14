@@ -6,6 +6,7 @@ import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/preferences.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
@@ -81,6 +82,8 @@ class EditProfileState extends State<EditProfile> {
 
   String imgurlForm;
 
+  bool disableButton = false;
+
   final FirebaseStorage storage =
       new FirebaseStorage(storageBucket: 'gs://fadzmaq1.appspot.com/');
 
@@ -100,8 +103,6 @@ class EditProfileState extends State<EditProfile> {
       setState(() {
         _image1 = newim1;
       });
-
-      _uploadFile();
     }
   }
 
@@ -166,11 +167,22 @@ class EditProfileState extends State<EditProfile> {
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: _image1 != null
+                          ? Image.file(
+                              _image1,
+                              height: Globals.recThumbDim,
+                              width: Globals.recThumbDim,
+                            )
+                          : DisplayPhoto(
+                              url: pd.photo,
+                              dimension: Globals.recThumbDim,
+                            ),
+                    ),
                     // Get an Image
                     RaisedButton(
-                      child: _image1 == null
-                          ? Text('No image selected.')
-                          : Image.file(_image1),
+                      child: Text('Select Image'),
                       onPressed: getImage1,
                     ),
                     FormBuilderTextField(
@@ -201,29 +213,51 @@ class EditProfileState extends State<EditProfile> {
                 children: <Widget>[
                   Expanded(
                     child: MaterialButton(
+                      disabledColor: Colors.grey,
                       color: Theme.of(context).accentColor,
                       child: Text(
                         "Submit",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        if (_fbKey.currentState.saveAndValidate()) {
-                          _fbKey.currentState.value.addAll({"photo": imgurl});
-                          print("Sending" + '${_fbKey.currentState.value}');
-                          httpPost(server + "profile",
-                              json: _fbKey.currentState.value);
+                      onPressed: disableButton
+                          ? null
+                          : () async {
+                              setState(() {
+                                disableButton = true;
+                              });
+                              if(_image1 != null){
+                                await _uploadFile();
+                              }
+                              if (_fbKey.currentState.saveAndValidate()) {
+                                _fbKey.currentState.value
+                                    .addAll({"photo": imgurl});
+                                print(
+                                    "Sending" + '${_fbKey.currentState.value}');
+                                httpPost(server + "profile",
+                                    json: _fbKey.currentState.value);
 
+                                if (imgurl != null) {
+                                  pd.photo = imgurl;
+                                }
 
-                          if(imgurl != null){
-                            pd.photo = imgurl;
-                          }
-
-                          Navigator.pop(context, pd);
-                        } else {
-                          print(_fbKey.currentState.value);
-                          print("validation failed");
-                        }
-                      },
+                                // setState(() {
+                                //   disableButton = false;
+                                // });
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context, pd);
+                                } else {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      // builder: (context) => UserPreferencesPage(),
+                                      builder: (context) => LandingPage(),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                print(_fbKey.currentState.value);
+                                print("validation failed");
+                              }
+                            },
                     ),
                   ),
                   SizedBox(

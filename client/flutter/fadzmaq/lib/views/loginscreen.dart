@@ -179,17 +179,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             print("B " + '$code' + " " + '$resonsee');
 
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                // builder: (context) => UserPreferencesPage(),
-                                builder: (context) => LandingPage(),
-                              ),
-                            );
+                            if (code == 200) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfilePage(),
+                                  // builder: (context) => LandingPage(),
+                                ),
+                              );
+                            }
+
+                            //TODO what if we fail to make an account?
                           }
 
                           // success with the server
                           // go to main page (perferences at the moment)
-                          if (code == 200) {
+                          else if (code == 200) {
                             await cacheImages(context);
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(

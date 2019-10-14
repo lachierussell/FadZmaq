@@ -7,6 +7,7 @@ import 'package:fadzmaq/models/recommendations.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fadzmaq/models/models.dart';
@@ -80,11 +81,13 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
               );
             } else if (snapshot.data.statusCode == 401) {
               // not sure if this is the best way to do this but it works for now - Jordan
+              // TODO return an error here and manage it further up
               return LoginScreen();
             } else {
               // TODO make this handle better
               return Text("Error with HTTP request: " +
-                  '${snapshot.data.statusCode.toString()} ' + ' ${snapshot.data.body.toString()}');
+                  '${snapshot.data.statusCode.toString()} ' +
+                  ' ${snapshot.data.body.toString()}');
             }
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
