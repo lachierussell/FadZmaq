@@ -69,7 +69,7 @@ class ProfileData {
     // this.gender,
     // this.age,
     this.name,
-    this.photo,
+    this.photo = "",
 //    this.contactDetails,
     this.profileFields,
     this.hobbyContainers,

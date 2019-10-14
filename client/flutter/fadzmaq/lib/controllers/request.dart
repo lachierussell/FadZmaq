@@ -159,6 +159,18 @@ Future httpGet(String url, {var json}) async {
   }
 }
 
+// this has to be a typeless future to pass errors
+Future httpDelete(String url, {var json}) async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseUser user = await auth.currentUser();
+  IdTokenResult result = await user.getIdToken();
+
+  try {
+    return await http.delete(url, headers: {"Authorization": result.token});
+  } catch (e) {
+    return e;
+  }
+}
 
 // /// temp for testing
 // Future sleep1() {
