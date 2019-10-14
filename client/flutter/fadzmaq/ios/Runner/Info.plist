@@ -15,6 +15,16 @@
 			</array>
 		</dict>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string> </string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string> </string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string> </string>
+	<key>NSCameraUsageDescription</key>
+	<string> </string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string> </string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>

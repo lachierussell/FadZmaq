@@ -42,7 +42,8 @@ void deleteUser(BuildContext context) async {
 
   // await user.delete();
   await googleSignIn.signOut();
-
+   Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+    LoginScreen()), (Route<dynamic> route) => false);
   Navigator.of(context)
       .pushReplacement(MaterialPageRoute(builder: (context) => LoginScreen()));
   }
