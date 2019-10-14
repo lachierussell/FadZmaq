@@ -5,7 +5,7 @@ import 'package:fadzmaq/controllers/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/profilepage.dart';
-import 'package:http/http.dart';
+import 'package:http/http.dart' as http;
 import 'package:fadzmaq/models/app_config.dart';
 
 /// Helper (method?) to the ProfileFieldWidget.
@@ -40,7 +40,7 @@ class ProfileBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-    
+
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
     // final String profileAge = pd.age != null ? pd.age : "-";
@@ -56,7 +56,23 @@ class ProfileBody extends StatelessWidget {
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5)),
 
-        type == ProfileType.match ? Row( children :<Widget> [IconButton(icon : Icon(Icons.thumb_up), onPressed: (){onThumbsUp(context, rating, pd.userId);}, color: returnColor(rating, 1),),IconButton(icon : Icon(Icons.thumb_down), onPressed: (){onThumbsDown(context, rating, pd.userId);}, color: returnColor(rating, -1))]) : Row() ,
+        type == ProfileType.match
+            ? Row(children: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.thumb_down),
+                    onPressed: () {
+                      onThumbsDown(context, rating, pd.userId);
+                    },
+                    color: returnColor(rating, 0)),
+                IconButton(
+                  icon: Icon(Icons.thumb_up),
+                  onPressed: () {
+                    onThumbsUp(context, rating, pd.userId);
+                  },
+                  color: returnColor(rating, 1),
+                ),
+              ])
+            : Row(),
         BodyDivider(),
         ContactBody(),
         ProfileHobbies(
@@ -110,7 +126,12 @@ class ProfileHobbies extends StatelessWidget {
         SizedBox(
           height: 8,
         ),
-        Center(child: HobbyChips(hobbies: hobbies, hobbyCategory: direction, alignment: WrapAlignment.center,)),
+        Center(
+            child: HobbyChips(
+          hobbies: hobbies,
+          hobbyCategory: direction,
+          alignment: WrapAlignment.center,
+        )),
         SizedBox(
           height: 16,
         ),
@@ -170,24 +191,51 @@ TextStyle bodyBold() {
 void onThumbsUp(BuildContext context, int rating, String userId) {
   print("thumbsup");
   if (rating != 1) {
-    post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
+    http.post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
+    Navigator.pop(context);
+  } else {
+    http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    Navigator.pop(context);
+  }
+}
+
+void onThumbsDown(BuildContext context, int rating, String userId) {
+  print("thumbsdown");
+  if (rating != 0) {
+    http.post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
+    Navigator.pop(context);
+  } else {
+    http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
     Navigator.pop(context);
   }
 }
 
 Color returnColor(int rating, int thumbs) {
-  if(rating == thumbs) {
-    return Colors.pink;
-  }
-  return Colors.blue;
-}
+  // rating
+  // -1 no rating
+  // 0 thumbs down
+  // 1 thumbs up
 
-void onThumbsDown(BuildContext context, int rating, String userId) {
-  print("thumbsdown");
-  if (rating != -1) {
-    post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
-    Navigator.pop(context);
+  // thumbs 'enum'
+  // 0 thumbs down
+  // 1 thumbs up
+
+  // no rating
+  if (rating == -1) {
+    return Colors.grey;
   }
+
+  // this is a thumbs down and we have rated thumbs down
+  if (thumbs == 0 && rating == 0) {
+    return Colors.blueAccent;
+  }
+
+  // this is a thumbs down and we have rated thumbs down
+  if (thumbs == 1 && rating == 1) {
+    return Colors.redAccent;
+  }
+
+  return Colors.grey;
 }
 
 class BodyDivider extends StatelessWidget {
