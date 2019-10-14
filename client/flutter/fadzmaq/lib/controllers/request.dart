@@ -196,7 +196,13 @@ class RequestProvider<T> extends InheritedWidget {
   // a bit more complex than normal because of the way dart handles generics
   static T of<T>(BuildContext context) {
     final type = _typeOf<RequestProvider<T>>();
-    return (context.inheritFromWidgetOfExactType(type) as RequestProvider).data;
+    RequestProvider rp = context.inheritFromWidgetOfExactType(type) as RequestProvider;
+    if(rp != null){
+      return rp.data;
+    }else{
+      print("Request Provider is null for: " + T.toString());
+      return null;
+    }
   }
 
   static _typeOf<T>() => T;
