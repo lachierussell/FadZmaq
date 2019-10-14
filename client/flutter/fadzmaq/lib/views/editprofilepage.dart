@@ -213,7 +213,12 @@ class EditProfileState extends State<EditProfile> {
                           httpPost(server + "profile",
                               json: _fbKey.currentState.value);
 
-                          Navigator.pop(context);
+
+                          if(imgurl != null){
+                            pd.photo = imgurl;
+                          }
+
+                          Navigator.pop(context, pd);
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");
