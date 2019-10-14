@@ -1,5 +1,7 @@
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
+import 'package:fadzmaq/models/mainModel.dart';
+import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/controllers/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
@@ -8,45 +10,48 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fadzmaq/models/app_config.dart';
 
-/// Helper (method?) to the ProfileFieldWidget.
-/// Builds a list of Text from the Profile data.
-/// @param context  The BuildContext from the ProfileFieldWidget
-/// @return A list of Text objects.
-List<Widget> profileFieldRender(context) {
-  ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-  List<Widget> rows =
-      pd.profileFields.map((item) => new Text(item.displayValue)).toList();
-  return rows;
-}
+// /// Helper (method?) to the ProfileFieldWidget.
+// /// Builds a list of Text from the Profile data.
+// /// @param context  The BuildContext from the ProfileFieldWidget
+// /// @return A list of Text objects.
+// List<Widget> profileFieldRender(context) {
+//   ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+//   List<Widget> rows =
+//       pd.profileFields.map((item) => new Text(item.displayValue)).toList();
+//   return rows;
+// }
 
-/// Dynamically builds/renders the profile fields section of the Profile page.
-/// It will draw every field that is sent to it. It also ignores anything that
-/// isn't sent. E.g. If it is a match, it will render contact details, but if
-/// it is a recommendation, it will not.
-class ProfileFieldWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(child: Column(children: profileFieldRender(context)));
-  }
-}
+// /// Dynamically builds/renders the profile fields section of the Profile page.
+// /// It will draw every field that is sent to it. It also ignores anything that
+// /// isn't sent. E.g. If it is a match, it will render contact details, but if
+// /// it is a recommendation, it will not.
+// class ProfileFieldWidget extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(child: Column(children: profileFieldRender(context)));
+//   }
+// }
 
 class ProfileBody extends StatelessWidget {
   final ProfileType type;
+  final ProfileData profile;
   const ProfileBody({
     Key key,
+    @required this.profile,
     this.type,
-  }) : super(key: key);
+  })  : assert(profile != null),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+    // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
 
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
     // final String profileAge = pd.age != null ? pd.age : "-";
-    final String profileName = pd.name != null ? pd.name : "-";
-    final int rating = pd.rating;
-    final String bio = getProfileField(pd, "bio");
+    final String profileName = profile.name != null ? profile.name : "-";
+    final int rating = profile.rating;
+    final String bio = getProfileField(profile, "bio");
     print(rating);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,24 +66,25 @@ class ProfileBody extends StatelessWidget {
                 IconButton(
                     icon: Icon(Icons.thumb_down),
                     onPressed: () {
-                      onThumbsDown(context, rating, pd.userId);
+                      onThumbsDown(context, rating, profile);
                     },
                     color: returnColor(rating, 0)),
                 IconButton(
                   icon: Icon(Icons.thumb_up),
                   onPressed: () {
-                    onThumbsUp(context, rating, pd.userId);
+                    onThumbsUp(context, rating, profile);
                   },
                   color: returnColor(rating, 1),
                 ),
               ])
             : Row(),
         BodyDivider(),
-        ContactBody(),
+        ContactBody(profile: profile),
         ProfileHobbies(
-            hobbies: pd.hobbyContainers, direction: HobbyDirection.discover),
+            hobbies: profile.hobbyContainers,
+            direction: HobbyDirection.discover),
         ProfileHobbies(
-            hobbies: pd.hobbyContainers, direction: HobbyDirection.share),
+            hobbies: profile.hobbyContainers, direction: HobbyDirection.share),
         BodyDivider(),
         Text("5km away"),
         SizedBox(
@@ -141,11 +147,17 @@ class ProfileHobbies extends StatelessWidget {
 }
 
 class ContactBody extends StatelessWidget {
+  final ProfileData profile;
+
+  ContactBody({
+    this.profile,
+  });
+
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-    final String email = getProfileField(pd, "email");
-    final String phone = getProfileField(pd, "phone");
+    // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+    final String email = getProfileField(profile, "email");
+    final String phone = getProfileField(profile, "phone");
 
     if (email == null && phone == null) {
       return Container();
@@ -188,25 +200,33 @@ TextStyle bodyBold() {
   return TextStyle(fontWeight: FontWeight.bold);
 }
 
-void onThumbsUp(BuildContext context, int rating, String userId) {
+void onThumbsUp(BuildContext context, int existingRating, ProfileData profile) {
+  profile.rating = 1;
+
   print("thumbsup");
-  if (rating != 1) {
-    http.post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
+  if (existingRating != 1) {
+    http.post(
+        AppConfig.of(context).server + "matches/thumbs/up/" + profile.userId);
     Navigator.pop(context);
   } else {
-    http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    http.delete(
+        AppConfig.of(context).server + "matches/thumbs/" + profile.userId);
     Navigator.pop(context);
   }
 }
 
-void onThumbsDown(BuildContext context, int rating, String userId) {
+void onThumbsDown(BuildContext context, int rating, ProfileData profile) {
+  profile.rating = 0;
+
   print("thumbsdown");
   if (rating != 0) {
-    http.post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
-    Navigator.pop(context);
+    http.post(
+        AppConfig.of(context).server + "matches/thumbs/down/" + profile.userId);
+    // Navigator.pop(context);
   } else {
-    http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
-    Navigator.pop(context);
+    http.delete(
+        AppConfig.of(context).server + "matches/thumbs/" + profile.userId);
+    // Navigator.pop(context);
   }
 }
 

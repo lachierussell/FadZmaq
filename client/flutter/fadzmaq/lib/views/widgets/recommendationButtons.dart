@@ -58,8 +58,6 @@ void asyncMatchPopup(BuildContext context, ProfileData profile) async {
   print("asyncMatchPopup");
   // http.Response response = await postAsync(context, "like/" + profile.userId);
 
-  UserProfileContainer upc = RequestProvider.of<UserProfileContainer>(context);
-
   // do a post request for like
   // build the model if there is a response
   // show popup if new match is true
@@ -70,7 +68,7 @@ void asyncMatchPopup(BuildContext context, ProfileData profile) async {
           json.decode(response.body));
 
       if (lr.match == true && lr.matched != null && lr.matched.length > 0) {
-        matchPopup(context, lr.matched.first.profile, upc.profile);
+        matchPopup(context, lr.matched.first.profile);
       }
     } else {
       // print("asyncMatchPopup NULL!");

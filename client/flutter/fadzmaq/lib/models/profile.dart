@@ -56,9 +56,9 @@ class ProfileData {
   // final String age;
 //  final ContactData contactDetails;
 
-  final String name;
-  final String photo;
-  final int rating;
+  String name;
+  String photo;
+  int rating;
   final List<ProfileField> profileFields;
   final List<HobbyContainer> hobbyContainers;
   // final int age;

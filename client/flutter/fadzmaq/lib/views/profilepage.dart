@@ -22,14 +22,12 @@ class ProfileAppbar extends StatelessWidget {
 class ProfilePage extends StatelessWidget {
   final String url;
   final ProfileData profile;
-  final UserProfileContainer userData;
   final ProfileType type;
 
   const ProfilePage({
     Key key,
     @required this.url,
     this.profile,
-    this.userData,
     @required this.type,
   })  : assert(url != null),
         assert(type != null),
@@ -38,29 +36,26 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // As we only pass profile data we convert it into a container
-    final ProfileContainer container =
-        (profile != null) ? ProfileContainer(profile: profile) : null;
+    // final ProfileContainer container =
+    //     (profile != null) ? ProfileContainer(profile: profile) : null;
 
     return Scaffold(
-      body: GetRequest<ProfileContainer>(
-        url: url,
-        model: container,
-        builder: (context) {
-          return GetRequest<UserProfileContainer>(
-            url: Globals.profileURL,
-            model: userData,
-            builder: (context) {
-              return ProfilePageState(type: type);
-            },
-          );
-        },
+      body: ProfilePageState(
+        type: type,
+        profile: profile,
       ),
+      // GetRequest<ProfileContainer>(
+      //   url: url,
+      //   model: container,
+      //   builder: (context) {
+      //     return ProfilePageState(type: type);
+      //   },
+      // ),
       floatingActionButton:
           profile != null && type == ProfileType.recommendation
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
                     LikeButton(profile: profile, type: LikePass.pass),
                     Expanded(
                       child: Container(
@@ -78,15 +73,17 @@ class ProfilePage extends StatelessWidget {
 
 class ProfilePageState extends StatelessWidget {
   final ProfileType type;
+  final ProfileData profile;
 
   ProfilePageState({
+    @required this.profile,
     @required this.type,
   }) : assert(type != null);
 
   @override
   Widget build(BuildContext context) {
-    ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
-    ProfileData profile = pc.profile;
+    // ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
+    // ProfileData profile = pc.profile;
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -115,7 +112,7 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, right: 16),
-                    child: ProfileBody(type: this.type,),
+                    child: ProfileBody(type: type, profile: profile),
                   ),
                   type == ProfileType.recommendation
                       ? SizedBox(height: 140)

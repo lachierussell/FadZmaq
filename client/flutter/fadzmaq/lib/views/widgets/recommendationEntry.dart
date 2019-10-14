@@ -29,8 +29,6 @@ class RecommendationEntry extends StatelessWidget {
   /// If there is a response either way remove the entry from the list
   /// This needs to be a async as it waits for the page to return
   _navigateAwait(BuildContext context, ProfileData profile) async {
-    UserProfileContainer upc =
-        RequestProvider.of<UserProfileContainer>(context);
 
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
@@ -40,7 +38,6 @@ class RecommendationEntry extends StatelessWidget {
         builder: (context) => ProfilePage(
           url: "matches/" + profile.userId,
           profile: profile,
-          userData: upc,
           type: ProfileType.recommendation,
         ),
       ),

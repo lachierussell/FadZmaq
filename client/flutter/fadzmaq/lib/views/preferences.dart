@@ -1,6 +1,7 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/models/mainModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
@@ -33,9 +34,9 @@ class PreferencesTempApp extends StatelessWidget {
 class TestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
+    ProfileData userProfile = DataController.of(context).userProfile;
 
-    return Text(profile.name);
+    return Text(userProfile.name);
   }
 }
 
@@ -46,8 +47,8 @@ class UserPreferencesPage extends StatelessWidget {
   /// only [builder] waits for the parent to initialise
   @override
   Widget build(BuildContext context) {
-    return GetRequest<ProfileContainer>(
-        url: Globals.profileURL,
+    return LoadModel(
+        model: Model.userProfile,
         builder: (context) {
           return UserPreferences();
         });
@@ -67,19 +68,11 @@ class UserPreferencesState extends State<UserPreferences> {
   double _locationDistance = 50;
   int _roundDist = 50;
   bool _notificationsBool = true;
-  ProfileData profile;
-
-  @override
-  void didChangeDependencies() {
-    if (profile == null) {
-      profile = RequestProvider.of<ProfileContainer>(context).profile;
-    }
-
-    super.didChangeDependencies();
-  }
 
   @override
   Widget build(BuildContext context) {
+    ProfileData userProfile = DataController.of(context).userProfile;
+
     return SingleChildScrollView(
       // color: Colors.grey,
       child: Align(
@@ -94,7 +87,7 @@ class UserPreferencesState extends State<UserPreferences> {
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: DisplayPhoto(
-                    url: profile.photo,
+                    url: userProfile.photo,
                     dimension: Globals.recThumbDim,
                   ),
                 ),
@@ -199,20 +192,9 @@ class UserPreferencesState extends State<UserPreferences> {
   }
 
   void editProfileFunction(BuildContext context) async {
-    var result =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return EditProfilePage();
     }));
-
-    if (result != null) {
-      print("EDIT RESULT " + result.toString());
-      ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
-      pc.profile = result;
-
-      setState(() {
-        profile = result;
-      });
-    }
   }
 }
 
@@ -223,7 +205,8 @@ class PreferenceButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
+    // ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
+    ProfileData userProfile = DataController.of(context).userProfile;
     return Column(
       children: <Widget>[
         Padding(
@@ -249,7 +232,7 @@ class PreferenceButtons extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
                           url: Globals.profileURL,
-                          profile: profile,
+                          profile: userProfile,
                           type: ProfileType.own,
                         )),
               );

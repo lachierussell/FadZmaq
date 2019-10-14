@@ -1,4 +1,5 @@
 import 'package:fadzmaq/controllers/globals.dart';
+import 'package:fadzmaq/models/mainModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -6,8 +7,9 @@ import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-Future<void> matchPopup(
-    BuildContext context, ProfileData profile, ProfileData userProfile) async {
+Future<void> matchPopup(BuildContext context, ProfileData profile) async {
+  ProfileData userProfile = DataController.of(context).userProfile;
+
   return showDialog<void>(
     context: mainScaffold.currentContext,
     barrierDismissible: false, // user must tap button!

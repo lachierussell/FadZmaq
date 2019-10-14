@@ -13,23 +13,19 @@ class MatchesPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetRequest<MatchesData>(
-        url: Globals.matchesURL,
+    return LoadModel(
+        model: Model.matches,
         builder: (context) {
-          return GetRequest<UserProfileContainer>(
-              url: Globals.profileURL,
-              builder: (context) {
-                return MatchesList();
-              });
+          return MatchesList();
         });
   }
 }
 
 class MatchesList extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     // MatchesData matchesData = RequestProvider.of<MatchesData>(context);
-    MatchesData matchesData = DataController.of(context).matches;
+    MatchesData matchesData = getMatchData(context);
     // print(matchesData.toString());
     // print(matchesData.matches.toString());
 

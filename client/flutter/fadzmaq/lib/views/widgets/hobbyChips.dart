@@ -1,5 +1,6 @@
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
+import 'package:fadzmaq/models/mainModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 import 'package:flutter/material.dart';
@@ -34,12 +35,7 @@ class HobbyChips extends StatelessWidget {
 
     // any request using hobby chips should have a user profile container request
     // to compare the hobbies to.
-    UserProfileContainer upc =
-        RequestProvider.of<UserProfileContainer>(context);
-
-    if (upc == null) return Container();
-
-    ProfileData userProfile = upc.profile;
+    ProfileData userProfile = DataController.of(context).userProfile;
 
     if (userProfile == null) return Container();
     if (userProfile.hobbyContainers == null) return Container();

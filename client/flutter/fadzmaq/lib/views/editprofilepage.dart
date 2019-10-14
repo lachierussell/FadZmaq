@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/models/mainModel.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/preferences.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
+// import 'package:permission_handler/permission_handler.dart';
 
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
@@ -42,12 +44,13 @@ class EditProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
-      body: GetRequest<ProfileContainer>(
-        url: Globals.profileURL,
-        builder: (context) {
-          return new EditProfile();
-        },
-      ),
+      body: EditProfile(),
+      // GetRequest<ProfileContainer>(
+      //   url: Globals.profileURL,
+      //   builder: (context) {
+      //     return new EditProfile();
+      //   },
+      // ),
     );
   }
 }
@@ -89,6 +92,12 @@ class EditProfileState extends State<EditProfile> {
 
   // Get an image from your gallery
   Future getImage1() async {
+
+
+
+
+// Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
@@ -138,13 +147,14 @@ class EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+    // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+    ProfileData userProfile = DataController.of(context).userProfile;
     String server = AppConfig.of(context).server;
 
     // check for id 1 (about me) and grab the display value
-    String bio = profileFieldFromString(pd, "bio");
-    String contactPhone = profileFieldFromString(pd, "phone");
-    String contactEmail = profileFieldFromString(pd, "email");
+    String bio = profileFieldFromString(userProfile, "bio");
+    String contactPhone = profileFieldFromString(userProfile, "phone");
+    String contactEmail = profileFieldFromString(userProfile, "email");
 
 //    final String contact_phone =
 //        pd.contactDetails.phone != null ? pd.contactDetails.phone : "";
@@ -176,7 +186,7 @@ class EditProfileState extends State<EditProfile> {
                               width: Globals.recThumbDim,
                             )
                           : DisplayPhoto(
-                              url: pd.photo,
+                              url: userProfile.photo,
                               dimension: Globals.recThumbDim,
                             ),
                     ),
@@ -192,7 +202,7 @@ class EditProfileState extends State<EditProfile> {
                         decoration: InputDecoration(labelText: "")),
                     FormBuilderTextField(
                         attribute: "nickname",
-                        initialValue: pd.name,
+                        initialValue: userProfile.name,
                         decoration: InputDecoration(labelText: "Nickname")),
                     FormBuilderTextField(
                         attribute: "email",
@@ -237,14 +247,14 @@ class EditProfileState extends State<EditProfile> {
                                     json: _fbKey.currentState.value);
 
                                 if (imgurl != null) {
-                                  pd.photo = imgurl;
+                                  userProfile.photo = imgurl;
                                 }
 
                                 // setState(() {
                                 //   disableButton = false;
                                 // });
                                 if (Navigator.canPop(context)) {
-                                  Navigator.pop(context, pd);
+                                  Navigator.pop(context);
                                 } else {
                                   Navigator.of(context).pushReplacement(
                                     MaterialPageRoute(
