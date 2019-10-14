@@ -24,5 +24,5 @@ T fromJson<T>(Map<String, dynamic> json) {
   if (T == RecommendationsData) {
     return RecommendationsData.fromJson(json) as T;
   }
-  throw UnimplementedError();
+  throw UnimplementedError("request called on unsuported type, add to 'models.dart'");
 }

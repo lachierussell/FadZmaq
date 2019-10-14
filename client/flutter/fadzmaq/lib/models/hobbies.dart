@@ -42,7 +42,7 @@ class HobbyData {
 
   @override
   int get hashCode {
-    return id;
+    return id.hashCode;
   }
 }
 

@@ -6,6 +6,7 @@
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 
+
 import fadzmaq.database.connection as db
 from fadzmaq.database.hobbies import get_hobbies
 
@@ -14,10 +15,10 @@ def update_profile(subject, uid):
     rows = db.get_db().execute(
         '''
         UPDATE profile
-        SET nickname= %s, bio= %s, email= %s, phone= %s
+        SET nickname= %s, bio= %s, email= %s, phone= %s, photo= %s
         WHERE user_id= %s;
         ''', subject.values['nickname'], subject.values['bio'], subject.values['email'],
-        subject.values['phone'], uid
+        subject.values['phone'], subject.values['photo'], uid
     )
 
 
@@ -36,7 +37,7 @@ def build_profile_data(row, permission):
     for perm in range(0, permission):
         for key in permission_keys[perm]:
             if key == 'location':
-                continue  # TODO: Add this to query and calculate on db
+                continue
             profile_fields.append(
                 {
                     "name": key,
@@ -49,6 +50,7 @@ def build_profile_data(row, permission):
             'user_id': row['user_id'],
             'name': row['nickname'],
             'photo_location': row['photo'],
+            'rating': row['rating'],
             'profile_fields': profile_fields,
             'hobbies': get_hobbies(row['user_id'])
         }
@@ -63,7 +65,7 @@ def retrieve_profile(subject):
     # Retrieves user info.
     rows = db.get_db().execute(
         '''
-        SELECT *, EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age 
+        SELECT *, -1 as rating
         FROM profile 
         WHERE user_id = %s
         ''', subject

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/preferences.dart';
@@ -41,7 +42,7 @@ class EditProfilePage extends StatelessWidget {
         title: Text('Edit Profile'),
       ),
       body: GetRequest<ProfileContainer>(
-        url: "profile",
+        url: Globals.profileURL,
         builder: (context) {
           return new EditProfile();
         },
