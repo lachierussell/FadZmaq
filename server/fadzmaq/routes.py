@@ -47,11 +47,11 @@ def auth_required(func):
             return func(uid=uid, *args, **kwargs)
         except Exception as e:
             # Invalid token or user
-            print('Authentication failed:', str(e))
-            uid = '26ab0db90d72e28ad0ba1e22ee510510'
-            return func(uid=uid, *args, **kwargs)
+            # print('Authentication failed:', str(e))
+            # uid = '26ab0db90d72e28ad0ba1e22ee510510'
+            # return func(uid=uid, *args, **kwargs)
             # Replace above return with below when in production
-            # return 'Authentication failed: ' + str(e), 401
+            return 'Authentication failed: ' + str(e), 401
 
     authenticate.__name__ = func.__name__
     return authenticate

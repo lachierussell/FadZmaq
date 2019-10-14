@@ -29,7 +29,6 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
 
     _signout();
-    
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setState(() {
@@ -43,7 +42,6 @@ class _LoginScreenState extends State<LoginScreen> {
           //
         });
   }
-
 
   Future<FirebaseUser> _handleSignIn() async {
     setState(() {
@@ -106,8 +104,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Center(
-              child: Text("First Time Users: Please click the settings tab to modify your profile")
-            ),
+                child: Text(
+                    "First Time Users: Please click the settings tab to modify your profile")),
             Center(
               child: _isButtonDisabled
                   ? CircularProgressIndicator()
@@ -130,22 +128,32 @@ class _LoginScreenState extends State<LoginScreen> {
                           // a quick check to the server to see if we have an account already
                           // fetch response code will use Firebase Authentication to send our token
                           String url = "matches";
+                          http.Response response;
                           // TODO check for timeout here
-                          http.Response response = await httpGet(config.server + url);
-                          int code = response.statusCode;
+                          try {
+                            response = await httpGet(config.server + url);
+                          } catch (e) {
+                            print(e.toString());
+                          }
 
-                          String resonse = response.body.toString();
+                          int code = 500;
 
-                          print("A " + '$code' + " " + '$resonse');
+                          if (response != null) {
+                            code = response.statusCode;
+
+                            String resonse = response.body.toString();
+
+                            print("A " + '$code' + " " + '$resonse');
+                          }
 
                           // 401: no user account
-                          if (code == 404) {
+                          if (code == 401) {
                             // TODO make this better, its a bit of a hack at the moment
 
                             // Get our id token from firebase
                             FirebaseAuth auth = FirebaseAuth.instance;
                             FirebaseUser user = await auth.currentUser();
-                            
+
                             var names = user.displayName.split(" ");
                             String name = names[0];
 
@@ -159,8 +167,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             // print(json);
                             // post to account with our auth
                             http.Response response = await httpPost(
-                              config.server + "account",json:_json
-                            );
+                                config.server + "account",
+                                json: _json);
 
                             // update our code
                             code = response.statusCode;
