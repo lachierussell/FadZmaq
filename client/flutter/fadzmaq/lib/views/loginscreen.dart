@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/controllers/globals.dart';
@@ -10,7 +11,6 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/cache.dart';
 
 import 'package:http/http.dart' as http;
-
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -105,9 +105,6 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Center(
-                child: Text(
-                    "First Time Users: Please click the settings tab to modify your profile")),
-            Center(
               child: _isButtonDisabled
                   ? CircularProgressIndicator()
                   : RaisedButton(
@@ -193,7 +190,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // success with the server
                           // go to main page (perferences at the moment)
                           else if (code == 200) {
-                            await cacheImages(context);
+                            await firstLoadGlobalModels(context);
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 // builder: (context) => UserPreferencesPage(),

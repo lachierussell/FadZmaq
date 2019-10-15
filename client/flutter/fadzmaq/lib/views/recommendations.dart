@@ -1,7 +1,9 @@
 import 'dart:math';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'package:fadzmaq/views/widgets/recommendationEntry.dart';
@@ -16,8 +18,8 @@ class RecommendationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetRequest<RecommendationsData>(
-        url: Globals.recsURL,
+    return VerifyModel(
+        model: Model.recommendations,
         builder: (context) {
           return RecommendationsList();
         });
@@ -37,11 +39,7 @@ class RecommendationsListState extends State<RecommendationsList> {
   @override
   void didChangeDependencies() {
     if (recommendationsList == null) {
-      RecommendationsData recommendationsData =
-          RequestProvider.of<RecommendationsData>(context);
-
-      cacheRecommendationPhotos(context, recommendationsData);
-
+      RecommendationsData recommendationsData = getRecommendations(context);
       recommendationsList = recommendationsData.recommendations;
     }
 
@@ -95,7 +93,8 @@ class RecommendationsListState extends State<RecommendationsList> {
     var rd = RecommendationsData.fromJson(json.decode(response.body));
     if (rd == null) return;
 
-    cacheRecommendationPhotos(context, rd);
+    GlobalModel globalModel = GlobalData.of(context);
+    cacheRecommendationPhotos(globalModel, rd);
 
     List<ProfileContainer> newList = rd.recommendations;
     if (recommendationsList == null) return;

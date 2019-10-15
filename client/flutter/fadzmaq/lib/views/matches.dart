@@ -23,11 +23,11 @@ class MatchesList extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     // MatchesData matchesData = RequestProvider.of<MatchesData>(context);
-    MatchesData matchesData = getMatchData(context);
+    MatchesData matchesData = getMatches(context);
     // print(matchesData.toString());
     // print(matchesData.matches.toString());
-
-    cacheMatchPhotos(context, matchesData);
+    GlobalModel globalModel = GlobalData.of(context);
+    cacheMatchPhotos(globalModel, matchesData);
 
     print("build matches");
 
@@ -39,7 +39,7 @@ class MatchesList extends StatelessWidget {
 
   Widget _listItemBuilder(BuildContext context, int index) {
     // MatchesData matchesData = RequestProvider.of<MatchesData>(context);
-    MatchesData matchesData = GlobalData.of(context).matches;
+    MatchesData matchesData = getMatches(context);
     return MatchEntry(profile: matchesData.matches[index].profile);
   }
 }

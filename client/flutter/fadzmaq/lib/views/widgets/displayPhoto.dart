@@ -1,5 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:flutter/material.dart';
 
 /// Displays a users profile photo
@@ -25,9 +27,9 @@ class DisplayPhoto extends StatelessWidget {
         width: dimension,
       );
     }
-
-    url = photoThumbURL(context, url, dimension);
-    print("displaying: " + url);
+    GlobalModel globalModel = GlobalData.of(context);
+    url = photoThumbURL(globalModel.devicePixelRatio, url, dimension);
+    // print("displaying: " + url);
 
     return SizedBox(
       height: dimension,

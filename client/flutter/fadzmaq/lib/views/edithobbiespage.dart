@@ -1,11 +1,14 @@
 import 'dart:convert';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/controllers/request.dart';
+
 
 class HobbyTempApp extends StatelessWidget {
   const HobbyTempApp();
@@ -29,8 +32,8 @@ class EditHobbyPage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      body: GetRequest<ProfileContainer>(
-        url: Globals.profileURL,
+      body: VerifyModel(
+        model: Model.userProfile,
         builder: (context) {
           finalIsShare = isShare;
           return new EditHobbyPage();
@@ -51,8 +54,8 @@ class EditHobbyPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Choose hobbies that you want to discover'),
       ),
-      body: GetRequest<AllHobbiesData>(
-        url: "hobbies",
+      body: VerifyModel(
+        model: Model.allHobbies,
         builder: (context) {
           return new EditHobby();
         },
@@ -122,8 +125,10 @@ class _EditHobbyPageState extends State<EditHobby> {
   Widget build(BuildContext context) {
     var x = ["Surfing", "Summer"];
     // List<FormBuilderFieldOption> y = function(x);
-    AllHobbiesData hb = RequestProvider.of<AllHobbiesData>(context);
-    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+
+    AllHobbiesData hb = getHobbies(context);
+    ProfileData pd = getUserProfile(context);
+
     List<String> hobbies = List();
     print("here");
     if (pd.hobbyContainers != null) {

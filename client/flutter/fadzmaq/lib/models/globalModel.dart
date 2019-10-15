@@ -18,44 +18,53 @@ class GlobalModel {
   ProfileData userProfile;
   AllHobbiesData allHobbies;
 
+  double devicePixelRatio;
+  double screenWidth;
+
   GlobalModel({
     this.matches,
     this.recommendations,
     this.userProfile,
     this.allHobbies,
+    this.devicePixelRatio,
+    this.screenWidth,
   });
+
+  void updateMediaQuery(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.shortestSide;
+    devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
+  }
 }
 
 GlobalModel getModel(BuildContext context) {
   GlobalModel model = GlobalData.of(context);
-  if (model == null) {
-    throw Exception("Data Controller not found");
-  }
+  if (model == null) throw Exception("Data Controller not found");
+
   return model;
 }
 
-MatchesData getMatchData(BuildContext context) {
+MatchesData getMatches(BuildContext context) {
   GlobalModel model = getModel(context);
-
-  // if(model.matches == null){
-  //   String server = AppConfig.of(context).server;
-  //   http.Response response;
-  //   try{
-  //     response = await httpGet(server + Globals.matchesURL);
-  //   }catch (e){
-  //     //TODO navidate away?
-  //     throw Exception(e);
-  //   }
-
-  //   if(response != null && response.statusCode == 200){
-
-  //     MatchesData md = MatchesData.fromJson(json.decode(response.body));
-  //      model.matches = md;
-  //   }
-  // }
-
+  if (model.matches == null) throw Exception("Matches model not found");
   return model.matches;
 }
 
+RecommendationsData getRecommendations(BuildContext context) {
+  GlobalModel model = getModel(context);
+  if (model.recommendations == null)
+    throw Exception("Recommendations model not found");
+  return model.recommendations;
+}
 
+AllHobbiesData getHobbies(BuildContext context) {
+  GlobalModel model = getModel(context);
+  if (model.allHobbies == null) throw Exception("All hobbies model not found");
+  return model.allHobbies;
+}
 
+ProfileData getUserProfile(BuildContext context) {
+  GlobalModel model = getModel(context);
+  if (model.userProfile == null)
+    throw Exception("User profile model not found");
+  return model.userProfile;
+}

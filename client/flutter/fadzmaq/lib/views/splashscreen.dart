@@ -1,4 +1,5 @@
 import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
@@ -56,8 +57,7 @@ class SplashScreenState extends State<SplashScreen> {
           ),
         );
       } else {
-        // TODO this should all be put after the login screen
-        await cacheImages(context);
+        await firstLoadGlobalModels(context);
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
