@@ -1,5 +1,6 @@
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -7,8 +8,8 @@ import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-Future<void> matchPopup(BuildContext context, ProfileData profile) async {
-  ProfileData userProfile = GlobalData.of(context).userProfile;
+Future<void> matchPopup(ProfileData profile) async {
+  ProfileData userProfile = getUserProfile(mainScaffold.currentContext);
 
   return showDialog<void>(
     context: mainScaffold.currentContext,
