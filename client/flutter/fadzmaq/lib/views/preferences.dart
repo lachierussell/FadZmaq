@@ -3,7 +3,7 @@ import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
-import 'package:fadzmaq/views/edithobbiespage.dart';
+import 'package:fadzmaq/models/settings.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
+import 'dart:convert';
 
 class UserPreferencesPage extends StatelessWidget {
   /// the [VerifyModel] for this page
@@ -40,6 +41,22 @@ class UserPreferencesState extends State<UserPreferences> {
   double _locationDistance = 50;
   int _roundDist = 50;
   bool _notificationsBool = true;
+
+  @override
+  void didChangeDependencies() {
+    AccountSettings settings = RequestProvider.of<AccountSettings>(context);
+
+    _locationDistance = settings.distanceSetting.toDouble();
+    _roundDist = settings.distanceSetting;
+
+    if (settings != null) {
+      print(settings.distanceSetting.toString());
+    } else {
+      print("settings null");
+    }
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,13 +100,18 @@ class UserPreferencesState extends State<UserPreferences> {
                         Expanded(
                           child: Slider(
                             min: 10,
-                            max: 200,
+                            max: 120,
                             // value: 50,
                             onChanged: (newDist) {
                               setState(() {
                                 int rounded = (newDist / 5).round() * 5;
                                 _locationDistance = newDist;
                                 _roundDist = rounded;
+
+                                AccountSettings newSetting = AccountSettings(distanceSetting: _roundDist);
+
+                                // TODO give this a delay
+                                postAsync(context, Globals.settingsURL, json: json.encode(newSetting.toJson()));
                               });
                             },
                             // onChangeEnd: (newDist){

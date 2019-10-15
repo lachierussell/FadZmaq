@@ -3,6 +3,7 @@ import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/views/landing.dart';
+import 'package:fadzmaq/views/widgets/localtionPermissionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -11,6 +12,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/imageCache.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:location/location.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -190,13 +192,22 @@ class _LoginScreenState extends State<LoginScreen> {
                           // success with the server
                           // go to main page (perferences at the moment)
                           else if (code == 200) {
+                            Location location = new Location();
+                            // don't request permission here
+
+                            bool hasPermission = await location.hasPermission();
                             await firstLoadGlobalModels(context);
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                // builder: (context) => UserPreferencesPage(),
-                                builder: (context) => LandingPage(),
-                              ),
-                            );
+                            if (hasPermission) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => LandingPage()),
+                              );
+                            } else {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => PermissionPage()),
+                              );
+                            }
                           }
 
                           // TODO error check here

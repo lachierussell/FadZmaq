@@ -4,6 +4,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
+import 'package:fadzmaq/views/widgets/localtionPermissionPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -20,7 +21,6 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-
     // var token = await user.getIdToken();
     super.initState();
 
@@ -31,6 +31,7 @@ class SplashScreenState extends State<SplashScreen> {
   onDoneLoading() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
+
     if (user != null) {
       // TODO refactor this
       ConfigResource config = AppConfig.of(context);
@@ -48,7 +49,6 @@ class SplashScreenState extends State<SplashScreen> {
         code = response.statusCode;
       }
 
-
       if (code == 401) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -57,35 +57,34 @@ class SplashScreenState extends State<SplashScreen> {
           ),
         );
       } else {
+        //     await fetchResponseCode(config.server + url);
+        Location location = new Location();
+        // don't request permission here
 
+        bool hasPermission = await location.hasPermission();
+        if (hasPermission) {
+          LocationData currentLocation = await location.getLocation();
 
-      var location = new Location();
-      var currentLocation;
-// Platform messages may fail, so we use a try/catch PlatformException.
-      currentLocation = await location.getLocation();
-
-      // var token = await user.getIdToken();
-      // printWrapped(token.token);
-      httpPost(AppConfig.of(context).server + "profile/ping", json:utf8.encode(json.encode(compileJson(currentLocation))));
-      // String url = "matches";
-      // int code =
-      //     await fetchResponseCode(config.server + url);
+          httpPost(AppConfig.of(context).server + "profile/ping",
+              json: utf8.encode(json.encode(compileJson(currentLocation))));
+        }
 
         await firstLoadGlobalModels(context);
 
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            // builder: (context) => UserPreferencesPage(),
-            builder: (context) => LandingPage(),
-          ),
-        );
+        if (hasPermission) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => LandingPage()),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => PermissionPage()),
+          );
+        }
       }
     } else {
       // TODO try for a silent google sign in
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => LoginScreen()),
       );
     }
   }
@@ -95,14 +94,19 @@ class SplashScreenState extends State<SplashScreen> {
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
-  Map compileJson(var x) {
+  Map compileJson(LocationData locationData) {
+    String lat = locationData.latitude.toStringAsFixed(2);
+    String long = locationData.longitude.toStringAsFixed(2);
+
     Map map = {
-      'location': [{'lat': x['latitude'] , "long": x['longitude'] }
-      ]};
+      'location': {
+        'lat': lat,
+        "long": long,
+      }
+    };
     print(map);
     return map;
   }
-
 
   @override
   Widget build(BuildContext context) {

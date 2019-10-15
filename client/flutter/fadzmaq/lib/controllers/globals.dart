@@ -8,6 +8,7 @@ class Globals{
   static const String matchesURL = "matches";
   static const String recsURL = "user/recs";
   static const String allHobbiesURL = "hobbies";
+   static const String settingsURL = "account/settings";
 
 
 

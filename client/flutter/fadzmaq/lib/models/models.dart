@@ -3,7 +3,7 @@ import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'dart:core';
-
+import 'package:fadzmaq/models/settings.dart';
 
 /// Redundant, used with [GetRequest]
 //
@@ -26,6 +26,9 @@ T fromJson<T>(Map<String, dynamic> json) {
   }
   if (T == RecommendationsData) {
     return RecommendationsData.fromJson(json) as T;
+  }
+  if (T == AccountSettings) {
+    return AccountSettings.fromJson(json) as T;
   }
   throw UnimplementedError("request called on unsuported type, add to 'models.dart'");
 }
