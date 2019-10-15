@@ -9,7 +9,6 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/controllers/request.dart';
 
-
 class HobbyTempApp extends StatelessWidget {
   const HobbyTempApp();
 
@@ -26,12 +25,11 @@ bool finalIsShare;
 
 class EditHobbyPage2 extends StatelessWidget {
   final bool isShare;
-  const EditHobbyPage2({Key key, this.isShare}) : super(key : key);
+  const EditHobbyPage2({Key key, this.isShare}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: VerifyModel(
         model: Model.userProfile,
         builder: (context) {
@@ -43,11 +41,8 @@ class EditHobbyPage2 extends StatelessWidget {
   }
 }
 
-
-
-
 class EditHobbyPage extends StatelessWidget {
-  const EditHobbyPage({Key key}) : super(key : key);
+  const EditHobbyPage({Key key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,10 +59,8 @@ class EditHobbyPage extends StatelessWidget {
   }
 }
 
-
-
 class EditHobby extends StatefulWidget {
-  const EditHobby({Key key}) : super(key : key);
+  const EditHobby({Key key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => new _EditHobbyPageState();
@@ -76,37 +69,44 @@ class EditHobby extends StatefulWidget {
 List<FormBuilderFieldOption> function(var x) {
   List<FormBuilderFieldOption> list = [];
   hobbies = Map();
-  for(var item  in x) {
+  for (var item in x) {
     list.add(FormBuilderFieldOption(value: item.name));
     hobbies[item.name] = item.id;
   }
   return list;
 }
 
-List<Map> deriveResult(var x) {
+List<Map> deriveResult(ProfileData profile, var x) {
+  List<HobbyData> modelHobbies = List<HobbyData>();
+
   List<Map> ret = List();
   List<String> y = x["languages"];
-  for(var z in y) {
-    ret.add({"id" : hobbies[z], "name" : z});
+  for (var z in y) {
+    ret.add({"id": hobbies[z], "name": z});
+    modelHobbies.add(HobbyData(id: hobbies[z], name: z));
   }
+
+  var hobbyContainer =
+      HobbyContainer(container: discoverOrShare(), hobbies: modelHobbies);
+  profile.replaceHobbyContainer(hobbyContainer);
+
   return ret;
 }
 
-
-Map compileJson(var x) {
-  Map map = {
-    'hobbies': [{'container': discoverOrShare() , "hobbies": deriveResult(x) }
-  ]};
+Map<String, dynamic> compileJson(ProfileData profile, var x) {
+  Map<String, dynamic> map = {
+    'hobbies': [
+      {'container': discoverOrShare(), "hobbies": deriveResult(profile, x)}
+    ]
+  };
   print(map);
   return map;
 }
 
 String discoverOrShare() {
-  if(finalIsShare) {
+  if (finalIsShare) {
     return "share";
-  }
-
-  else {
+  } else {
     return "discover";
   }
 }
@@ -118,7 +118,7 @@ class _EditHobbyPageState extends State<EditHobby> {
   bool showSegmentedControl = true;
   final GlobalKey<FormBuilderState> _fbKey = GlobalKey<FormBuilderState>();
   final GlobalKey<FormFieldState> _specifyTextFieldKey =
-  GlobalKey<FormFieldState>();
+      GlobalKey<FormFieldState>();
 
   ValueChanged _onChanged = (val) => print(val);
   @override
@@ -133,10 +133,9 @@ class _EditHobbyPageState extends State<EditHobby> {
     print("here");
     if (pd.hobbyContainers != null) {
       for (HobbyContainer hc in pd.hobbyContainers) {
-        if(hc.container == discoverOrShare())
-        if (hc.hobbies != null) {
+        if (hc.container == discoverOrShare()) if (hc.hobbies != null) {
           for (HobbyData h in hc.hobbies) {
-           hobbies.add(h.name);
+            hobbies.add(h.name);
           }
         }
       }
@@ -150,69 +149,70 @@ class _EditHobbyPageState extends State<EditHobby> {
     //     title: Text("Choose hobbies to discover"),
     //   ),
     //   body:
-     return Padding(
-        padding: EdgeInsets.all(10),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              FormBuilder(
-                // context,
-                key: _fbKey,
-                autovalidate: true,
-                initialValue: {
-                  'movie_rating': 5,
-                },
-                // readOnly: true,
-                child: Column(
-                  children: <Widget>[
-
-                    FormBuilderCheckboxList(
-                      decoration: InputDecoration(
-                      labelText: "Hobbies"),
-                      attribute: "languages",
-
-                      // TODO make this use the hobbies we're looking for
-                      // probably use another getRequest for now, but it should be smoother
-                      // maybe some storage of the hobby list on the app so we're only requesting the user hobbies
-                      initialValue: hobbies,
-                      leadingInput: true,
-                      options: y,
-                      onChanged: _onChanged,
-                    ),
-
-                  ],
-                ),
-              ),
-              Row(
+    return Padding(
+      padding: EdgeInsets.all(10),
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            FormBuilder(
+              // context,
+              key: _fbKey,
+              autovalidate: true,
+              initialValue: {
+                'movie_rating': 5,
+              },
+              // readOnly: true,
+              child: Column(
                 children: <Widget>[
-                  Expanded(
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        if (_fbKey.currentState.saveAndValidate()) {
-                          print(_fbKey.currentState.value);
-                          httpPost(AppConfig.of(context).server + "profile/hobbies", json:utf8.encode(json.encode(compileJson(_fbKey.currentState.value))));
-                          Navigator.pop(context);
-                        } else {
-                          print(_fbKey.currentState.value);
-                          print("validation failed");
-                        }
-                      },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
+                  FormBuilderCheckboxList(
+                    decoration: InputDecoration(labelText: "Hobbies"),
+                    attribute: "languages",
 
+                    // TODO make this use the hobbies we're looking for
+                    // probably use another getRequest for now, but it should be smoother
+                    // maybe some storage of the hobby list on the app so we're only requesting the user hobbies
+                    initialValue: hobbies,
+                    leadingInput: true,
+                    options: y,
+                    onChanged: _onChanged,
+                  ),
                 ],
               ),
-            ],
-          ),
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: MaterialButton(
+                    color: Theme.of(context).accentColor,
+                    child: Text(
+                      "Submit",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      if (_fbKey.currentState.saveAndValidate()) {
+                        print(_fbKey.currentState.value);
+                        Map<String, dynamic> hobJson =
+                            compileJson(pd, _fbKey.currentState.value);
+
+                        httpPost(
+                            AppConfig.of(context).server + "profile/hobbies",
+                            json: json.encode(hobJson));
+                        Navigator.pop(context);
+                      } else {
+                        print(_fbKey.currentState.value);
+                        print("validation failed");
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+              ],
+            ),
+          ],
         ),
+      ),
       // ),
     );
   }

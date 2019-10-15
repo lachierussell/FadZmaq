@@ -249,11 +249,11 @@ class EditProfileState extends State<EditProfile> {
                                   userProfile.name = nickname;
 
                                 if (email != null)
-                                  userProfile.replaceField("email", email);
+                                  userProfile.replaceProfileField("email", email);
                                 if (phone != null)
-                                  userProfile.replaceField("phone", phone);
+                                  userProfile.replaceProfileField("phone", phone);
                                 if (bio != null)
-                                  userProfile.replaceField("bio", bio);
+                                  userProfile.replaceProfileField("bio", bio);
 
                                 // setState(() {
                                 //   disableButton = false;

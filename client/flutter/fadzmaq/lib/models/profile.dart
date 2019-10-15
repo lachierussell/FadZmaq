@@ -112,10 +112,19 @@ class ProfileData {
     );
   }
 
+  void replaceHobbyContainer(HobbyContainer hobbyContainer) {
+    for (HobbyContainer hc in hobbyContainers) {
+      if (hc.container == hobbyContainer.container) {
+        hc.hobbies = hobbyContainer.hobbies;
+        return;
+      }
+    }
+    hobbyContainers.add(hobbyContainer);
+  }
 
-  void replaceField(String field, String value){
-    for(ProfileField pf in profileFields){
-      if(pf.name == field){
+  void replaceProfileField(String field, String value) {
+    for (ProfileField pf in profileFields) {
+      if (pf.name == field) {
         pf.displayValue = value;
         return;
       }
