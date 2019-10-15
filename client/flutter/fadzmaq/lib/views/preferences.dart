@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/account.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/globalModel.dart';
@@ -143,7 +144,9 @@ class UserPreferencesState extends State<UserPreferences> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: RaisedButton(
-                    onPressed: logOut,
+                    onPressed: () {
+                      logOut(context);
+                    },
                     child: Text("Log out"),
                   ),
                 ),
@@ -175,17 +178,6 @@ class UserPreferencesState extends State<UserPreferences> {
         ),
       ),
     );
-  }
-
-  // TODO temp living here, to be moved to auth(?)
-  void logOut() async {
-    await FirebaseAuth.instance.signOut();
-    GoogleSignIn _googleSignIn = GoogleSignIn();
-    _googleSignIn.signOut();
-    cleanModel(context);
-
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
   void editProfileFunction(BuildContext context) async {
