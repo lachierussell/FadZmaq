@@ -3,6 +3,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/hobbies.dart';
+import 'package:fadzmaq/models/settings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/matches.dart';
@@ -175,6 +176,9 @@ String _getURL(Model model) {
     case Model.allHobbies:
       url = Globals.allHobbiesURL;
       break;
+    case Model.accountSettings:
+      url = Globals.settingsURL;
+      break;
   }
   return url;
 }
@@ -195,6 +199,9 @@ bool _checkModel(BuildContext context, Model model) {
       break;
     case Model.allHobbies:
       present = globalModel.allHobbies != null;
+      break;
+    case Model.accountSettings:
+      present = globalModel.accountSettings != null;
       break;
   }
   print("checkmodel: " + model.toString() + "-" + present.toString());
@@ -225,6 +232,9 @@ void _loadJSON(GlobalModel globalModel, Model model, dynamic json) {
     case Model.allHobbies:
       globalModel.allHobbies = AllHobbiesData.fromJson(json);
       break;
+    case Model.accountSettings:
+      globalModel.accountSettings = AccountSettings.fromJson(json);
+      break;
   }
 }
 
@@ -241,6 +251,8 @@ Future _cacheModelImages(GlobalModel globalModel, Model model) async {
       await cacheProfilePhotos(globalModel, globalModel.userProfile);
       break;
     case Model.allHobbies:
+      break;
+    case Model.accountSettings:
       break;
   }
 }

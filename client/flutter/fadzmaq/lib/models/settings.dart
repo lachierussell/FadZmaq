@@ -1,5 +1,5 @@
 class AccountSettings {
-  final int distanceSetting;
+  int distanceSetting;
 
   AccountSettings({
     this.distanceSetting,

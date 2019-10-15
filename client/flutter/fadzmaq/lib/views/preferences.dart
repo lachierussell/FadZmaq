@@ -1,6 +1,7 @@
 import 'package:fadzmaq/controllers/account.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
+import 'package:fadzmaq/controllers/requestProvider.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/settings.dart';
@@ -44,7 +45,7 @@ class UserPreferencesState extends State<UserPreferences> {
 
   @override
   void didChangeDependencies() {
-    AccountSettings settings = RequestProvider.of<AccountSettings>(context);
+    AccountSettings settings = getAccountSettings(context);
 
     _locationDistance = settings.distanceSetting.toDouble();
     _roundDist = settings.distanceSetting;
@@ -108,10 +109,11 @@ class UserPreferencesState extends State<UserPreferences> {
                                 _locationDistance = newDist;
                                 _roundDist = rounded;
 
-                                AccountSettings newSetting = AccountSettings(distanceSetting: _roundDist);
+                                var accountSettings = getAccountSettings(context);
+                                accountSettings.distanceSetting = _roundDist;
 
                                 // TODO give this a delay
-                                postAsync(context, Globals.settingsURL, json: json.encode(newSetting.toJson()));
+                                postAsync(context, Globals.settingsURL, json: json.encode(accountSettings.toJson()));
                               });
                             },
                             // onChangeEnd: (newDist){

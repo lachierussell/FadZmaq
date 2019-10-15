@@ -2,6 +2,7 @@ import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
+import 'package:fadzmaq/models/settings.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'package:flutter/material.dart';
 
@@ -10,15 +11,17 @@ enum Model {
   userProfile,
   recommendations,
   allHobbies,
+  accountSettings,
 }
 
-/// The [GlobalModel] contains instances of all the 
+/// The [GlobalModel] contains instances of all the
 /// models the app needs to run
 class GlobalModel {
   MatchesData matches;
   RecommendationsData recommendations;
   ProfileData userProfile;
   AllHobbiesData allHobbies;
+  AccountSettings accountSettings;
 
   // these are needed to cache images at
   // the correct resolution
@@ -42,17 +45,17 @@ class GlobalModel {
 
 /// A continaer is needed to wipe the model
 /// from memory on a logout
-class GlobalModelContainer{
+class GlobalModelContainer {
   GlobalModel model;
-  
-  GlobalModelContainer(){
+
+  GlobalModelContainer() {
     model = GlobalModel();
   }
 }
 
 GlobalModel getModel(BuildContext context) {
   GlobalData data = GlobalData.of(context);
-  
+
   if (data == null) throw Exception("Data Controller not found");
   if (data.container == null) throw Exception("Model container not found");
   if (data.container.model == null) throw Exception("Model not found");
@@ -79,6 +82,12 @@ AllHobbiesData getHobbies(BuildContext context) {
   return model.allHobbies;
 }
 
+AccountSettings getAccountSettings(BuildContext context) {
+  GlobalModel model = getModel(context);
+  if (model.accountSettings == null) throw Exception("All hobbies model not found");
+  return model.accountSettings;
+}
+
 ProfileData getUserProfile(BuildContext context) {
   GlobalModel model = getModel(context);
   if (model.userProfile == null)
@@ -87,7 +96,7 @@ ProfileData getUserProfile(BuildContext context) {
 }
 
 /// Remove the current [GlobalModel] from [GlobalData]
-void cleanModel(BuildContext context){
+void cleanModel(BuildContext context) {
   GlobalData data = GlobalData.of(context);
   data.container.model = GlobalModel();
 }
