@@ -1,6 +1,6 @@
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/profile_body.dart';
-import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
+import 'package:fadzmaq/views/widgets/likePassButtons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/models/profile.dart';

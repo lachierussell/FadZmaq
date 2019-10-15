@@ -5,7 +5,7 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/recommendations.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
-import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
+import 'package:fadzmaq/views/widgets/likePassButtons.dart';
 import 'package:flutter/material.dart';
 
 /// Entry in the recommendation list
