@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlobalData(
-      model: GlobalModel(),
+      container: GlobalModelContainer(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

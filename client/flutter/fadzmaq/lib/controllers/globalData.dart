@@ -1,4 +1,4 @@
-import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/imageCache.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/globalModel.dart';
@@ -23,7 +23,6 @@ Future firstLoadGlobalModels(BuildContext context) async {
   for (Model model in Model.values) {
     futures.add(loadModel(context, model));
   }
-
   await Future.wait(futures);
 }
 
@@ -82,17 +81,18 @@ class _VerifyModelState extends State<VerifyModel> {
   }
 }
 
+
+
 class GlobalData extends InheritedWidget {
   GlobalData({
-    this.model,
+    this.container,
     Widget child,
   }) : super(child: child);
 
-  final GlobalModel model;
+  final GlobalModelContainer container;
 
-  static GlobalModel of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(GlobalData) as GlobalData)
-        .model;
+  static GlobalData of(BuildContext context) {
+    return (context.inheritFromWidgetOfExactType(GlobalData) as GlobalData);
   }
 
   // This widget is created once and does not change, therefore has no
@@ -109,7 +109,7 @@ class GlobalData extends InheritedWidget {
 Future<int> loadModel(BuildContext context, Model model) async {
   print("Load model " + model.toString());
   String server = AppConfig.of(context).server + _getURL(model);
-  GlobalModel mainModel = GlobalData.of(context);
+  GlobalModel mainModel = getModel(context);
   mainModel.updateMediaQuery(context);
 
   http.Response response;
@@ -120,6 +120,8 @@ Future<int> loadModel(BuildContext context, Model model) async {
     if (response.statusCode == 200) {
       responseJson = json.decode(response.body);
       await _loadJsonAndCache(mainModel, model, responseJson);
+    }else{
+      throw Exception("Status code was " + response.statusCode.toString());
     }
   } catch (e) {
     throw e;
@@ -149,7 +151,7 @@ String _getURL(Model model) {
 }
 
 bool _checkModel(BuildContext context, Model model) {
-  GlobalModel globalModel = GlobalData.of(context);
+  GlobalModel globalModel = getModel(context);
   bool present;
   switch (model) {
     case Model.matches:

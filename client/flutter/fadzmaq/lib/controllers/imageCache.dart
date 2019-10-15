@@ -1,17 +1,12 @@
-import 'dart:convert';
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/models/app_config.dart';
-import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:http/http.dart' as http;
 
 /// Caches profile photos based on [RecommendationsData]
+/// globalModel required to calculate image sizes
 Future cacheRecommendationPhotos(
     GlobalModel globalModel, RecommendationsData rd) async {
   List<Future> futures = List<Future>();
@@ -30,6 +25,7 @@ Future cacheRecommendationPhotos(
 }
 
 /// Caches profile photos based on [MatchesData]
+/// globalModel required to calculate image sizes
 Future cacheMatchPhotos(GlobalModel globalModel, MatchesData matchData) async {
   List<Future> futures = List<Future>();
 
@@ -47,6 +43,7 @@ Future cacheMatchPhotos(GlobalModel globalModel, MatchesData matchData) async {
 }
 
 /// Caches profile photos based on [ProfileContainer]
+/// globalModel required to calculate image sizes
 Future cacheProfilePhotos(GlobalModel globalModel, ProfileData profile) async {
   if (profile == null) return;
   if (profile.photo == null) return;
@@ -55,18 +52,18 @@ Future cacheProfilePhotos(GlobalModel globalModel, ProfileData profile) async {
 }
 
 /// Caches the three different expected sized images of a particular image
+/// globalModel required to calculate image sizes
 Future<void> cachePhotoURL(GlobalModel globalModel, String url) async {
-  String recPhoto = photoThumbURL(globalModel.devicePixelRatio, url, Globals.recThumbDim);
-  String matchPhoto = photoThumbURL(globalModel.devicePixelRatio, url, Globals.matchThumbDim);
-  String profilePhoto = photoThumbURL(globalModel.devicePixelRatio, url, globalModel.screenWidth);
+  double pr = globalModel.devicePixelRatio;
 
-  // print("cacheing: " + matchPhoto);
-  // print("cacheing: " + profilePhoto);
+  String recPhoto = photoThumbURL(pr, url, Globals.recThumbDim);
+  String matchPhoto = photoThumbURL(pr, url, Globals.matchThumbDim);
+  String profilePhoto = photoThumbURL(pr, url, globalModel.screenWidth);
 
   DefaultCacheManager cache = DefaultCacheManager();
-
   List<Future> futures = List<Future>();
 
+  // Add each to a list of futures so they may be concurently processed
   if (await cache.getFileFromCache(recPhoto) == null) {
     print("cacheing: " + recPhoto);
     futures.add(cache.downloadFile(recPhoto));
@@ -77,12 +74,11 @@ Future<void> cachePhotoURL(GlobalModel globalModel, String url) async {
   }
 }
 
-/// This convers a standard URL to a thumb version the server can understand
+/// This converts a standard URL to a thumb version the server can understand
 /// and return the specific dimensioned image by
 /// Currently only working for test images on Wikipedia, but Firebase supports
 /// a similar function
 String photoThumbURL(double devicePixelRatio, String url, double dimension) {
-
   String dimString = (dimension * devicePixelRatio).toStringAsFixed(0);
 
   const wikipediaURL = "https://upload.wikimedia.org/wikipedia/commons";

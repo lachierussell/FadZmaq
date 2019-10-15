@@ -36,11 +36,22 @@ class GlobalModel {
   }
 }
 
-GlobalModel getModel(BuildContext context) {
-  GlobalModel model = GlobalData.of(context);
-  if (model == null) throw Exception("Data Controller not found");
+class GlobalModelContainer{
+  GlobalModel model;
+  
+  GlobalModelContainer(){
+    model = GlobalModel();
+  }
+}
 
-  return model;
+GlobalModel getModel(BuildContext context) {
+  GlobalData data = GlobalData.of(context);
+  
+  if (data == null) throw Exception("Data Controller not found");
+  if (data.container == null) throw Exception("Model container not found");
+  if (data.container.model == null) throw Exception("Model not found");
+
+  return data.container.model;
 }
 
 MatchesData getMatches(BuildContext context) {
@@ -67,4 +78,10 @@ ProfileData getUserProfile(BuildContext context) {
   if (model.userProfile == null)
     throw Exception("User profile model not found");
   return model.userProfile;
+}
+
+/// Remove the current [GlobalModel] from [GlobalData]
+void cleanModel(BuildContext context){
+  GlobalData data = GlobalData.of(context);
+  data.container.model = GlobalModel();
 }

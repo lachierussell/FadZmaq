@@ -1,4 +1,5 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -40,6 +41,9 @@ void deleteUser(BuildContext context) async {
 
   // await user.delete();
   await googleSignIn.signOut();
+
+  cleanModel(context);
+
    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
     LoginScreen()), (Route<dynamic> route) => false);
   Navigator.of(context)

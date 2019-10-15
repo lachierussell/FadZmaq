@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:fadzmaq/controllers/request.dart';
-import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/imageCache.dart';
 
 import 'package:http/http.dart' as http;
 

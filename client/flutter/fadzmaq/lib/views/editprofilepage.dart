@@ -4,6 +4,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -139,7 +140,7 @@ class EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-    ProfileData userProfile = GlobalData.of(context).userProfile;
+    ProfileData userProfile = getUserProfile(context);
     String server = AppConfig.of(context).server;
 
     // check for id 1 (about me) and grab the display value

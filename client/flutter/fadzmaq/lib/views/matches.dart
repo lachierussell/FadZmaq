@@ -1,4 +1,4 @@
-import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/imageCache.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/views/widgets/matchEntry.dart';
@@ -26,7 +26,7 @@ class MatchesList extends StatelessWidget {
     MatchesData matchesData = getMatches(context);
     // print(matchesData.toString());
     // print(matchesData.matches.toString());
-    GlobalModel globalModel = GlobalData.of(context);
+    GlobalModel globalModel = getModel(context);
     cacheMatchPhotos(globalModel, matchesData);
 
     print("build matches");

@@ -30,7 +30,7 @@ class PreferencesTempApp extends StatelessWidget {
 class TestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData userProfile = GlobalData.of(context).userProfile;
+    ProfileData userProfile = getUserProfile(context);
 
     return Text(userProfile.name);
   }
@@ -67,7 +67,7 @@ class UserPreferencesState extends State<UserPreferences> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData userProfile = GlobalData.of(context).userProfile;
+    ProfileData userProfile = getUserProfile(context);
 
     return SingleChildScrollView(
       // color: Colors.grey,
@@ -182,6 +182,7 @@ class UserPreferencesState extends State<UserPreferences> {
     await FirebaseAuth.instance.signOut();
     GoogleSignIn _googleSignIn = GoogleSignIn();
     _googleSignIn.signOut();
+    cleanModel(context);
 
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
@@ -202,7 +203,7 @@ class PreferenceButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
-    ProfileData userProfile = GlobalData.of(context).userProfile;
+    ProfileData userProfile = getUserProfile(context);
     return Column(
       children: <Widget>[
         Padding(

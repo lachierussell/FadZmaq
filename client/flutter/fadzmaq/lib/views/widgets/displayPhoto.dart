@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/imageCache.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,7 @@ class DisplayPhoto extends StatelessWidget {
         width: dimension,
       );
     }
-    GlobalModel globalModel = GlobalData.of(context);
+    GlobalModel globalModel = getModel(context);
     url = photoThumbURL(globalModel.devicePixelRatio, url, dimension);
     // print("displaying: " + url);
 

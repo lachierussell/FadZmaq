@@ -1,3 +1,4 @@
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/profile.dart';
@@ -34,7 +35,7 @@ class HobbyChips extends StatelessWidget {
 
     // any request using hobby chips should have a user profile container request
     // to compare the hobbies to.
-    ProfileData userProfile = GlobalData.of(context).userProfile;
+    ProfileData userProfile = getUserProfile(context);
 
     if (userProfile == null) return Container();
     if (userProfile.hobbyContainers == null) return Container();

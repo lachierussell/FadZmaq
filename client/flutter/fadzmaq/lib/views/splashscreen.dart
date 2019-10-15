@@ -1,4 +1,3 @@
-import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/request.dart';

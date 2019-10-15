@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/imageCache.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
@@ -93,7 +93,7 @@ class RecommendationsListState extends State<RecommendationsList> {
     var rd = RecommendationsData.fromJson(json.decode(response.body));
     if (rd == null) return;
 
-    GlobalModel globalModel = GlobalData.of(context);
+    GlobalModel globalModel = getModel(context);
     cacheRecommendationPhotos(globalModel, rd);
 
     List<ProfileContainer> newList = rd.recommendations;
