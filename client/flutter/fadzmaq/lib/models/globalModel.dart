@@ -1,21 +1,30 @@
 import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'package:flutter/material.dart';
 
+enum Model {
+  matches,
+  userProfile,
+  recommendations,
+  allHobbies,
+}
+
 class GlobalModel {
   MatchesData matches;
   RecommendationsData recommendations;
   ProfileData userProfile;
+  AllHobbiesData allHobbies;
 
   GlobalModel({
     this.matches,
     this.recommendations,
     this.userProfile,
+    this.allHobbies,
   });
 }
-
 
 GlobalModel getModel(BuildContext context) {
   GlobalModel model = GlobalData.of(context);
@@ -48,9 +57,5 @@ MatchesData getMatchData(BuildContext context) {
   return model.matches;
 }
 
-enum Model {
-  matches,
-  userProfile,
-  recommendations,
-}
+
 

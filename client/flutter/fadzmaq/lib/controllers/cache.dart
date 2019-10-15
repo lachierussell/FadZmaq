@@ -46,12 +46,11 @@ Future cacheMatchPhotos(BuildContext context, MatchesData matchData) async {
 }
 
 /// Caches profile photos based on [ProfileContainer]
-Future cacheProfilePhotos(BuildContext context, ProfileContainer pc) async {
-  if (pc == null) return;
-  if (pc.profile == null) return;
-  if (pc.profile.photo == null) return;
+Future cacheProfilePhotos(BuildContext context, ProfileData profile) async {
+  if (profile == null) return;
+  if (profile.photo == null) return;
 
-  await cachePhotoURL(context, pc.profile.photo);
+  await cachePhotoURL(context, profile.photo);
 }
 
 /// Caches the three different expected sized images of a particular image
@@ -71,9 +70,9 @@ Future<void> cachePhotoURL(BuildContext context, String url) async {
 
   if (await cache.getFileFromCache(recPhoto) == null) {
     print("cacheing: " + recPhoto);
-    futures.add(DefaultCacheManager().downloadFile(recPhoto));
-    futures.add(DefaultCacheManager().downloadFile(matchPhoto));
-    futures.add(DefaultCacheManager().downloadFile(profilePhoto));
+    futures.add(cache.downloadFile(recPhoto));
+    futures.add(cache.downloadFile(matchPhoto));
+    futures.add(cache.downloadFile(profilePhoto));
 
     await Future.wait(futures);
   }
@@ -101,66 +100,4 @@ String photoThumbURL(BuildContext context, String url, double dimension) {
   } else {
     return url;
   }
-}
-
-Future cacheImages(BuildContext context) async {
-  List<Future> futures = List<Future>();
-
-  var server = AppConfig.of(context).server;
-
-  futures.add(httpGetCachePhoto<ProfileContainer>(
-      context, server + Globals.profileURL));
-  futures.add(
-      httpGetCachePhoto<MatchesData>(context, server + Globals.matchesURL));
-  futures.add(httpGetCachePhoto<RecommendationsData>(
-      context, server + Globals.recsURL));
-
-  await Future.wait(futures);
-}
-
-/// This is pretty hacky but it lets the future for the request stay
-/// umcompleted until the images are also cached.
-Future httpGetCachePhoto<T>(BuildContext context, String url) async {
-  http.Response response;
-  dynamic responseJson;
-  try {
-    response = await httpGet(url);
-    responseJson = json.decode(response.body);
-  } catch (e) {
-    return e;
-  }
-
-  print("CACHING: " + T.toString());
-
-  if (T == MatchesData) {
-    var matchData = MatchesData.fromJson(responseJson);
-
-    // TODO move caching to be inside the update for the data model
-    if (GlobalData.of(context) != null ) {
-      GlobalData.of(context).matches = matchData;
-    }
-    
-    await cacheMatchPhotos(context, matchData);
-  } else if (T == RecommendationsData) {
-    var recommendationsData = RecommendationsData.fromJson(responseJson);
-
-    if (GlobalData.of(context) != null) {
-      GlobalData.of(context).recommendations = recommendationsData;
-    }
-
-    await cacheRecommendationPhotos(context, recommendationsData);
-  } else if (T == ProfileContainer) {
-    var profileContainer = ProfileContainer.fromJson(responseJson);
-
-    if (GlobalData.of(context) != null && profileContainer != null) {
-      GlobalData.of(context).userProfile = profileContainer.profile;
-    }
-
-    await cacheProfilePhotos(context, profileContainer);
-  } else {
-    throw UnimplementedError(
-        "httpGetCachePhoto method called on unspported type");
-  }
-
-  return response;
 }
