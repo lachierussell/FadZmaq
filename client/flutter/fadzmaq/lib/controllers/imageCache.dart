@@ -52,7 +52,7 @@ Future cacheProfilePhotos(GlobalModel globalModel, ProfileData profile) async {
 }
 
 /// Caches the three different expected sized images of a particular image
-/// globalModel required to calculate image sizes
+/// [globalModel] required to calculate image sizes
 Future<void> cachePhotoURL(GlobalModel globalModel, String url) async {
   double pr = globalModel.devicePixelRatio;
 

@@ -12,12 +12,16 @@ enum Model {
   allHobbies,
 }
 
+/// The [GlobalModel] contains instances of all the 
+/// models the app needs to run
 class GlobalModel {
   MatchesData matches;
   RecommendationsData recommendations;
   ProfileData userProfile;
   AllHobbiesData allHobbies;
 
+  // these are needed to cache images at
+  // the correct resolution
   double devicePixelRatio;
   double screenWidth;
 
@@ -36,6 +40,8 @@ class GlobalModel {
   }
 }
 
+/// A continaer is needed to wipe the model
+/// from memory on a logout
 class GlobalModelContainer{
   GlobalModel model;
   

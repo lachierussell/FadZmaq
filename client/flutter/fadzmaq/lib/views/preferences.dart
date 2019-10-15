@@ -16,30 +16,8 @@ import 'package:flutter/rendering.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 
-class PreferencesTempApp extends StatelessWidget {
-  const PreferencesTempApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: new UserPreferencesPage(),
-    );
-  }
-}
-
-/// Test widget that lives below a [GetRequest<T>] model of type [ProfileData]
-class TestWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    ProfileData userProfile = getUserProfile(context);
-
-    return Text(userProfile.name);
-  }
-}
-
 class UserPreferencesPage extends StatelessWidget {
-  /// the [GetRequest<ProfileData>] for this page
-  /// note [url] is matches and the [builder] creates the below children
+  /// the [VerifyModel] for this page
   /// this is a [builder] because [children] are initialised independent to heirachy
   /// only [builder] waits for the parent to initialise
   @override
@@ -208,7 +186,7 @@ class PreferenceButtons extends StatelessWidget {
               ///
               /// this is all test at the moment, I'll adjust it shortly,
               /// but you can hopefully see how its arranged - Jordan
-              TestWidget(),
+              Text(userProfile.name),
             ],
           ),
         ),

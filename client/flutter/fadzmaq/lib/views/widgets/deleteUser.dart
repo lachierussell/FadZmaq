@@ -2,7 +2,7 @@ import 'package:fadzmaq/controllers/account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-//show alert dialog
+/// Alert diaglog to confirm deleting an account
 void deleteDialog(BuildContext context) async {
   showDialog(
     context: context,
@@ -23,7 +23,6 @@ void deleteDialog(BuildContext context) async {
               child: const Text('ACCEPT'),
               onPressed: () {
                 deleteUser(context);
-                // Navigator.of(context).pop();
               }),
         ],
       );

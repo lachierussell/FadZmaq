@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+/// Used to initialise the global model
 Future firstLoadGlobalModels(BuildContext context) async {
   //TODO error checking in here if we have no server etc
 
@@ -26,6 +27,8 @@ Future firstLoadGlobalModels(BuildContext context) async {
   await Future.wait(futures);
 }
 
+/// Creates a [FutureBuilder] over a page if the [model]
+/// is not found
 class VerifyModel extends StatefulWidget {
   /// The relative url to request
   final WidgetBuilder builder;
@@ -81,6 +84,7 @@ class _VerifyModelState extends State<VerifyModel> {
   }
 }
 
+/// The [InheritedWidget] that [GlobalModel] lives in
 class GlobalData extends InheritedWidget {
   GlobalData({
     this.container,
@@ -102,8 +106,18 @@ class GlobalData extends InheritedWidget {
   bool updateShouldNotify(InheritedWidget oldWidget) => false;
 }
 
-/// This is pretty hacky but it lets the future for the request stay
-/// umcompleted until the images are also cached.
+/// Loads a model in the background
+loadModelAsync(BuildContext context, Model model) async {
+  try {
+    await loadModel(context, model);
+  } catch (e) {
+    print("loadModelAsync Error: " + e.toString());
+    // do nothing on error
+    // TODO maybe show a popup bar?
+  }
+}
+
+/// Loads a [model] into [GlobalModel]
 Future<int> loadModel(BuildContext context, Model model) async {
   print("Load model " + model.toString());
   String server = AppConfig.of(context).server + _getURL(model);
@@ -128,6 +142,7 @@ Future<int> loadModel(BuildContext context, Model model) async {
   return response.statusCode;
 }
 
+/// returns the URL used for a given [model]
 String _getURL(Model model) {
   // print("get url for " + model.toString());
   String url;
@@ -148,6 +163,7 @@ String _getURL(Model model) {
   return url;
 }
 
+/// checks whether a [model] is present in the [GlobalModel]
 bool _checkModel(BuildContext context, Model model) {
   GlobalModel globalModel = getModel(context);
   bool present;
@@ -168,6 +184,14 @@ bool _checkModel(BuildContext context, Model model) {
   return present;
 }
 
+/// converts [json] to a [model] and caches any profile images present
+Future _loadJsonAndCache(
+    GlobalModel globalModel, Model model, dynamic json) async {
+  _loadJSON(globalModel, model, json);
+  await _cacheModelImages(globalModel, model);
+}
+
+/// Converts given [json] into a [model]
 void _loadJSON(GlobalModel globalModel, Model model, dynamic json) {
   switch (model) {
     case Model.matches:
@@ -187,12 +211,7 @@ void _loadJSON(GlobalModel globalModel, Model model, dynamic json) {
   }
 }
 
-Future _loadJsonAndCache(
-    GlobalModel globalModel, Model model, dynamic json) async {
-  _loadJSON(globalModel, model, json);
-  await _cacheModelImages(globalModel, model);
-}
-
+/// caches any profile images of a given [model]
 Future _cacheModelImages(GlobalModel globalModel, Model model) async {
   switch (model) {
     case Model.matches:

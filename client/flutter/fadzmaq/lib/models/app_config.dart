@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Allows config options to be passed through the app
+/// Is selected by pointing to different main files which hold the
+/// specificed build configurations
 class AppConfig extends InheritedWidget {
   AppConfig({
     this.appConfig,
@@ -9,12 +12,9 @@ class AppConfig extends InheritedWidget {
   final ConfigResource appConfig;
 
   static ConfigResource of(BuildContext context) {
-    return (context.inheritFromWidgetOfExactType(AppConfig)as AppConfig).appConfig;
+    return (context.inheritFromWidgetOfExactType(AppConfig) as AppConfig)
+        .appConfig;
   }
-
-  // static String of(BuildContext context){
-  //   return (context.inheritFromWidgetOfExactType(AppConfig).testString as String);
-  // }
 
   @override
   bool updateShouldNotify(InheritedWidget oldWidget) => false;

@@ -50,6 +50,7 @@ class LikeButton extends StatelessWidget {
   }
 }
 
+/// Makes an async request and prepares a popup on certain response conditions
 void asyncMatchPopup(BuildContext context, ProfileData profile) async {
   print("asyncMatchPopup");
   // http.Response response = await postAsync(context, "like/" + profile.userId);
@@ -62,20 +63,12 @@ void asyncMatchPopup(BuildContext context, ProfileData profile) async {
   await postAsync(context, "like/" + profile.userId).then((response) {
     if (response != null) {
       // print("RESPONSE! " + response.body);
-      LikeResult lr = LikeResult.fromJson(
-          json.decode(response.body));
+      LikeResult lr = LikeResult.fromJson(json.decode(response.body));
 
       if (lr.match == true && lr.matched != null && lr.matched.length > 0) {
-        addToMatchesModel(matches, lr.matched[0]);
+        matches.addToMatchesModel(lr.matched[0]);
         matchPopup(lr.matched.first.profile);
       }
-    } else {
-      // print("asyncMatchPopup NULL!");
-    }
+    } else {}
   });
-}
-
-
-void addToMatchesModel(MatchesData matchesData, ProfileContainer pc){
-  matchesData.matches.insert(0, pc);
 }

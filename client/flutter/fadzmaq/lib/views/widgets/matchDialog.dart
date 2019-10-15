@@ -8,6 +8,7 @@ import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+/// a pop up that occurs when a new match is made
 Future<void> matchPopup(ProfileData profile) async {
   ProfileData userProfile = getUserProfile(mainScaffold.currentContext);
 
@@ -62,7 +63,6 @@ Future<void> matchPopup(ProfileData profile) async {
                     builder: (context) => ProfilePage(
                           // just view our own profile for now
                           url: "matches/" + profile.userId,
-                          //TODO don't send the profile because it doesn't have contact info
                           profile: profile,
                           type: ProfileType.match,
                         )),

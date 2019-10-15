@@ -1,5 +1,5 @@
+/// Global constants used in the app
 class Globals{
-
 
   static const double matchThumbDim = 80;
   static const double recThumbDim = 160;

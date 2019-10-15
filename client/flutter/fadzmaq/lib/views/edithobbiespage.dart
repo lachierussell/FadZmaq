@@ -76,7 +76,7 @@ List<FormBuilderFieldOption> function(var x) {
   return list;
 }
 
-List<Map> deriveResult(ProfileData profile, var x) {
+List<Map> deriveResult(BuildContext context, var x) {
   List<HobbyData> modelHobbies = List<HobbyData>();
 
   List<Map> ret = List();
@@ -88,15 +88,21 @@ List<Map> deriveResult(ProfileData profile, var x) {
 
   var hobbyContainer =
       HobbyContainer(container: discoverOrShare(), hobbies: modelHobbies);
-  profile.replaceHobbyContainer(hobbyContainer);
+
+  // Replace the new hobby configuration
+  // If a replacement was made load in the recommendations again
+  bool replacementMade = getUserProfile(context).replaceHobbyContainer(hobbyContainer);
+  if(replacementMade){
+    loadModelAsync(context, Model.recommendations);
+  }
 
   return ret;
 }
 
-Map<String, dynamic> compileJson(ProfileData profile, var x) {
+Map<String, dynamic> compileJson(BuildContext context, var x) {
   Map<String, dynamic> map = {
     'hobbies': [
-      {'container': discoverOrShare(), "hobbies": deriveResult(profile, x)}
+      {'container': discoverOrShare(), "hobbies": deriveResult(context, x)}
     ]
   };
   print(map);
@@ -192,7 +198,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                       if (_fbKey.currentState.saveAndValidate()) {
                         print(_fbKey.currentState.value);
                         Map<String, dynamic> hobJson =
-                            compileJson(pd, _fbKey.currentState.value);
+                            compileJson(context, _fbKey.currentState.value);
 
                         httpPost(
                             AppConfig.of(context).server + "profile/hobbies",

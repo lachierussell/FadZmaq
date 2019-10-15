@@ -24,10 +24,6 @@ class SplashScreenState extends State<SplashScreen> {
     onDoneLoading();
   }
 
-  // Future<Timer> loadData() async {
-  //   return new Timer(Duration(seconds: 3), onDoneLoading);
-  // }
-
   onDoneLoading() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
@@ -85,15 +81,19 @@ class SplashScreenState extends State<SplashScreen> {
     return Container(
       color: Theme.of(context).accentColor,
       child: Center(
-          child: Icon(
-        Icons.swap_horizontal_circle,
-        color: Colors.white,
-        size: 221,
-      )
-          // child: CircularProgressIndicator(
-          //   valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
-          // ),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(
+            Icons.swap_horizontal_circle,
+            color: Colors.white,
+            size: 221,
           ),
+          CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.redAccent),
+          ),
+        ],
+      )),
     );
   }
 }

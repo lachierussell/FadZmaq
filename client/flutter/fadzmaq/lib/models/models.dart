@@ -4,6 +4,9 @@ import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'dart:core';
 
+
+/// Redundant, used with [GetRequest]
+//
 // Dart does not support instantiating from a generic type aparemeter
 // To allow us to get generic types back from our requests
 // We need to maintain a map of types to factory functions

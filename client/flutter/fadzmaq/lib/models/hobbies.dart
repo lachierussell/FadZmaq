@@ -1,5 +1,7 @@
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 
+/// All the hobbies
+/// Used to select from the hobbies list
 class AllHobbiesData {
   List<HobbyData> hobbies;
 

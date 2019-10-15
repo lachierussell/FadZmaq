@@ -1,4 +1,5 @@
 import 'package:fadzmaq/models/hobbies.dart';
+import 'package:collection/collection.dart';
 
 class ProfileContainer {
   ProfileData profile;
@@ -52,25 +53,18 @@ class UserProfileContainer {
 
 class ProfileData {
   final String userId;
-  // final String gender;
-  // final String age;
-//  final ContactData contactDetails;
 
   String name;
   String photo;
   int rating;
   final List<ProfileField> profileFields;
   final List<HobbyContainer> hobbyContainers;
-  // final int age;
 
   ProfileData({
     this.userId,
     this.rating,
-    // this.gender,
-    // this.age,
     this.name,
     this.photo = "",
-//    this.contactDetails,
     this.profileFields,
     this.hobbyContainers,
   });
@@ -80,16 +74,6 @@ class ProfileData {
 //    var contactJson = profile['contact_details'];
     var profileFieldsJson = json['profile_fields'] as List;
     var hobbyContainersJson = json['hobbies'] as List;
-
-//    ContactData contact =
-//        contactJson != null ? ContactData.fromJson(contactJson) : null;
-
-    // List<HobbyData> listListMap(Map<String, dynamic> json) {
-    //   List<HobbyData> list = new List<HobbyData>();
-    //   print(json.toString());
-
-    //   return list;
-    // }
 
     List<ProfileField> profileFields = profileFieldsJson != null
         ? profileFieldsJson.map((i) => ProfileField.fromJson(i)).toList()
@@ -105,21 +89,29 @@ class ProfileData {
       name: json['name'],
       rating: json['rating'],
       photo: json['photo_location'],
-      // age: profile['age'],
-//      contactDetails: contact,
       profileFields: profileFields,
       hobbyContainers: hobbyContainers,
     );
   }
 
-  void replaceHobbyContainer(HobbyContainer hobbyContainer) {
+  /// Tries to replace a [HobbyContainer] in the profile [hobbyContainers]
+  /// if no matching container found it will insert it into [hobbyContainers]
+  /// will return [true] on a replacement or insertion is made
+  /// will return [false] if a hobby container of the same container type with the same
+  /// hobbies already exists
+  bool replaceHobbyContainer(HobbyContainer hobbyContainer) {
     for (HobbyContainer hc in hobbyContainers) {
       if (hc.container == hobbyContainer.container) {
-        hc.hobbies = hobbyContainer.hobbies;
-        return;
+        if (!ListEquality().equals(hc.hobbies, hobbyContainer.hobbies)) {
+          hc.hobbies = hobbyContainer.hobbies;
+          return true;
+        } else {
+          return false;
+        }
       }
     }
     hobbyContainers.add(hobbyContainer);
+    return false;
   }
 
   void replaceProfileField(String field, String value) {
@@ -131,32 +123,23 @@ class ProfileData {
     }
     profileFields.add(ProfileField(name: field, displayValue: value));
   }
+
+  String getProfileField(String field) {
+    if (profileFields == null) return null;
+    for (ProfileField pf in profileFields) {
+      if (pf.name == field) {
+        return pf.displayValue;
+      }
+    }
+    return null;
+  }
 }
 
-//class ContactData {
-//  final String phone;
-//  final String email;
-//
-//  ContactData({
-//    this.phone,
-//    this.email,
-//  });
-//
-//  factory ContactData.fromJson(Map<String, dynamic> json) {
-//    return ContactData(
-//      phone: json['phone'] as String,
-//      email: json['email'] as String,
-//    );
-//  }
-//}
-
 class ProfileField {
-  // final int id;
   String displayValue;
   final String name;
 
   ProfileField({
-    // this.id,
     this.displayValue,
     this.name,
   });

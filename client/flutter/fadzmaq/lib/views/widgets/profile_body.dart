@@ -1,11 +1,12 @@
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
-import 'package:fadzmaq/controllers/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:http/http.dart' as http;
 import 'package:fadzmaq/models/app_config.dart';
+
+// Redundant but useful
 
 // /// Helper (method?) to the ProfileFieldWidget.
 // /// Builds a list of Text from the Profile data.
@@ -41,14 +42,12 @@ class ProfileBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-
     // putting these up here in case of nulls
     // right now just putting dash instead of the value
     // final String profileAge = pd.age != null ? pd.age : "-";
     final String profileName = profile.name != null ? profile.name : "-";
     final int rating = profile.rating;
-    final String bio = getProfileField(profile, "bio");
+    final String bio = profile.getProfileField("bio");
     print(rating);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,6 +95,7 @@ class ProfileBody extends StatelessWidget {
   }
 }
 
+/// the display of the hobbies
 class ProfileHobbies extends StatelessWidget {
   const ProfileHobbies({
     Key key,
@@ -153,8 +153,8 @@ class ContactBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-    final String email = getProfileField(profile, "email");
-    final String phone = getProfileField(profile, "phone");
+    final String email = profile.getProfileField("email");
+    final String phone = profile.getProfileField("phone");
 
     if (email == null && phone == null) {
       return Container();

@@ -81,8 +81,6 @@ class ProfilePageState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
-    // ProfileData profile = pc.profile;
 
     return Scaffold(
       body: SingleChildScrollView(

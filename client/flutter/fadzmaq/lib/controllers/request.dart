@@ -53,8 +53,3 @@ Future httpDelete(String url, {var json}) async {
     return e;
   }
 }
-
-// /// temp for testing
-// Future sleep1() {
-//   return new Future.delayed(const Duration(seconds: 2), () => "2");
-// }

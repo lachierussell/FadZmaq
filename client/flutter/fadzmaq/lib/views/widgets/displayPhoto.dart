@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fadzmaq/controllers/imageCache.dart';
-import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:flutter/material.dart';
 
 /// Displays a users profile photo
+/// Uses [CachedNetworkImage]
 class DisplayPhoto extends StatelessWidget {
-  String url;
+  final String url;
   final double dimension;
 
   DisplayPhoto({
@@ -16,11 +16,6 @@ class DisplayPhoto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // print(url);
-
-    // https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Sam_Neill_2010.jpg/1080px-Sam_Neill_2010.jpg
-    // https://upload.wikimedia.org/wikipedia/commons/6/61/Sam_Neill_2010.jpg
-
     if (url == null) {
       return SizedBox(
         height: dimension,
@@ -28,7 +23,7 @@ class DisplayPhoto extends StatelessWidget {
       );
     }
     GlobalModel globalModel = getModel(context);
-    url = photoThumbURL(globalModel.devicePixelRatio, url, dimension);
+    final String dimensionedURL = photoThumbURL(globalModel.devicePixelRatio, url, dimension);
     // print("displaying: " + url);
 
     return SizedBox(
@@ -38,7 +33,7 @@ class DisplayPhoto extends StatelessWidget {
         fadeInDuration: const Duration(seconds: 0),
         height: dimension,
         width: dimension,
-        imageUrl: url,
+        imageUrl: dimensionedURL,
         fit: BoxFit.cover,
         alignment: Alignment.topCenter,
         // placeholder: (context, url) => Container(color: Colors.grey),

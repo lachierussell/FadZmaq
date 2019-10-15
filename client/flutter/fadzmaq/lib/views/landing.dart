@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 final GlobalKey mainScaffold = GlobalKey();
 
+/// The main navigation tabbed page of the app
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

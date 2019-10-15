@@ -19,38 +19,3 @@ RecommendationsData _recommendationsFromJson(Map<String, dynamic> json) {
     recommendations: recommendations,
   );
 }
-
-// class RecommendationContainer {
-//   final int rank;
-//   final ProfileData user;
-
-//   RecommendationContainer({
-//     this.rank,
-//     this.user,
-//   });
-
-//   factory RecommendationContainer.fromJson(Map<String, dynamic> json) {
-
-
-//     var userJson = json['user'];
-//     // print("USERJSON: " + userJson.toString());
-//     ProfileData user = userJson != null ? ProfileData.fromJson(userJson) : null;
-
-//     return RecommendationContainer(
-//       rank: json['rank'],
-//       user: user,
-//     );
-//   }
-
-
-//     @override
-//   bool operator ==(Object other) {
-//     return identical(this, other) ||
-//         other is RecommendationContainer && user.userId == other.user.userId;
-//   }
-
-//   @override
-//   int get hashCode {
-//     return user.userId.hashCode;
-//   }
-// }

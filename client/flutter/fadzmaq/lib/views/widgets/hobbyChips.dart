@@ -5,6 +5,7 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 import 'package:flutter/material.dart';
 
+/// Used for hobby types and colouring
 enum HobbyDirection {
   none,
   match,

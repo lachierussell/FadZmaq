@@ -44,6 +44,7 @@ Future<http.Response> postAsync(BuildContext context, String url,
   return response;
 }
 
+/// snackbar for errors
 void errorSnackRevised(String s) {
   Flushbar flush;
   flush = Flushbar(
@@ -77,5 +78,5 @@ void errorSnackRevised(String s) {
 //   );
 
 //   // mainScaffold.currentState.showSnackBar(snackBar);
-//   Scaffold.of(context).showSnackBar(snackBar);
+//   Scaffold.of(mainScaffold.currentContext).showSnackBar(snackBar);
 // }
