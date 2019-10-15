@@ -79,6 +79,11 @@ Future<void> cachePhotoURL(GlobalModel globalModel, String url) async {
 /// Currently only working for test images on Wikipedia, but Firebase supports
 /// a similar function
 String photoThumbURL(double devicePixelRatio, String url, double dimension) {
+
+  if(dimension == null) return url;
+  if(devicePixelRatio == null) return url;
+
+
   String dimString = (dimension * devicePixelRatio).toStringAsFixed(0);
 
   const wikipediaURL = "https://upload.wikimedia.org/wikipedia/commons";

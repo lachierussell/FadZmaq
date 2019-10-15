@@ -84,7 +84,7 @@ AllHobbiesData getHobbies(BuildContext context) {
 
 AccountSettings getAccountSettings(BuildContext context) {
   GlobalModel model = getModel(context);
-  if (model.accountSettings == null) throw Exception("All hobbies model not found");
+  if (model.accountSettings == null) throw Exception("Settings model not found");
   return model.accountSettings;
 }
 

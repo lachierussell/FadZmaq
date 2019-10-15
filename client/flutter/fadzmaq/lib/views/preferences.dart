@@ -5,6 +5,7 @@ import 'package:fadzmaq/controllers/requestProvider.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/settings.dart';
+import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,11 @@ class UserPreferencesPage extends StatelessWidget {
     return VerifyModel(
         model: Model.userProfile,
         builder: (context) {
-          return UserPreferences();
+          return VerifyModel(
+              model: Model.accountSettings,
+              builder: (context) {
+                return UserPreferences();
+              });
         });
   }
 }
@@ -41,7 +46,7 @@ class UserPreferencesState extends State<UserPreferences> {
 
   double _locationDistance = 50;
   int _roundDist = 50;
-  bool _notificationsBool = true;
+  // bool _notificationsBool = true;
 
   @override
   void didChangeDependencies() {
@@ -92,12 +97,13 @@ class UserPreferencesState extends State<UserPreferences> {
                     child: Text("Edit Profile"),
                   ),
                 ),
+                SizedBox(height: 50,),
                 Column(
                   children: <Widget>[
-                    Text("Distance: $_roundDist"),
+                    Text("Search Radius: " + _roundDist.toString() + "km"),
                     Row(
                       children: <Widget>[
-                        Text("Distance"),
+                        // Text("Distance"),
                         Expanded(
                           child: Slider(
                             min: 10,
@@ -105,15 +111,24 @@ class UserPreferencesState extends State<UserPreferences> {
                             // value: 50,
                             onChanged: (newDist) {
                               setState(() {
-                                int rounded = (newDist / 5).round() * 5;
                                 _locationDistance = newDist;
+                                int rounded = (newDist / 5).round() * 5;
                                 _roundDist = rounded;
+                              });
+                            },
+                            onChangeEnd: (endDist) {
+                              int rounded = (endDist / 5).round() * 5;
+                              _locationDistance = endDist;
+                              _roundDist = rounded;
 
-                                var accountSettings = getAccountSettings(context);
-                                accountSettings.distanceSetting = _roundDist;
+                              var accountSettings = getAccountSettings(context);
+                              accountSettings.distanceSetting = _roundDist;
 
-                                // TODO give this a delay
-                                postAsync(context, Globals.settingsURL, json: json.encode(accountSettings.toJson()));
+                              postAsync(context, Globals.settingsURL,
+                                      json:
+                                          json.encode(accountSettings.toJson()))
+                                  .then((value) {
+                                loadModel(mainScaffold.currentContext, Model.recommendations);
                               });
                             },
                             // onChangeEnd: (newDist){
@@ -130,17 +145,18 @@ class UserPreferencesState extends State<UserPreferences> {
                     ),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Text("Notifications"),
-                    Switch(
-                      onChanged: (b) {
-                        setState(() => _notificationsBool = b);
-                      },
-                      value: _notificationsBool,
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: <Widget>[
+                //     Text("Notifications"),
+                //     Switch(
+                //       onChanged: (b) {
+                //         setState(() => _notificationsBool = b);
+                //       },
+                //       value: _notificationsBool,
+                //     ),
+                //   ],
+                // ),
+                SizedBox(height: 120,),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: RaisedButton(
@@ -148,15 +164,6 @@ class UserPreferencesState extends State<UserPreferences> {
                       logOut(context);
                     },
                     child: Text("Log out"),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
-                    onPressed: () {
-                      postAsync(context, "profile");
-                    },
-                    child: Text("Post Request Test"),
                   ),
                 ),
                 Padding(
@@ -223,7 +230,6 @@ class PreferenceButtons extends StatelessWidget {
             child: Text("View Profile"),
           ),
         ),
-
       ],
     );
   }

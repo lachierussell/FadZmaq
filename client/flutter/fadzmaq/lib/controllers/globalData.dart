@@ -52,7 +52,7 @@ class _VerifyModelState extends State<VerifyModel> {
   /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
   @override
   void didChangeDependencies() {
-    if (_checkModel(context, widget.model) == false || _future == null) {
+    if (_checkModel(context, widget.model) == false && _future == null) {
       String server = AppConfig.of(context).server + _getURL(widget.model);
       _future = httpGet(server);
     }
