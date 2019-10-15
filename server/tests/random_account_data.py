@@ -96,6 +96,13 @@ female_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/0/0f/CourteneyCoxFeb09.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/9/90/Jennifer_Connelly_2005.2.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/3/35/Lauren_Cohan_by_Gage_Skidmore_4.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a5/Jane_Krakowski_%282005%29_%28cropped%29.jpeg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8a/Noomi_Rapace_Paris_Fashion_Week_Spring_Summer_2020.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8b/Noomi_Rapace_in_LA.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/e/e5/Michelle_Dockery_2013_2.jpg",
+
+
+
     
 ]
 
@@ -127,7 +134,6 @@ male_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/5/59/Conan_O%27Brien_by_Gage_Skidmore_2.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/b/bd/Alec_Baldwin_Cannes_2012.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/9/95/Tracy_Morgan_3_Shankbone_2009_NYC.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/a/a5/Jane_Krakowski_%282005%29_%28cropped%29.jpeg",
     "https://upload.wikimedia.org/wikipedia/commons/5/5d/Jackmcbrayer.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/8/80/ScottAdsit.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/0/0a/Steve_Martin%2C_2017-08-11.jpg",
@@ -183,5 +189,13 @@ male_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/0/0c/Charlie_Cox_by_Gage_Skidmore.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/5/5a/Mike_Colter_2018.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/5/57/Finn_Jones_by_Gage_Skidmore.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b4/Hugh_Grant_2014_crop.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/d/d4/Colin_Farrell_by_Gage_Skidmore.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/75/Jeremy_Strong_2014.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/48/Charlie_Hunnam_at_Berlinale_2017.jpeg",
+    "https://upload.wikimedia.org/wikipedia/commons/2/26/Matthew_McConaughey_Cannes_2015_2.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/1/14/GuyRitchiebyKathyHutchins.jpg",
+
+
 
 ]
