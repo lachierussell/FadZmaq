@@ -51,20 +51,20 @@ class ProfilePage extends StatelessWidget {
       //   },
       // ),
       floatingActionButton:
-          profile != null && type == ProfileType.recommendation
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    LikeButton(profile: profile, type: LikePass.pass),
-                    Expanded(
-                      child: Container(
-                        height: 10,
-                      ),
-                    ),
-                    LikeButton(profile: profile, type: LikePass.like),
-                  ],
-                )
-              : null,
+      profile != null && type == ProfileType.recommendation
+          ? Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          LikeButton(profile: profile, type: LikePass.pass),
+          Expanded(
+            child: Container(
+              height: 10,
+            ),
+          ),
+          LikeButton(profile: profile, type: LikePass.like),
+        ],
+      )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

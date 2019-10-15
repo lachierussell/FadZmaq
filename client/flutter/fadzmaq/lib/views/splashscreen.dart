@@ -7,6 +7,8 @@ import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:location/location.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -18,6 +20,8 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+
+    // var token = await user.getIdToken();
     super.initState();
 
     // loadData();
@@ -44,6 +48,7 @@ class SplashScreenState extends State<SplashScreen> {
         code = response.statusCode;
       }
 
+
       if (code == 401) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
@@ -52,6 +57,20 @@ class SplashScreenState extends State<SplashScreen> {
           ),
         );
       } else {
+
+
+      var location = new Location();
+      var currentLocation;
+// Platform messages may fail, so we use a try/catch PlatformException.
+      currentLocation = await location.getLocation();
+
+      // var token = await user.getIdToken();
+      // printWrapped(token.token);
+      httpPost(AppConfig.of(context).server + "profile/ping", json:utf8.encode(json.encode(compileJson(currentLocation))));
+      // String url = "matches";
+      // int code =
+      //     await fetchResponseCode(config.server + url);
+
         await firstLoadGlobalModels(context);
 
         Navigator.of(context).pushReplacement(
@@ -75,6 +94,15 @@ class SplashScreenState extends State<SplashScreen> {
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
+
+  Map compileJson(var x) {
+    Map map = {
+      'location': [{'lat': x['latitude'] , "long": x['longitude'] }
+      ]};
+    print(map);
+    return map;
+  }
+
 
   @override
   Widget build(BuildContext context) {
