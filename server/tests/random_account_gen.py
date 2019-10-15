@@ -8,27 +8,20 @@ from tests.random_account_data import male_name_list
 from tests.random_account_data import female_photo_list
 from tests.random_account_data import male_photo_list
 
-from fadzmaq.database import profile
-from fadzmaq.database import hobbies
+from tests.random_account_db import make_user_test
+from tests.random_account_db import update_user_hobbies
+from tests.random_account_db import get_hobby_list
+from tests.random_account_db import set_location
 
-# @brief Creates a user in the database
-# @throws IOError if the user already exists or the database insertion fails.
-
-
-def make_user_test(name, email, uid, photo):
-    rows = db.get_db().execute(
-        '''
-        INSERT INTO profile (nickname, email, user_id, photo) VALUES (%s, %s, %s, %s) RETURNING user_id;
-        ''', name, email, uid, photo
-    )
-    for row in rows:
-        print(str(row['user_id']))
-        return str(row['user_id'])
-    print('IOError: No Rows')
-    raise IOError
+engine = None
+connection = None
+db_cred = "empty"
 
 
-def make_random_accounts(num):
+def make_random_accounts(num, cred):
+    global db_cred
+    db_cred = cred
+    print("Cred2: " + db_cred)
     for i in range(num):
         make_random_account()
 
@@ -44,8 +37,10 @@ def make_random_account():
 
     # db stuff
     make_user_test(name, email, uid, photo)
-    hobbies.update_user_hobbies(uid, random_hobby_request())
     profile.set_location(uid, random_lat(), random_long(), 'null device')
+    set_location(uid, random_lat(), random_long())
+
+    print("added: " + name + " - " + uid)
 
 
 def random_id():
@@ -103,7 +98,7 @@ def random_hobbies(all_hobby_list):
 
 def random_hobby_request():
 
-    all_hobby_list = hobbies.get_hobby_list()['hobby_list']
+    all_hobby_list = get_hobby_list()['hobby_list']
 
     share_list = {
         'container': 'share',
@@ -123,9 +118,9 @@ def random_hobby_request():
 
 
 # Random coordinates around perth
-def random_long():
-    return round(random.uniform(115.75, 116.00), 2)
-
-
 def random_lat():
     return round(random.uniform(-31.67, -32.17), 2)
+
+
+def random_long():
+    return round(random.uniform(115.75, 116.00), 2)

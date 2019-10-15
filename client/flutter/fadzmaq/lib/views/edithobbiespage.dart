@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +30,7 @@ class EditHobbyPage2 extends StatelessWidget {
     return Scaffold(
 
       body: GetRequest<ProfileContainer>(
-        url: "profile",
+        url: Globals.profileURL,
         builder: (context) {
           finalIsShare = isShare;
           return new EditHobbyPage();

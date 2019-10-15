@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -24,7 +25,7 @@ Future<void> matchPopup(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: DisplayPhoto(
                     url: userProfile.photo,
-                    dimension: 80,
+                    dimension: Globals.matchThumbDim,
                   ),
                 ),
                 SizedBox(width: 10),
@@ -34,7 +35,7 @@ Future<void> matchPopup(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: DisplayPhoto(
                     url: profile.photo,
-                    dimension: 80,
+                    dimension: Globals.matchThumbDim,
                   ),
                 ),
               ],

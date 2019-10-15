@@ -1,12 +1,17 @@
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/views/editprofilepage.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/cache.dart';
 
 import 'package:http/http.dart' as http;
+
+import 'createprofilescreen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,26 +22,34 @@ class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
+  bool _isButtonDisabled = false;
+
   GoogleSignInAccount _currentUser;
 
   @override
   void initState() {
     super.initState();
 
+    _signout();
+
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setState(() {
         _currentUser = account;
       });
       if (_currentUser != null) {
-        // Navigator.pushNamed(context, "/UwaAll");
+        //
       }
     });
     _googleSignIn.signInSilently().whenComplete(() => {
-          // Navigator.pushNamed(context, "/UwaAll")
+          //
         });
   }
 
   Future<FirebaseUser> _handleSignIn() async {
+    setState(() {
+      _isButtonDisabled = true;
+    });
+
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
@@ -62,6 +75,11 @@ class _LoginScreenState extends State<LoginScreen> {
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
+  void _signout() async {
+    await FirebaseAuth.instance.signOut();
+    await _googleSignIn.signOut();
+  }
+
   @override
   Widget build(BuildContext context) {
     ConfigResource config = AppConfig.of(context);
@@ -72,23 +90,28 @@ class _LoginScreenState extends State<LoginScreen> {
         //   title: Text("Login"),
         // ),
         body: Center(
-          child: Container(
-            alignment: Alignment.bottomCenter,
-            constraints: BoxConstraints(
-                maxHeight: 300.0,
-                maxWidth: 200.0,
-                minWidth: 150.0,
-                minHeight: 150.0),
-            child: ListView(
-              children: <Widget>[
-                Center(
-                  child: Icon(
-                    Icons.account_box,
-                    size: 130,
-                  ),
-                ),
-                Center(
-                  child: RaisedButton(
+      child: Container(
+        alignment: Alignment.bottomCenter,
+        constraints: BoxConstraints(
+            maxHeight: 300.0,
+            maxWidth: 200.0,
+            minWidth: 150.0,
+            minHeight: 150.0),
+        child: ListView(
+          children: <Widget>[
+            Center(
+              child: Icon(
+                Icons.account_box,
+                size: 130,
+              ),
+            ),
+            Center(
+                child: Text(
+                    "First Time Users: Please click the settings tab to modify your profile")),
+            Center(
+              child: _isButtonDisabled
+                  ? CircularProgressIndicator()
+                  : RaisedButton(
                       child: (Text("Login With Google")),
                       onPressed: () async {
                         // _handleSignIn().then((FirebaseUser user) {
@@ -100,13 +123,30 @@ class _LoginScreenState extends State<LoginScreen> {
                         // await sleep1();
 
                         if (user != null) {
+                          FirebaseAuth auth = FirebaseAuth.instance;
+                          FirebaseUser user = await auth.currentUser();
+                          IdTokenResult result = await user.getIdToken();
+
                           // a quick check to the server to see if we have an account already
                           // fetch response code will use Firebase Authentication to send our token
-                          String url = "matches";
+                          http.Response response;
+                          String url = Globals.matchesURL;
                           // TODO check for timeout here
-                          http.Response response = await httpGet(config.server + url);
-                          int code = response.statusCode;
-                              
+                          try {
+                            response = await httpGet(config.server + url);
+                          } catch (e) {
+                            print(e.toString());
+                          }
+
+                          int code = 500;
+
+                          if (response != null) {
+                            code = response.statusCode;
+
+                            String resonse = response.body.toString();
+
+                            print("A " + '$code' + " " + '$resonse');
+                          }
 
                           // 401: no user account
                           if (code == 401) {
@@ -115,13 +155,12 @@ class _LoginScreenState extends State<LoginScreen> {
                             // Get our id token from firebase
                             FirebaseAuth auth = FirebaseAuth.instance;
                             FirebaseUser user = await auth.currentUser();
-                            IdTokenResult result = await user.getIdToken();
 
                             var names = user.displayName.split(" ");
                             String name = names[0];
 
                             // put together our post request for a new account
-                            String json = '{"new_user":{"email":"' +
+                            String _json = '{"new_user":{"email":"' +
                                 user.email +
                                 '", "name":"' +
                                 name +
@@ -129,19 +168,33 @@ class _LoginScreenState extends State<LoginScreen> {
 
                             // print(json);
                             // post to account with our auth
-                            http.Response response = await http.post(
-                              config.server + "account",
-                              headers: {"Authorization": result.token},
-                              body: json,
-                            );
+                            http.Response response = await httpPost(
+                                config.server + "account",
+                                json: _json);
 
                             // update our code
                             code = response.statusCode;
+
+                            String resonsee = response.body.toString();
+
+                            print("B " + '$code' + " " + '$resonsee');
+
+                            if (code == 200) {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => EditProfilePage(),
+                                  // builder: (context) => LandingPage(),
+                                ),
+                              );
+                            }
+
+                            //TODO what if we fail to make an account?
                           }
 
                           // success with the server
                           // go to main page (perferences at the moment)
-                          if (code == 200) {
+                          else if (code == 200) {
+                            await cacheImages(context);
                             Navigator.of(context).pushReplacement(
                               MaterialPageRoute(
                                 // builder: (context) => UserPreferencesPage(),
@@ -154,11 +207,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         }
                         // }).catchError((e) => print(e));
                       }),
-                ),
-              ],
             ),
-          ),
-        ));
+          ],
+        ),
+      ),
+    ));
   }
 
   // TODO remove me

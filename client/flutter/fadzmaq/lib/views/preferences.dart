@@ -1,15 +1,22 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
+import 'package:fadzmaq/views/widgets/deleteUser.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
+import 'package:flutter/rendering.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:http/http.dart';
+import 'package:http/http.dart' as prefix1;
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -32,132 +39,152 @@ class TestWidget extends StatelessWidget {
   }
 }
 
-class ProfilePic extends StatelessWidget {
+class UserPreferencesPage extends StatelessWidget {
+  /// the [GetRequest<ProfileData>] for this page
+  /// note [url] is matches and the [builder] creates the below children
+  /// this is a [builder] because [children] are initialised independent to heirachy
+  /// only [builder] waits for the parent to initialise
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
-    return SizedBox(
-      height: 200,
-      width: 200,
-      child: CachedNetworkImage(
-        imageUrl: profile.photo,
-        fit: BoxFit.cover,
-        // placeholder: (context, url) => new CircularProgressIndicator(),
-        errorWidget: (context, url, error) => new Icon(Icons.error),
-      ),
-    );
+    return GetRequest<ProfileContainer>(
+        url: Globals.profileURL,
+        builder: (context) {
+          return UserPreferences();
+        });
   }
 }
 
 /// stateful because we have the slider and switches to keep track of
-class UserPreferencesPage extends StatefulWidget {
+class UserPreferences extends StatefulWidget {
   UserPreferencesState createState() {
     return UserPreferencesState();
   }
 }
 
-class UserPreferencesState extends State {
+class UserPreferencesState extends State<UserPreferences> {
   // const UserPreferencesPage([Key key]) : super(key: key);
 
   double _locationDistance = 50;
   int _roundDist = 50;
   bool _notificationsBool = true;
+  ProfileData profile;
+
+  @override
+  void didChangeDependencies() {
+    if (profile == null) {
+      profile = RequestProvider.of<ProfileContainer>(context).profile;
+    }
+
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return page();
-
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text('Preferences'),
-    //   ),
-    //   body: page(),
-    // );
-  }
-
-  Widget page() {
-    /// the [GetRequest<ProfileData>] for this page
-    /// note [url] is matches and the [builder] creates the below children
-    /// this is a [builder] because [children] are initialised independent to heirachy
-    /// only [builder] waits for the parent to initialise
-    return GetRequest<ProfileContainer>(
-      url: "profile",
-      builder: (context) {
-        return SingleChildScrollView(
-          // color: Colors.grey,
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  new PreferenceButtons(),
-                  Column(
-                    children: <Widget>[
-                      Text("Distance: $_roundDist"),
-                      Row(
-                        children: <Widget>[
-                          Text("Distance"),
-                          Expanded(
-                            child: Slider(
-                              min: 10,
-                              max: 200,
-                              // value: 50,
-                              onChanged: (newDist) {
-                                setState(() {
-                                  int rounded = (newDist / 5).round() * 5;
-                                  _locationDistance = newDist;
-                                  _roundDist = rounded;
-                                });
-                              },
-                              // onChangeEnd: (newDist){
-                              //   setState(() {
-                              //     int rounded = (newDist / 5).round() * 5;
-                              //     _locationDistance = rounded as double;
-                              //     _roundDist = rounded;
-                              //   });
-                              // },
-                              value: _locationDistance,
-                            ),
+    return SingleChildScrollView(
+      // color: Colors.grey,
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              // mainAxisAlignment: MainAxisAlignment.center,
+              // crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  child: DisplayPhoto(
+                    url: profile.photo,
+                    dimension: Globals.recThumbDim,
+                  ),
+                ),
+                new PreferenceButtons(),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(
+                    onPressed: () {
+                      editProfileFunction(context);
+                    },
+                    child: Text("Edit Profile"),
+                  ),
+                ),
+                Column(
+                  children: <Widget>[
+                    Text("Distance: $_roundDist"),
+                    Row(
+                      children: <Widget>[
+                        Text("Distance"),
+                        Expanded(
+                          child: Slider(
+                            min: 10,
+                            max: 200,
+                            // value: 50,
+                            onChanged: (newDist) {
+                              setState(() {
+                                int rounded = (newDist / 5).round() * 5;
+                                _locationDistance = newDist;
+                                _roundDist = rounded;
+                              });
+                            },
+                            // onChangeEnd: (newDist){
+                            //   setState(() {
+                            //     int rounded = (newDist / 5).round() * 5;
+                            //     _locationDistance = rounded as double;
+                            //     _roundDist = rounded;
+                            //   });
+                            // },
+                            value: _locationDistance,
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Text("Notifications"),
+                    Switch(
+                      onChanged: (b) {
+                        setState(() => _notificationsBool = b);
+                      },
+                      value: _notificationsBool,
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(
+                    onPressed: logOut,
+                    child: Text("Log out"),
                   ),
-                  Row(
-                    children: <Widget>[
-                      Text("Notifications"),
-                      Switch(
-                        onChanged: (b) {
-                          setState(() => _notificationsBool = b);
-                        },
-                        value: _notificationsBool,
-                      ),
-                    ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(
+                    onPressed: () {
+                      postAsync(context, "profile");
+                    },
+                    child: Text("Post Request Test"),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: logOut,
-                      child: Text("Log out"),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: 8.0,
+                    horizontal: 20.0,
+                  ),
+                  child: RaisedButton(
+                    onPressed: () {
+                      deleteDialog(context);
+                    },
+                    child: Text(
+                      "Delete Account",
+                      style: TextStyle(color: Colors.red),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: RaisedButton(
-                      onPressed: (){ postAsync(context, "profile");},
-                      child: Text("Post Request Test"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
+                ),
+              ]),
+        ),
+      ),
     );
   }
 
@@ -169,6 +196,23 @@ class UserPreferencesState extends State {
 
     Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => LoginScreen()));
+  }
+
+  void editProfileFunction(BuildContext context) async {
+    var result =
+        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return EditProfilePage();
+    }));
+
+    if (result != null) {
+      print("EDIT RESULT " + result.toString());
+      ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
+      pc.profile = result;
+
+      setState(() {
+        profile = result;
+      });
+    }
   }
 }
 
@@ -186,9 +230,6 @@ class PreferenceButtons extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              ProfilePic(),
-              // Text("Rowan Atkinson"),
-
               /// here we see [TestWidget], it accesses the
               /// [RequestProvider<T>] created by [GetRequest<T>]
               /// to access the model data
@@ -206,8 +247,11 @@ class PreferenceButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        ProfilePage(url: "profile", profile: profile, type: ProfileType.own,)),
+                    builder: (context) => ProfilePage(
+                          url: Globals.profileURL,
+                          profile: profile,
+                          type: ProfileType.own,
+                        )),
               );
             },
             child: Text("View Profile"),
@@ -220,10 +264,10 @@ class PreferenceButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => EditProfilePage()),
+                    builder: (context) => EditHobbyPage2(isShare: false)),
               );
             },
-            child: Text("Edit Profile"),
+            child: Text("Choose hobbies that you want to discover"),
           ),
         ),
         Padding(
@@ -233,23 +277,7 @@ class PreferenceButtons extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        EditHobbyPage2(isShare: false)),
-              );
-            },
-            child:
-                Text("Choose hobbies that you want to discover"),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        EditHobbyPage2(isShare: true)),
+                    builder: (context) => EditHobbyPage2(isShare: true)),
               );
             },
             child: Text("Choose hobbies that you want to share"),
