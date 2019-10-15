@@ -3,9 +3,8 @@ import 'package:fadzmaq/views/widgets/profile_body.dart';
 import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
-import 'package:fadzmaq/controllers/globals.dart';
+
 
 enum ProfileType { own, match, recommendation }
 

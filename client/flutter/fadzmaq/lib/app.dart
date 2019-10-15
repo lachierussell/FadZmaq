@@ -4,11 +4,12 @@ import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/splashscreen.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/preferences.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return DataController(
+    return GlobalData(
       model: MainModel(),
       child: MaterialApp(
         title: 'Flutter Demo',

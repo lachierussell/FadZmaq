@@ -1,13 +1,11 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/mainModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' as prefix0;
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
@@ -15,9 +13,7 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart' as prefix1;
+import 'package:fadzmaq/controllers/globalData.dart';
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -34,7 +30,7 @@ class PreferencesTempApp extends StatelessWidget {
 class TestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ProfileData userProfile = DataController.of(context).userProfile;
+    ProfileData userProfile = GlobalData.of(context).userProfile;
 
     return Text(userProfile.name);
   }
@@ -47,7 +43,7 @@ class UserPreferencesPage extends StatelessWidget {
   /// only [builder] waits for the parent to initialise
   @override
   Widget build(BuildContext context) {
-    return LoadModel(
+    return VerifyModel(
         model: Model.userProfile,
         builder: (context) {
           return UserPreferences();
@@ -71,7 +67,7 @@ class UserPreferencesState extends State<UserPreferences> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData userProfile = DataController.of(context).userProfile;
+    ProfileData userProfile = GlobalData.of(context).userProfile;
 
     return SingleChildScrollView(
       // color: Colors.grey,
@@ -206,7 +202,7 @@ class PreferenceButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
-    ProfileData userProfile = DataController.of(context).userProfile;
+    ProfileData userProfile = GlobalData.of(context).userProfile;
     return Column(
       children: <Widget>[
         Padding(

@@ -1,5 +1,4 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/likeResult.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';

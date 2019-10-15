@@ -1,7 +1,4 @@
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
-import 'package:fadzmaq/models/mainModel.dart';
-import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/controllers/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';

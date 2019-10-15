@@ -11,7 +11,6 @@ import 'package:fadzmaq/controllers/cache.dart';
 
 import 'package:http/http.dart' as http;
 
-import 'createprofilescreen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override

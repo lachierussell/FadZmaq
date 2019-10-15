@@ -1,5 +1,5 @@
 import 'package:fadzmaq/models/profile.dart';
-import 'package:flutter/cupertino.dart';
+
 
 class LikeResult {
   final bool match;

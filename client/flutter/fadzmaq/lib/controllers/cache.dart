@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
-import 'package:fadzmaq/models/mainModel.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
@@ -136,24 +136,24 @@ Future httpGetCachePhoto<T>(BuildContext context, String url) async {
     var matchData = MatchesData.fromJson(responseJson);
 
     // TODO move caching to be inside the update for the data model
-    if (DataController.of(context) != null ) {
-      DataController.of(context).matches = matchData;
+    if (GlobalData.of(context) != null ) {
+      GlobalData.of(context).matches = matchData;
     }
     
     await cacheMatchPhotos(context, matchData);
   } else if (T == RecommendationsData) {
     var recommendationsData = RecommendationsData.fromJson(responseJson);
 
-    if (DataController.of(context) != null) {
-      DataController.of(context).recommendations = recommendationsData;
+    if (GlobalData.of(context) != null) {
+      GlobalData.of(context).recommendations = recommendationsData;
     }
 
     await cacheRecommendationPhotos(context, recommendationsData);
   } else if (T == ProfileContainer) {
     var profileContainer = ProfileContainer.fromJson(responseJson);
 
-    if (DataController.of(context) != null && profileContainer != null) {
-      DataController.of(context).userProfile = profileContainer.profile;
+    if (GlobalData.of(context) != null && profileContainer != null) {
+      GlobalData.of(context).userProfile = profileContainer.profile;
     }
 
     await cacheProfilePhotos(context, profileContainer);

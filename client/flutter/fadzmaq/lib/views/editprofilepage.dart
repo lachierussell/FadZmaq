@@ -1,25 +1,16 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
-import 'package:fadzmaq/models/mainModel.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/views/landing.dart';
-import 'package:fadzmaq/views/preferences.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:fadzmaq/main.dart';
-import 'package:flutter/material.dart';
-import 'package:fadzmaq/controllers/request.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:fadzmaq/models/app_config.dart';
 import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
 // import 'package:permission_handler/permission_handler.dart';
@@ -148,7 +139,7 @@ class EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
-    ProfileData userProfile = DataController.of(context).userProfile;
+    ProfileData userProfile = GlobalData.of(context).userProfile;
     String server = AppConfig.of(context).server;
 
     // check for id 1 (about me) and grab the display value

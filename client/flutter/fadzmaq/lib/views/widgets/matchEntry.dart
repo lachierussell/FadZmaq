@@ -1,5 +1,4 @@
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
