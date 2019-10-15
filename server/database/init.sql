@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS user_hobbies
 
 CREATE TABLE IF NOT EXISTS location_data
 (
-    device_id VARCHAR,
+    device_id VARCHAR DEFAULT NULL,
     user_id   VARCHAR NOT NULL REFERENCES profile (user_id) ON DELETE CASCADE,
     lat       FLOAT   NOT NULL,
     long      FLOAT   NOT NULL,
