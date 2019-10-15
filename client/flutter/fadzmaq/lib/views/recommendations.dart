@@ -21,7 +21,12 @@ class RecommendationsPage extends StatelessWidget {
     return VerifyModel(
         model: Model.recommendations,
         builder: (context) {
-          return RecommendationsList();
+          return VerifyModel(
+              model: Model.userProfile,
+              builder: (context) {
+                return RecommendationsList();
+              });
+          ;
         });
   }
 }

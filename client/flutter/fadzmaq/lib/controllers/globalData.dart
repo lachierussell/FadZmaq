@@ -52,7 +52,7 @@ class _VerifyModelState extends State<VerifyModel> {
   /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
   @override
   void didChangeDependencies() {
-    if (_checkModel(context, widget.model) == false && _future == null) {
+    if (_checkModel(context, widget.model) == false) {
       String server = AppConfig.of(context).server + _getURL(widget.model);
       _future = httpGet(server);
     }
@@ -73,7 +73,6 @@ class _VerifyModelState extends State<VerifyModel> {
               return Center(child: Text(snapshot.data.toString()));
             }
             if (snapshot.data.statusCode == 200) {
-              print("Ready to go: " + snapshot.data.toString());
               dynamic responseJson = json.decode(snapshot.data.body);
               _loadJSON(getModel(context), widget.model, responseJson);
               return widget.builder(context);
@@ -89,6 +88,8 @@ class _VerifyModelState extends State<VerifyModel> {
             }
           } else if (snapshot.hasError) {
             return Text("${snapshot.error}");
+          }else{
+            return Text("problem");
           }
 
           // By default, show a loading spinner.

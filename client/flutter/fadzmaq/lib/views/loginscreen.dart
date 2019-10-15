@@ -128,7 +128,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           // a quick check to the server to see if we have an account already
                           // fetch response code will use Firebase Authentication to send our token
                           http.Response response;
-                          String url = Globals.matchesURL;
+                          String url = Globals.profileURL;
                           // TODO check for timeout here
                           try {
                             response = await httpGet(config.server + url);

@@ -131,7 +131,8 @@ class ProfileData {
         return pf.displayValue;
       }
     }
-    return null;
+
+    return "";
   }
 }
 

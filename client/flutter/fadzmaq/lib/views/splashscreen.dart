@@ -36,7 +36,7 @@ class SplashScreenState extends State<SplashScreen> {
       // TODO refactor this
       ConfigResource config = AppConfig.of(context);
       http.Response response;
-      String url = Globals.matchesURL;
+      String url = Globals.profileURL;
       // TODO check for timeout here
       try {
         response = await httpGet(config.server + url);

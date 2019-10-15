@@ -14,7 +14,11 @@ class MatchesPage extends StatelessWidget {
     return VerifyModel(
         model: Model.matches,
         builder: (context) {
-          return MatchesList();
+          return VerifyModel(
+              model: Model.userProfile,
+              builder: (context) {
+                return MatchesList();
+              });
         });
   }
 }
