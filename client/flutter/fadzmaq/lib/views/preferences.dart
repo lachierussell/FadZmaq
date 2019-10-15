@@ -1,7 +1,7 @@
 import 'package:fadzmaq/controllers/account.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/requestProvider.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/settings.dart';
@@ -13,7 +13,6 @@ import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:flutter/rendering.dart';
-import 'package:fadzmaq/controllers/globalData.dart';
 import 'dart:convert';
 
 class UserPreferencesPage extends StatelessWidget {

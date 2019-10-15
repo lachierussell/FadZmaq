@@ -6,6 +6,7 @@ import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/recommendationEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -57,7 +58,7 @@ class RecommendationsListState extends State<RecommendationsList> {
 
     if (recommendationsList.length > 0) {
       // never more than 10 entries shown
-      int numEntries = min(10, recommendationsList.length);
+      int numEntries = min(11, recommendationsList.length);
 
       return ListView.separated(
         separatorBuilder: (context, index) {
@@ -79,6 +80,16 @@ class RecommendationsListState extends State<RecommendationsList> {
   }
 
   Widget _listItemBuilder(BuildContext context, int index) {
+    if (index == 10)
+      return SizedBox(
+        height: 75,
+        child: Center(
+            child: Text(
+          "To see more recommendations please like or pass\ncandidates from your current list",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey),
+        )),
+      );
     if (recommendationsList[index].profile == null) return null;
     return RecommendationEntry(
         profile: recommendationsList[index].profile, recommendationList: this);

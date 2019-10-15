@@ -5,6 +5,7 @@ import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/widgets/matchDialog.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'dart:convert';
 
 enum LikePass { like, pass }
@@ -54,8 +55,13 @@ class LikeButton extends StatelessWidget {
 void asyncMatchPopup(BuildContext context, ProfileData profile) async {
   print("asyncMatchPopup");
   // http.Response response = await postAsync(context, "like/" + profile.userId);
-
-  MatchesData matches = getMatches(context);
+  MatchesData matches;
+  try {
+    matches = getMatches(context);
+  } catch (e) {
+    await loadModel(context, Model.matches);
+    matches = getMatches(context);
+  }
 
   // do a post request for like
   // build the model if there is a response
