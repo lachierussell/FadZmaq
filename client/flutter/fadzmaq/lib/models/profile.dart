@@ -111,6 +111,17 @@ class ProfileData {
       hobbyContainers: hobbyContainers,
     );
   }
+
+
+  void replaceField(String field, String value){
+    for(ProfileField pf in profileFields){
+      if(pf.name == field){
+        pf.displayValue = value;
+        return;
+      }
+    }
+    profileFields.add(ProfileField(name: field, displayValue: value));
+  }
 }
 
 //class ContactData {
@@ -132,15 +143,13 @@ class ProfileData {
 
 class ProfileField {
   // final int id;
-  final String displayValue;
+  String displayValue;
   final String name;
-  final String rating;
 
   ProfileField({
     // this.id,
     this.displayValue,
     this.name,
-    this.rating,
   });
 
   factory ProfileField.fromJson(Map<String, dynamic> json) {
@@ -148,7 +157,6 @@ class ProfileField {
       // id: json['id'] as int,
       name: json['name'] as String,
       displayValue: json['display_value'] as String,
-      rating: json['rating'] as String,
     );
   }
 }

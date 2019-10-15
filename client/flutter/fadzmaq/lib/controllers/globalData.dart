@@ -81,8 +81,6 @@ class _VerifyModelState extends State<VerifyModel> {
   }
 }
 
-
-
 class GlobalData extends InheritedWidget {
   GlobalData({
     this.container,
@@ -120,7 +118,7 @@ Future<int> loadModel(BuildContext context, Model model) async {
     if (response.statusCode == 200) {
       responseJson = json.decode(response.body);
       await _loadJsonAndCache(mainModel, model, responseJson);
-    }else{
+    } else {
       throw Exception("Status code was " + response.statusCode.toString());
     }
   } catch (e) {

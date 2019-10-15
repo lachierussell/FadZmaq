@@ -84,10 +84,6 @@ class EditProfileState extends State<EditProfile> {
 
   // Get an image from your gallery
   Future getImage1() async {
-
-
-
-
 // Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
 
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -227,7 +223,7 @@ class EditProfileState extends State<EditProfile> {
                               setState(() {
                                 disableButton = true;
                               });
-                              if(_image1 != null){
+                              if (_image1 != null) {
                                 await _uploadFile();
                               }
                               if (_fbKey.currentState.saveAndValidate()) {
@@ -238,9 +234,26 @@ class EditProfileState extends State<EditProfile> {
                                 httpPost(server + "profile",
                                     json: _fbKey.currentState.value);
 
-                                if (imgurl != null) {
-                                  userProfile.photo = imgurl;
-                                }
+                                print(_fbKey.currentState.value.toString());
+
+                                if (imgurl != null) userProfile.photo = imgurl;
+                                String nickname =
+                                    _fbKey.currentState.value['nickname'];
+                                String email =
+                                    _fbKey.currentState.value['email'];
+                                String phone =
+                                    _fbKey.currentState.value['phone'];
+                                String bio = _fbKey.currentState.value['bio'];
+
+                                if (nickname != null)
+                                  userProfile.name = nickname;
+
+                                if (email != null)
+                                  userProfile.replaceField("email", email);
+                                if (phone != null)
+                                  userProfile.replaceField("phone", phone);
+                                if (bio != null)
+                                  userProfile.replaceField("bio", bio);
 
                                 // setState(() {
                                 //   disableButton = false;
