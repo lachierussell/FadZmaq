@@ -4,12 +4,12 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'package:flutter/material.dart';
 
-class MainModel {
+class GlobalModel {
   MatchesData matches;
   RecommendationsData recommendations;
   ProfileData userProfile;
 
-  MainModel({
+  GlobalModel({
     this.matches,
     this.recommendations,
     this.userProfile,
@@ -17,8 +17,8 @@ class MainModel {
 }
 
 
-MainModel getModel(BuildContext context) {
-  MainModel model = GlobalData.of(context);
+GlobalModel getModel(BuildContext context) {
+  GlobalModel model = GlobalData.of(context);
   if (model == null) {
     throw Exception("Data Controller not found");
   }
@@ -26,7 +26,7 @@ MainModel getModel(BuildContext context) {
 }
 
 MatchesData getMatchData(BuildContext context) {
-  MainModel model = getModel(context);
+  GlobalModel model = getModel(context);
 
   // if(model.matches == null){
   //   String server = AppConfig.of(context).server;

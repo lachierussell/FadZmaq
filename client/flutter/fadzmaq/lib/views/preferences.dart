@@ -1,6 +1,6 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/models/mainModel.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';

@@ -1,6 +1,6 @@
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
-import 'package:fadzmaq/models/mainModel.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/matches.dart';
@@ -16,9 +16,9 @@ class GlobalData extends InheritedWidget {
     Widget child,
   }) : super(child: child);
 
-  final MainModel model;
+  final GlobalModel model;
 
-  static MainModel of(BuildContext context) {
+  static GlobalModel of(BuildContext context) {
     return (context.inheritFromWidgetOfExactType(GlobalData) as GlobalData)
         .model;
   }
@@ -112,7 +112,7 @@ class _VerifyModelState extends State<VerifyModel> {
   }
 
   bool _checkModel(Model model) {
-    MainModel mainModel = GlobalData.of(context);
+    GlobalModel mainModel = GlobalData.of(context);
     bool present;
     switch (widget.model) {
       case Model.matches:
@@ -129,7 +129,7 @@ class _VerifyModelState extends State<VerifyModel> {
   }
 
   void _loadJSON(Model model, dynamic json) {
-    MainModel mainModel = GlobalData.of(context);
+    GlobalModel mainModel = GlobalData.of(context);
     switch (widget.model) {
       case Model.matches:
         mainModel.matches = MatchesData.fromJson(json);

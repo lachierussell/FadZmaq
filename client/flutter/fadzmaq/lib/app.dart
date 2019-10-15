@@ -1,4 +1,4 @@
-import 'package:fadzmaq/models/mainModel.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/views/createprofilescreen.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/splashscreen.dart';
@@ -10,7 +10,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GlobalData(
-      model: MainModel(),
+      model: GlobalModel(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(

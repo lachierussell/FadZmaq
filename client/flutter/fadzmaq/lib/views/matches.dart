@@ -1,6 +1,6 @@
 import 'package:fadzmaq/controllers/cache.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
-import 'package:fadzmaq/models/mainModel.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/views/widgets/matchEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
