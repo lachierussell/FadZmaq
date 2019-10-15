@@ -5,6 +5,7 @@ import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/globalModel.dart';
+import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -16,16 +17,6 @@ import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
 // import 'package:permission_handler/permission_handler.dart';
 
-class ProfileTempApp extends StatelessWidget {
-  const ProfileTempApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const EditProfilePage(),
-    );
-  }
-}
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({Key key}) : super(key: key);
@@ -36,13 +27,12 @@ class EditProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
-      body: EditProfile(),
-      // GetRequest<ProfileContainer>(
-      //   url: Globals.profileURL,
-      //   builder: (context) {
-      //     return new EditProfile();
-      //   },
-      // ),
+      body: VerifyModel(
+        model: Model.userProfile,
+        builder: (context) {
+          return new EditProfile();
+        },
+      ),
     );
   }
 }
@@ -151,7 +141,7 @@ class EditProfileState extends State<EditProfile> {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.fromLTRB(30,10,30,10),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -165,6 +155,7 @@ class EditProfileState extends State<EditProfile> {
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
+                    SizedBox(height: 20),
                     ClipRRect(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
                       child: _image1 != null
@@ -179,15 +170,45 @@ class EditProfileState extends State<EditProfile> {
                             ),
                     ),
                     // Get an Image
+                    SizedBox(height: 10,),
                     RaisedButton(
                       child: Text('Select Image'),
                       onPressed: getImage1,
                     ),
-                    FormBuilderTextField(
-                        attribute: "photo",
-                        initialValue: imgurlForm,
-                        readOnly: true,
-                        decoration: InputDecoration(labelText: "")),
+                    // FormBuilderTextField(
+                    //     attribute: "photo",
+                    //     initialValue: imgurlForm,
+                    //     readOnly: true,
+                    //     decoration: InputDecoration(labelText: "")),
+                    SizedBox(height: 20,),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditHobbyPage2(isShare: false)),
+                          );
+                        },
+                        child: Text("Choose hobbies that you want to discover"),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RaisedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditHobbyPage2(isShare: true)),
+                          );
+                        },
+                        child: Text("Choose hobbies that you want to share"),
+                      ),
+                    ),
                     FormBuilderTextField(
                         attribute: "nickname",
                         initialValue: userProfile.name,
@@ -207,78 +228,72 @@ class EditProfileState extends State<EditProfile> {
                   ],
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: MaterialButton(
-                      disabledColor: Colors.grey,
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: disableButton
-                          ? null
-                          : () async {
-                              setState(() {
-                                disableButton = true;
-                              });
-                              if (_image1 != null) {
-                                await _uploadFile();
-                              }
-                              if (_fbKey.currentState.saveAndValidate()) {
-                                _fbKey.currentState.value
-                                    .addAll({"photo": imgurl});
-                                print(
-                                    "Sending" + '${_fbKey.currentState.value}');
-                                httpPost(server + "profile",
-                                    json: _fbKey.currentState.value);
+              SizedBox(height: 20,),
+              MaterialButton(
+                disabledColor: Colors.grey,
+                color: Theme.of(context).accentColor,
+                child: Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.white),
+                ),
+                onPressed: disableButton
+                    ? null
+                    : () async {
+                        setState(() {
+                          disableButton = true;
+                        });
+                        if (_image1 != null) {
+                          await _uploadFile();
+                        }
+                        if (_fbKey.currentState.saveAndValidate()) {
+                          _fbKey.currentState.value
+                              .addAll({"photo": imgurl});
+                          print(
+                              "Sending" + '${_fbKey.currentState.value}');
+                          httpPost(server + "profile",
+                              json: _fbKey.currentState.value);
 
-                                print(_fbKey.currentState.value.toString());
+                          print(_fbKey.currentState.value.toString());
 
-                                if (imgurl != null) userProfile.photo = imgurl;
-                                String nickname =
-                                    _fbKey.currentState.value['nickname'];
-                                String email =
-                                    _fbKey.currentState.value['email'];
-                                String phone =
-                                    _fbKey.currentState.value['phone'];
-                                String bio = _fbKey.currentState.value['bio'];
+                          if (imgurl != null) userProfile.photo = imgurl;
+                          String nickname =
+                              _fbKey.currentState.value['nickname'];
+                          String email =
+                              _fbKey.currentState.value['email'];
+                          String phone =
+                              _fbKey.currentState.value['phone'];
+                          String bio = _fbKey.currentState.value['bio'];
 
-                                if (nickname != null)
-                                  userProfile.name = nickname;
+                          if (nickname != null)
+                            userProfile.name = nickname;
 
-                                if (email != null)
-                                  userProfile.replaceProfileField("email", email);
-                                if (phone != null)
-                                  userProfile.replaceProfileField("phone", phone);
-                                if (bio != null)
-                                  userProfile.replaceProfileField("bio", bio);
+                          if (email != null)
+                            userProfile.replaceProfileField(
+                                "email", email);
+                          if (phone != null)
+                            userProfile.replaceProfileField(
+                                "phone", phone);
+                          if (bio != null)
+                            userProfile.replaceProfileField("bio", bio);
 
-                                // setState(() {
-                                //   disableButton = false;
-                                // });
-                                if (Navigator.canPop(context)) {
-                                  Navigator.pop(context);
-                                } else {
-                                  Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                      // builder: (context) => UserPreferencesPage(),
-                                      builder: (context) => LandingPage(),
-                                    ),
-                                  );
-                                }
-                              } else {
-                                print(_fbKey.currentState.value);
-                                print("validation failed");
-                              }
-                            },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                ],
+                          // setState(() {
+                          //   disableButton = false;
+                          // });
+                          if (Navigator.canPop(context)) {
+                            Navigator.pop(context);
+                          } else {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                // builder: (context) => UserPreferencesPage(),
+                                builder: (context) => LandingPage(),
+                              ),
+                            );
+                          }
+                        } else {
+                          print(_fbKey.currentState.value);
+                          print("validation failed");
+                        }
+                      },
               ),
             ],
           ),

@@ -21,7 +21,7 @@ class MatchesPage extends StatelessWidget {
 
 class MatchesList extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     // MatchesData matchesData = RequestProvider.of<MatchesData>(context);
     MatchesData matchesData = getMatches(context);
     // print(matchesData.toString());
@@ -29,12 +29,17 @@ class MatchesList extends StatelessWidget {
     GlobalModel globalModel = getModel(context);
     cacheMatchPhotos(globalModel, matchesData);
 
-    print("build matches");
-
-    return ListView.builder(
-      itemCount: matchesData.matches.length,
-      itemBuilder: _listItemBuilder,
-    );
+    if (matchesData.matches.length > 0) {
+      return ListView.builder(
+        itemCount: matchesData.matches.length,
+        itemBuilder: _listItemBuilder,
+      );
+    } else {
+      return Text(
+        "\n\nNo Matches!\n\nTry browsing your recommendations\nfor people you might like!",
+        textAlign: TextAlign.center,
+      );
+    }
   }
 
   Widget _listItemBuilder(BuildContext context, int index) {

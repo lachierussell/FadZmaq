@@ -6,14 +6,11 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 
 class UserPreferencesPage extends StatelessWidget {
@@ -59,6 +56,7 @@ class UserPreferencesState extends State<UserPreferences> {
               // crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                SizedBox(height: 20),
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: DisplayPhoto(
@@ -180,12 +178,6 @@ class PreferenceButtons extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              /// here we see [TestWidget], it accesses the
-              /// [RequestProvider<T>] created by [GetRequest<T>]
-              /// to access the model data
-              ///
-              /// this is all test at the moment, I'll adjust it shortly,
-              /// but you can hopefully see how its arranged - Jordan
               Text(userProfile.name),
             ],
           ),
@@ -207,32 +199,7 @@ class PreferenceButtons extends StatelessWidget {
             child: Text("View Profile"),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EditHobbyPage2(isShare: false)),
-              );
-            },
-            child: Text("Choose hobbies that you want to discover"),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EditHobbyPage2(isShare: true)),
-              );
-            },
-            child: Text("Choose hobbies that you want to share"),
-          ),
-        ),
+
       ],
     );
   }

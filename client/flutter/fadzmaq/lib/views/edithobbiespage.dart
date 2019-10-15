@@ -174,9 +174,6 @@ class _EditHobbyPageState extends State<EditHobby> {
                     decoration: InputDecoration(labelText: "Hobbies"),
                     attribute: "languages",
 
-                    // TODO make this use the hobbies we're looking for
-                    // probably use another getRequest for now, but it should be smoother
-                    // maybe some storage of the hobby list on the app so we're only requesting the user hobbies
                     initialValue: hobbies,
                     leadingInput: true,
                     options: y,

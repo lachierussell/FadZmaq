@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     super.initState();
 
-    _signout();
+    // _signout();
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
       setState(() {
@@ -74,10 +74,10 @@ class _LoginScreenState extends State<LoginScreen> {
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
-  void _signout() async {
-    await FirebaseAuth.instance.signOut();
-    await _googleSignIn.signOut();
-  }
+  // void _signout() async {
+  //   await FirebaseAuth.instance.signOut();
+  //   await _googleSignIn.signOut();
+  // }
 
   @override
   Widget build(BuildContext context) {

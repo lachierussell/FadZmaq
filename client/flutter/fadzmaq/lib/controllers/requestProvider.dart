@@ -79,7 +79,6 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
               // TODO return an error here and manage it further up
               return LoginScreen();
             } else {
-              // TODO make this handle better
               return Text("Error with HTTP request: " +
                   '${snapshot.data.statusCode.toString()} ' +
                   ' ${snapshot.data.body.toString()}');

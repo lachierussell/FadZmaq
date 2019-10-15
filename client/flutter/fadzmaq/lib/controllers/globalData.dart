@@ -45,6 +45,19 @@ class VerifyModel extends StatefulWidget {
 }
 
 class _VerifyModelState extends State<VerifyModel> {
+  Future _future;
+
+  /// [didChangeDependencies] is called after [init], but is then only called once a dependency changes
+  /// we initialise the [Future] [fetchResponse()] here to avoid state changes refiring it
+  @override
+  void didChangeDependencies() {
+    if (_checkModel(context, widget.model) == false || _future == null) {
+      String server = AppConfig.of(context).server + _getURL(widget.model);
+      _future = httpGet(server);
+    }
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_checkModel(context, widget.model)) {
@@ -52,15 +65,18 @@ class _VerifyModelState extends State<VerifyModel> {
     } else {
       print("no model found for " + widget.model.toString() + " loading");
       return FutureBuilder(
-        future: loadModel(context, widget.model),
+        future: _future,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             if (snapshot.data is Exception) {
               return Center(child: Text(snapshot.data.toString()));
             }
-            if (snapshot.data == 200) {
+            if (snapshot.data.statusCode == 200) {
+              print("Ready to go: " + snapshot.data.toString());
+              dynamic responseJson = json.decode(snapshot.data.body);
+              _loadJSON(getModel(context), widget.model, responseJson);
               return widget.builder(context);
-            } else if (snapshot.data == 401) {
+            } else if (snapshot.data.statusCode == 401) {
               // not sure if this is the best way to do this but it works for now - Jordan
               // TODO return an error here and manage it further up
               return LoginScreen();
@@ -118,7 +134,7 @@ loadModelAsync(BuildContext context, Model model) async {
 }
 
 /// Loads a [model] into [GlobalModel]
-Future<int> loadModel(BuildContext context, Model model) async {
+Future loadModel(BuildContext context, Model model) async {
   print("Load model " + model.toString());
   String server = AppConfig.of(context).server + _getURL(model);
   GlobalModel mainModel = getModel(context);
@@ -139,7 +155,7 @@ Future<int> loadModel(BuildContext context, Model model) async {
     throw e;
   }
 
-  return response.statusCode;
+  return response;
 }
 
 /// returns the URL used for a given [model]
@@ -181,6 +197,7 @@ bool _checkModel(BuildContext context, Model model) {
       present = globalModel.allHobbies != null;
       break;
   }
+  print("checkmodel: " + model.toString() + "-" + present.toString());
   return present;
 }
 

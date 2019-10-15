@@ -66,7 +66,10 @@ class RecommendationsListState extends State<RecommendationsList> {
         itemBuilder: _listItemBuilder,
       );
     } else {
-      return Text("No recommendations");
+      return Text(
+        "\n\nNo Recommendations!\n\nTry adding more hobbies to share,\nor increase your search radius.",
+        textAlign: TextAlign.center,
+      );
     }
   }
 

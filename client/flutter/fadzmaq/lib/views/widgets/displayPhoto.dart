@@ -20,6 +20,7 @@ class DisplayPhoto extends StatelessWidget {
       return SizedBox(
         height: dimension,
         width: dimension,
+        child: Container(color: Colors.grey),
       );
     }
     GlobalModel globalModel = getModel(context);
