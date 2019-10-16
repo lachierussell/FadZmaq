@@ -20,30 +20,25 @@ from fadzmaq.database.profile import build_profile_data
 def get_matches(subject):
     rows = db.get_db().execute(
         '''
-        SELECT DISTINCT(profile.user_id), nickname, bio, email, phone, photo,
-         CASE WHEN r.rate_value is NULL THEN -1 ELSE r.rate_value
-         END AS rating
-        FROM profile
-        FULL OUTER JOIN rating r
-          ON user_id = user_to
-         AND user_from = %s
-        WHERE profile.user_id IN (
-            SELECT user_a
+        SELECT profile.*, MAX(time) AS time, MAX(COALESCE(rating.rate_value, - 1)) AS rating
+        FROM (
+            SELECT user_b AS user_id, time
             FROM matches
             WHERE user_a = %s
-               OR user_b = %s
-               AND NOT matches.unmatch
-        )
-        AND profile.user_id != %s
-        OR profile.user_id IN (
-            SELECT user_b
+                AND unmatch = false
+            
+            UNION
+            
+            SELECT user_a AS user_id, time
             FROM matches
-            WHERE user_a = %s
-               OR user_b = %s
-               AND NOT matches.unmatch
-        )
-        AND profile.user_id != %s
-        ''', subject, subject, subject, subject, subject, subject, subject
+            WHERE user_b = %s
+                AND unmatch = false
+            ) matches
+        LEFT JOIN profile ON profile.user_id = matches.user_id
+        LEFT JOIN rating ON matches.user_id = rating.user_to AND rating.user_from = %s
+        GROUP BY profile.user_id
+        ORDER BY time DESC
+        ''', subject, subject, subject, 
     )
 
     matches = []

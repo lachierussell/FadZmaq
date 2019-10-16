@@ -395,21 +395,20 @@ $matching_algorithm$
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Avid rock climber and hiking enthusiast.', 'Lachie', 'Lachie@email.com', '1999-09-04', '0423199199',
         'b026324c6904b2a9cb4b88d6d61c81d1',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/AV0A6306_Sean_Bean.jpg/468px-AV0A6306_Sean_Bean.jpg');
+        'https://upload.wikimedia.org/wikipedia/commons/c/ca/AV0A6306_Sean_Bean.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Casual cyclist looking for social rides.', 'John', 'John@email.com', '1999-10-4', '0423239199',
         '26ab0db90d72e28ad0ba1e22ee510510',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Good_Omens_panel_at_NYCC_%2860841%29a.jpg/1024px-Good_Omens_panel_at_NYCC_%2860841%29a.jpg');
+        'https://upload.wikimedia.org/wikipedia/commons/9/9b/Good_Omens_panel_at_NYCC_%2860841%29a.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Boating admirer', 'Smith', 'smith@email.com', '1970-12-5', '0413239199', '6d7fce9fee471194aa8b5b6e47267f03',
-        'https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2' ||
-        '_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg');
+        'https://upload.wikimedia.org/wikipedia/commons/8/89/Matt_Smith_by_Gage_Skidmore_2.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('Boxing champion', 'Judy', 'judy@email.com', '1980-10-3', '0404239188', '48a24b70a0b376535542b996af517398',
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg/800px-Jeffrey_Wright_by_Gage_Skidmore_3.jpg');
+        'https://upload.wikimedia.org/wikipedia/commons/5/51/Jeffrey_Wright_by_Gage_Skidmore_3.jpg');
 
 INSERT INTO profile (bio, nickname, email, dob, phone, user_id, photo)
 VALUES ('I dont have hobbies but keen to find something new', 'Mike', 'mike@email.com', '1980-09-14', '0415239188',
@@ -421,7 +420,7 @@ INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
 VALUES ('TMnFU6BmQoV8kSMoYYGLJDu8qSy1', 'Lachie', 'Mountain biker but wanting to try out rock climbing!', '1999-09-14',
         'lachie.russell@gmail.com',
         '04152122188',
-        'https://www.russell-systems.cc/other/48a825f8953a416e22525ac737975ee2785c3088448f665df3f0e13c4955241e.jpg');
+        'https://upload.wikimedia.org/wikipedia/commons/f/fd/Christopher_Plummer_2014.jpg');
 
 INSERT INTO profile (user_id, nickname, bio, dob, email, phone, photo)
 VALUES ('OQezYUwFC2P2JOP81nicQR4qZRB3', 'Jordan',
