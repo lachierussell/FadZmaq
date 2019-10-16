@@ -1,4 +1,5 @@
 import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/controllers/location.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/controllers/globals.dart';
@@ -181,8 +182,9 @@ class _LoginScreenState extends State<LoginScreen> {
                             Location location = new Location();
                             // don't request permission here
 
-                            bool hasPermission = await location.hasPermission();
+                            bool hasPermission = await sendLocation(context);
                             await firstLoadGlobalModels(context);
+
                             if (hasPermission) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
@@ -202,11 +204,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           // success with the server
                           // go to main page (perferences at the moment)
                           else if (code == 200) {
-                            Location location = new Location();
-                            // don't request permission here
 
-                            bool hasPermission = await location.hasPermission();
+                            bool hasPermission = await sendLocation(context);
                             await firstLoadGlobalModels(context);
+
                             if (hasPermission) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(

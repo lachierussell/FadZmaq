@@ -17,8 +17,11 @@ Future sendLocation(BuildContext context) async {
   bool hasPermission = await location.hasPermission();
 
   if (hasPermission == false) {
+    print("couldn't ping location no permission");
     return false;
   }
+
+  print("pinging location");
 
   LocationData currentLocation = await location.getLocation();
 
@@ -29,9 +32,9 @@ Future sendLocation(BuildContext context) async {
     deviceToken = "";
   }
 
-  print("deviceToken: " + deviceToken);
+  // print("deviceToken: " + deviceToken);
 
-  httpPost(AppConfig.of(context).server + "profile/ping",
+  await httpPost(AppConfig.of(context).server + "profile/ping",
       json:
           utf8.encode(json.encode(_compileJson(currentLocation, deviceToken))));
 
@@ -49,6 +52,6 @@ Map _compileJson(LocationData locationData, String deviceToken) {
     },
     "device": deviceToken,
   };
-  print(map);
+  // print(map);
   return map;
 }

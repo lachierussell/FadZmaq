@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/location.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/views/landing.dart';
@@ -51,7 +52,6 @@ class PermissionPage extends StatelessWidget {
                   ),
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
-                    await location.requestPermission();
                     moveOnPermitted(context);
                   },
                   shape: RoundedRectangleBorder(
@@ -65,8 +65,9 @@ class PermissionPage extends StatelessWidget {
 
   void moveOnPermitted(BuildContext context) async {
     bool hasPermission = await sendLocation(context);
-
+    
     if (hasPermission) {
+      await firstLoadGlobalModels(context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => navToEdit ? EditProfilePage() : LandingPage(),
