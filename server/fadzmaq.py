@@ -1,4 +1,5 @@
 # @file
+# The application entry point. Run this file to use the FadZmaq Server.
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019

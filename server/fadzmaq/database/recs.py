@@ -1,5 +1,5 @@
-# @file
-#
+## @file
+# @brief Contains functions for retrieving and calculating recommendations.
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
 #

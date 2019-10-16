@@ -1,4 +1,5 @@
-# @file
+## @file
+# @brief The routes file containing the API entry points.
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
