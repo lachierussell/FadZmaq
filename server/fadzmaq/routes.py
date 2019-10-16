@@ -332,3 +332,18 @@ def pass_user(uid, id):
         return "User passed", 200
     except Exception:
         return page_not_found, 404
+
+
+
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# TESTS
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+# 
+@route_bp.route('/tests/notify/<string:id>', methods=['GET'])
+def test_notify(id):
+    try:
+        recs.notify_match(id)
+    except Exception as e:
+        return 'failed: ' + str(e), 500
+    return "Notified", 200
