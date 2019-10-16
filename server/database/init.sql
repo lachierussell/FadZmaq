@@ -337,6 +337,8 @@ WHERE dt.user_id NOT IN (
               SELECT user_a FROM matches WHERE user_b = from_user
               UNION
               SELECT user_b FROM matches WHERE user_a = from_user
+              UNION
+              SELECT user_id FROM profile where user_id = from_user
     )
 $matching_algorithm$
     LANGUAGE SQL;
