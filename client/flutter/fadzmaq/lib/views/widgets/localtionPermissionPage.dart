@@ -9,7 +9,7 @@ class PermissionPage extends StatelessWidget {
   final bool navToEdit;
 
   const PermissionPage({
-    this.navToEdit,
+    this.navToEdit = false,
     Key key,
   }) : super(key: key);
 
@@ -68,7 +68,7 @@ class PermissionPage extends StatelessWidget {
     bool hasPermission = await sendLocation(context);
     
     if (hasPermission) {
-      await firstLoadGlobalModels(context);
+      firstLoadGlobalModels(context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => navToEdit ? EditProfilePage() : LandingPage(),
