@@ -8,6 +8,8 @@ import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/views/edithobbiespage.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
+import 'package:fadzmaq/views/widgets/hobbyChips.dart';
+import 'package:fadzmaq/views/widgets/profile_body.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
@@ -181,6 +183,14 @@ class EditProfileState extends State<EditProfile> {
                     //     readOnly: true,
                     //     decoration: InputDecoration(labelText: "")),
                     SizedBox(height: 20,),
+                    FormBuilderTextField(
+                      attribute: "nickname",
+                      initialValue: userProfile.name,
+                      decoration: InputDecoration(labelText: "Nickname")),
+                    SizedBox(height: 20,),
+                    ProfileHobbies(
+                      hobbies: userProfile.hobbyContainers,
+                      direction: HobbyDirection.discover),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RaisedButton(
@@ -195,6 +205,9 @@ class EditProfileState extends State<EditProfile> {
                         child: Text("Choose hobbies that you want to discover"),
                       ),
                     ),
+                    ProfileHobbies(
+                      hobbies: userProfile.hobbyContainers,
+                      direction: HobbyDirection.share),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RaisedButton(
@@ -209,10 +222,6 @@ class EditProfileState extends State<EditProfile> {
                         child: Text("Choose hobbies that you want to share"),
                       ),
                     ),
-                    FormBuilderTextField(
-                        attribute: "nickname",
-                        initialValue: userProfile.name,
-                        decoration: InputDecoration(labelText: "Nickname")),
                     FormBuilderTextField(
                         attribute: "email",
                         initialValue: contactEmail,
