@@ -8,13 +8,20 @@
 # @author Jordan Russell        20357813@student.uwa.edu.au
 # @author Thiren Naidoo         22257963@student.uwa.edu.au
 
-
 import fadzmaq.database.connection as db
 from fadzmaq.api.notifications import notify_match
 from fadzmaq.database.profile import retrieve_profile
 from fadzmaq.database.profile import build_profile_data
 
 
+## @brief Votes a user. The type of vote is dependant on param vote.
+# @param uid    Your user id.
+# @param id     Their user id.
+# @param vote   True for a like, False for a pass.
+# @return An object indicating whether the vote resulted in a match.
+# @note This is not JSON. To convert to JSON use `jsonify()`.
+# @warning This function has been modified for testing. A vote on a test user will result in a
+# match 1/3 of the time.
 def like_user(uid, id, vote):
     ######
     # TESTING
@@ -53,6 +60,11 @@ def like_user(uid, id, vote):
         }
 
 
+## @brief Calculates the compatibility score of your recommendations.
+# This takes in input from the database indicating shared hobbies and distance as well as average rating
+# and uses that to calculate an elo-based matching algorithm.
+# @param row    ResultProxy row containing distance, hobbies and score.
+# @returns A value indicating compatibility. Lower is better.
 def calculate_compatibility(row):
     dist = row['distance']
     hobbies = row['hobbies']
@@ -81,6 +93,12 @@ def calculate_compatibility(row):
     return (hobbies_factor - distance_factor) * rating_factor
 
 
+## @brief Retrieves a list of users who would be suitable recommendations to the current user.
+# This builds a list of profiles (similar to matches) which contains their information in a sorted list, based off of
+# the compatibility score calculated above.
+# @param uid    Your user id.
+# @return A sorted list of recommendations.
+# @note This is not JSON. To convert to JSON use `jsonify()`.
 def get_recommendations(uid):
     top_users = []
 
@@ -106,6 +124,11 @@ def get_recommendations(uid):
     }
 
 
+## @brief Gets a profile of a recommendation individually.
+# This is used by get recommendations to build each profile in the list.
+# @param user_id    Their user ID.
+# @param my_id      Your user ID.
+# @return Profile data object.
 def get_recommendation_profile(user_id, my_id):
     row = db.get_db().execute(
         '''
