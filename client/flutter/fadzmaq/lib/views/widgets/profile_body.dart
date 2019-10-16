@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
@@ -191,10 +192,12 @@ TextStyle bodyBold() {
 void onThumbsUp(BuildContext context, int rating, String userId) {
   print("thumbsup");
   if (rating != 1) {
-    http.post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
+    // http.post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
+    postAsync(context, "matches/thumbs/up/" + userId);
     Navigator.pop(context);
   } else {
-    http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    // http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    postAsync(context, "matches/thumbs/" + userId, useDelete: true);
     Navigator.pop(context);
   }
 }
@@ -202,10 +205,12 @@ void onThumbsUp(BuildContext context, int rating, String userId) {
 void onThumbsDown(BuildContext context, int rating, String userId) {
   print("thumbsdown");
   if (rating != 0) {
-    http.post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
+    // http.post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
+    postAsync(context, "matches/thumbs/down/" + userId);
     Navigator.pop(context);
   } else {
-    http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    // http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    postAsync(context, "matches/thumbs/" + userId, useDelete: true);
     Navigator.pop(context);
   }
 }
