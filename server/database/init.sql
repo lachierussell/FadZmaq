@@ -238,13 +238,34 @@ CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR)
             )
 AS
 $compatability_score$
-SELECT user_id, Count(user_id) AS compat
-FROM   user_hobbies 
-WHERE  hobby_id IN(SELECT hobby_id 
-                   FROM   user_hobbies 
-                   WHERE  user_id = from_user) 
-GROUP  BY user_id 
-ORDER  BY compat DESC 
+SELECT  coalesce(my_share.user_id, my_discover.user_id) as user_id,
+        coalesce(count_share, 0) * coalesce(count_discover,0) * 2 + coalesce(count_share, 0) + coalesce(count_discover,0) AS compat
+FROM (
+	SELECT DISTINCT (user_id), Count(user_id) AS count_share
+	FROM user_hobbies
+	WHERE hobby_id IN (
+			SELECT hobby_id
+			FROM user_hobbies
+			WHERE user_id = from_user
+				AND swap = 'share'
+			)
+		AND swap = 'discover'
+	GROUP BY user_id
+	) my_share
+FULL OUTER JOIN (
+	SELECT DISTINCT (user_id), Count(user_id) AS count_discover
+	FROM user_hobbies 
+	WHERE hobby_id IN (
+			SELECT hobby_id
+			FROM user_hobbies
+			WHERE user_id = from_user
+				AND swap = 'discover'
+			)
+		AND swap = 'share'
+	GROUP BY user_id
+	) my_discover
+ON (my_share.user_id = my_discover.user_id)
+ORDER BY compat DESC
 $compatability_score$
     LANGUAGE SQL;
 
