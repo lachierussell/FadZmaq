@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS rating
 --  ----------------------------------------
 --------------------------------------------
 
--- Trigger to form a match between two consenting users
+-- @brief Trigger which matches two uses when mutual votes exist.
 CREATE OR REPLACE FUNCTION match()
     RETURNS TRIGGER
     LANGUAGE plpgsql
@@ -121,12 +121,15 @@ BEGIN
 END;
 $make_match$;
 
+-- @brief Activates the match() trigger.
 CREATE TRIGGER make_match
     BEFORE INSERT OR UPDATE
     ON votes
     FOR EACH ROW
 EXECUTE PROCEDURE match();
 
+
+-- @brief Creates a trigger that prevents duplicate and conflicting ratings on a user.
 CREATE OR REPLACE FUNCTION rate_user()
     RETURNS TRIGGER
     LANGUAGE plpgsql AS
@@ -162,6 +165,7 @@ BEGIN
 END;
 $rate$;
 
+-- @brief Activates rating trigger.
 CREATE TRIGGER rate
     BEFORE INSERT
     ON rating
@@ -169,6 +173,9 @@ CREATE TRIGGER rate
 EXECUTE PROCEDURE rate_user();
 
 
+-- @brief Calculates user compatibility.
+-- Using the average rating score it calculates the difference between users.
+-- This simulates the elo rating system.
 CREATE OR REPLACE FUNCTION compatible_rating(from_user VARCHAR)
     RETURNS TABLE
             (
@@ -195,6 +202,7 @@ $compatible_rating$
     LANGUAGE SQL;
 
 
+-- @brief Calculates hobby compatibility between two users.
 -- Count number of hobbies for filtering / compatibility score
 CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR)
     RETURNS TABLE
@@ -221,7 +229,10 @@ $compatability_score$
     LANGUAGE SQL;
 
 
--- Made by
+-- @brief Calculates the distance between two users.
+-- Adapted from code by: Kirill Bekus
+-- GeoDataSource.com (C) All Rights Reserved 2019
+-- https://www.geodatasource.com/developers/postgresql
 CREATE OR REPLACE FUNCTION calculate_distance(lat1 DOUBLE PRECISION, lon1 DOUBLE PRECISION,
                                               lat2 DOUBLE PRECISION, lon2 DOUBLE PRECISION)
     RETURNS FLOAT AS
@@ -252,6 +263,9 @@ END;
 $dist$ LANGUAGE plpgsql;
 
 
+-- @brief Builds a table of distance values between users.
+-- This uses the calculate_distance function to build up a table of approximate distance between users
+-- so that this can be used by the matching algorithm.
 CREATE OR REPLACE FUNCTION distance_table(from_user VARCHAR)
     RETURNS TABLE
             (
@@ -299,6 +313,7 @@ $distances$
     LANGUAGE SQL;
 
 
+-- @brief Collates compatibility, ratings and distances of users into a single function for use by the server.
 CREATE OR REPLACE FUNCTION matching_algorithm(from_user VARCHAR)
     RETURNS TABLE
             (
@@ -324,9 +339,6 @@ WHERE dt.user_id NOT IN (
     )
 $matching_algorithm$
     LANGUAGE SQL;
-
-
--- INSERT INTO votes (vote, user_from, user_to) VALUES (TRUE,'TMnFU6BmQoV8kSMoYYGLJDu8qSy1', '26ab0db90d72e28ad0ba1e22ee510510' );
 
 
 --------------------------------------------
