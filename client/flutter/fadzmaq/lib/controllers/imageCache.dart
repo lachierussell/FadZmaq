@@ -5,6 +5,11 @@ import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
+
+import 'dart:async';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+
 /// Caches profile photos based on [RecommendationsData]
 /// globalModel required to calculate image sizes
 Future cacheRecommendationPhotos(
@@ -60,17 +65,19 @@ Future<void> cachePhotoURL(GlobalModel globalModel, String url) async {
   String matchPhoto = photoThumbURL(pr, url, Globals.matchThumbDim);
   String profilePhoto = photoThumbURL(pr, url, globalModel.screenWidth);
 
-  DefaultCacheManager cache = DefaultCacheManager();
+  CustomCacheManager cache = CustomCacheManager();
+
   List<Future> futures = List<Future>();
 
   // Add each to a list of futures so they may be concurently processed
   if (await cache.getFileFromCache(recPhoto) == null) {
-    print("cacheing: " + recPhoto);
+    print("Caching: " + url);
     futures.add(cache.downloadFile(recPhoto));
     futures.add(cache.downloadFile(matchPhoto));
     futures.add(cache.downloadFile(profilePhoto));
 
     await Future.wait(futures);
+    print("Cache complete for: " + url);
   }
 }
 
@@ -98,4 +105,28 @@ String photoThumbURL(double devicePixelRatio, String url, double dimension) {
   } else {
     return url;
   }
+}
+
+
+class CustomCacheManager extends BaseCacheManager {
+  static const key = "customCache";
+
+  static CustomCacheManager _instance;
+
+  factory CustomCacheManager() {
+    if (_instance == null) {
+      _instance = new CustomCacheManager._();
+    }
+    return _instance;
+  }
+
+  CustomCacheManager._() : super(key,
+      maxAgeCacheObject: Duration(days: 7),
+      maxNrOfCacheObjects: 1000,);
+
+  Future<String> getFilePath() async {
+    var directory = await getTemporaryDirectory();
+    return p.join(directory.path, key);
+  }
+
 }

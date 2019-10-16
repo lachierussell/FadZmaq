@@ -26,6 +26,8 @@ Future firstLoadGlobalModels(BuildContext context) async {
     futures.add(loadModel(context, model));
   }
   await Future.wait(futures);
+  print("first load complete");
+  return;
 }
 
 /// Creates a [FutureBuilder] over a page if the [model]
