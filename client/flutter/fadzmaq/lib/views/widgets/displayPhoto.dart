@@ -31,6 +31,7 @@ class DisplayPhoto extends StatelessWidget {
       height: dimension,
       width: dimension,
       child: CachedNetworkImage(
+        cacheManager: CustomCacheManager(),
         fadeInDuration: const Duration(seconds: 0),
         height: dimension,
         width: dimension,

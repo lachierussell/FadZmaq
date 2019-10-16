@@ -121,7 +121,7 @@ class CustomCacheManager extends BaseCacheManager {
   }
 
   CustomCacheManager._() : super(key,
-      maxAgeCacheObject: Duration(days: 7),
+      maxAgeCacheObject: Duration(days: 30),
       maxNrOfCacheObjects: 1000,);
 
   Future<String> getFilePath() async {

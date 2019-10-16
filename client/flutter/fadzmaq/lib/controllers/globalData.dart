@@ -209,7 +209,7 @@ bool _checkModel(BuildContext context, Model model) {
       present = globalModel.accountSettings != null;
       break;
   }
-  print("checkmodel: " + model.toString() + "-" + present.toString());
+  // print("checkmodel: " + model.toString() + "-" + present.toString());
   return present;
 }
 
