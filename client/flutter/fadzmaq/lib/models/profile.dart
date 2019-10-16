@@ -1,7 +1,7 @@
 import 'package:fadzmaq/models/hobbies.dart';
 
 class ProfileContainer {
-  final ProfileData profile;
+  ProfileData profile;
 
   ProfileContainer({
     this.profile,
@@ -56,9 +56,10 @@ class ProfileData {
   // final String age;
 //  final ContactData contactDetails;
 
-  final String name;
-  final String photo;
-  final int rating;
+  String name;
+  String photo;
+  int rating;
+
   final List<ProfileField> profileFields;
   final List<HobbyContainer> hobbyContainers;
   // final int age;
@@ -69,7 +70,7 @@ class ProfileData {
     // this.gender,
     // this.age,
     this.name,
-    this.photo,
+    this.photo = "",
 //    this.contactDetails,
     this.profileFields,
     this.hobbyContainers,

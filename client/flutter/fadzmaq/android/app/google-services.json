@@ -15,6 +15,38 @@
       },
       "oauth_client": [
         {
+          "client_id": "126247573200-es71effcmntlssg7jjn7h5ehhgra4nrr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.team26.fadzmaq",
+            "certificate_hash": "022fa0af98044cb5611604e904eb1ac9adc83082"
+          }
+        },
+        {
+          "client_id": "126247573200-o2ep6unsgeqfdtdv24p2tgiremvvlvi9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.team26.fadzmaq",
+            "certificate_hash": "b019dfcce3f3ceca1122bc48962589e4cac8a160"
+          }
+        },
+        {
+          "client_id": "126247573200-bgvg0aut4pc5u3dtiouea9s358orl5ai.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.team26.fadzmaq",
+            "certificate_hash": "0c43547603f3d562f3a851bb7fb4235fe8acfaeb"
+          }
+        },
+        {
+          "client_id": "126247573200-oabsso1vli9emsar4ov227tnnerk0j3i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.team26.fadzmaq",
+            "certificate_hash": "12d2971b65d2bcf139acf86bd57a77f471805668"
+          }
+        },
+        {
           "client_id": "126247573200-9qjhcpo4fiojufh53vfsnieq7f4n6bc1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,6 +70,13 @@
             {
               "client_id": "126247573200-qb1vj0755ntihlro0buhus43kg0drkno.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "126247573200-8aclgs9srnqg94kcg78bar27j64qa7p7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.team26.fadzmaq"
+              }
             }
           ]
         }

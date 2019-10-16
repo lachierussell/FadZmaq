@@ -77,6 +77,7 @@ class RecommendationsListState extends State<RecommendationsList> {
   }
 
   Widget _listItemBuilder(BuildContext context, int index) {
+    if(recommendationsList[index].profile == null) return null;
     return RecommendationEntry(
         profile: recommendationsList[index].profile, recommendationList: this);
   }

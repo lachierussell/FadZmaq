@@ -1,3 +1,4 @@
+import 'package:fadzmaq/views/createprofilescreen.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/splashscreen.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class App extends StatelessWidget {
 
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/login': (context) => LoginScreen(),
+        '/CreateProfile': (context) => CreateProfileScreen(),
         // '/profile': (context) => LoginScreen(),
       },
     );
