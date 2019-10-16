@@ -200,14 +200,16 @@ TextStyle bodyBold() {
 }
 
 void onThumbsUp(BuildContext context, int existingRating, ProfileData profile) {
-  profile.rating = 1;
+  
 
   print("thumbsup");
   if (existingRating != 1) {
+    profile.rating = 1;
     // http.post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
     postAsync(context, "matches/thumbs/up/" + profile.userId);
     Navigator.pop(context);
   } else {
+    profile.rating = -1;
     // http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
     postAsync(context, "matches/thumbs/" + profile.userId, useDelete: true);
     Navigator.pop(context);
@@ -215,14 +217,16 @@ void onThumbsUp(BuildContext context, int existingRating, ProfileData profile) {
 }
 
 void onThumbsDown(BuildContext context, int existingRating, ProfileData profile) {
-  profile.rating = 0;
+  
 
   print("thumbsdown");
   if (existingRating != 0) {
+    profile.rating = 0;
     // http.post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
     postAsync(context, "matches/thumbs/down/" + profile.userId);
     Navigator.pop(context);
   } else {
+    profile.rating = -1;
     // http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
     postAsync(context, "matches/thumbs/" + profile.userId, useDelete: true);
     Navigator.pop(context);
