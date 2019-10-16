@@ -58,24 +58,7 @@ class ProfileBody extends StatelessWidget {
         Text(profileName,
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5)),
-
-        type == ProfileType.match
-            ? Row(children: <Widget>[
-                IconButton(
-                    icon: Icon(Icons.thumb_down),
-                    onPressed: () {
-                      onThumbsDown(context, rating, profile);
-                    },
-                    color: returnColor(rating, 0)),
-                IconButton(
-                  icon: Icon(Icons.thumb_up),
-                  onPressed: () {
-                    onThumbsUp(context, rating, profile);
-                  },
-                  color: returnColor(rating, 1),
-                ),
-              ])
-            : Row(),
+        distanceBox(profile),
         BodyDivider(),
         ContactBody(profile: profile),
         ProfileHobbies(
@@ -84,17 +67,63 @@ class ProfileBody extends StatelessWidget {
         ProfileHobbies(
             hobbies: profile.hobbyContainers, direction: HobbyDirection.share),
         BodyDivider(),
-        Text("5km away"),
-        SizedBox(
-          height: 15,
-        ),
+        SizedBox(height: 15),
+        Text("Bio", style: TextStyle(fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
         bio != null ? Text(bio) : Container(),
-        SizedBox(
-          height: 15,
-        ),
+        SizedBox(height: 15),
+        BodyDivider(),
+        Text("Rate " + profileName,
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        SizedBox(height: 10),
+        type == ProfileType.match
+            ? Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  IconButton(
+                      iconSize: 40,
+                      icon: Icon(Icons.thumb_down),
+                      onPressed: () {
+                        onThumbsDown(context, rating, profile);
+                      },
+                      color: returnColor(rating, 0)),
+                  SizedBox(width: 25),
+                  IconButton(
+                    iconSize: 40,
+                    icon: Icon(Icons.thumb_up),
+                    onPressed: () {
+                      onThumbsUp(context, rating, profile);
+                    },
+                    color: returnColor(rating, 1),
+                  ),
+                ],
+              )
+            : Container(),
+        SizedBox(height: 15),
       ],
     );
   }
+}
+
+Widget distanceBox(ProfileData profile) {
+  String distance = profile.getProfileField("distance");
+  if (distance == null || distance == "") {
+    return Container();
+  }
+
+  return Row(
+    children: <Widget>[
+      Icon(
+        Icons.location_on,
+        color: Colors.grey,
+        size: 16,
+      ),
+      Text(
+        profile.getProfileField("distance"),
+        style: TextStyle(color: Colors.grey),
+      ),
+    ],
+  );
 }
 
 /// the display of the hobbies
@@ -128,9 +157,7 @@ class ProfileHobbies extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-        SizedBox(
-          height: 8,
-        ),
+        SizedBox(height: 15),
         Center(
             child: HobbyChips(
           hobbies: hobbies,
@@ -200,8 +227,6 @@ TextStyle bodyBold() {
 }
 
 void onThumbsUp(BuildContext context, int existingRating, ProfileData profile) {
-  
-
   print("thumbsup");
   if (existingRating != 1) {
     profile.rating = 1;
@@ -216,9 +241,8 @@ void onThumbsUp(BuildContext context, int existingRating, ProfileData profile) {
   }
 }
 
-void onThumbsDown(BuildContext context, int existingRating, ProfileData profile) {
-  
-
+void onThumbsDown(
+    BuildContext context, int existingRating, ProfileData profile) {
   print("thumbsdown");
   if (existingRating != 0) {
     profile.rating = 0;

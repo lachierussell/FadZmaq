@@ -5,7 +5,7 @@ import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
-import 'package:fadzmaq/views/widgets/localtionPermissionPage.dart';
+import 'package:fadzmaq/views/localtionPermissionPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
