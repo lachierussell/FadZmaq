@@ -52,6 +52,7 @@ class PermissionPage extends StatelessWidget {
                   ),
                   color: Theme.of(context).accentColor,
                   onPressed: () async {
+                    await location.requestPermission();
                     moveOnPermitted(context);
                   },
                   shape: RoundedRectangleBorder(
