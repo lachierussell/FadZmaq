@@ -155,8 +155,8 @@ def update_hobbies(uid):
 def ping_location(uid):
     try:
         data = json.loads(request.get_data())
-        data = data['location']
-        profile.set_location(uid, data['lat'], data['long'])
+        loc = data['location']
+        profile.set_location(uid, loc['lat'], loc['long'], data['device'])
         return 'Ping Set', 204
     except Exception as e:
         return 'FAILED', 500
@@ -310,3 +310,17 @@ def pass_user(uid, id):
 # def test_add_users(num):
 #     random_account_gen.make_random_accounts(int(num), cred=current_app.config['DATABASE_URI'])
 #     return 'Added users', 200
+
+
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# TESTS
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+# 
+@route_bp.route('/tests/notify/<string:id>', methods=['GET'])
+def test_notify(id):
+    try:
+        recs.notify_match(id)
+    except Exception as e:
+        return 'failed: ' + str(e), 500
+    return "Notified", 200

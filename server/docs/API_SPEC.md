@@ -531,7 +531,8 @@ none
         // This provides approximately 1km of resolution.
         "lat": -122.06,
         "long": 37.42
-    }	
+    },
+    "device": [device id]
 }
 
 // Recieve

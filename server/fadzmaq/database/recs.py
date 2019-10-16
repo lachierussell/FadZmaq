@@ -38,7 +38,7 @@ def like_user(uid, id, vote):
     )
     if rows.first() is None:
         print('MATCH')
-        notify_match()
+        notify_match(id)
         matches = [retrieve_profile(id)]
         return {
             "match": True,
