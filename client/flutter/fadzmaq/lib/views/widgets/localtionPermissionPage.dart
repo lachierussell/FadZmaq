@@ -1,3 +1,4 @@
+import 'package:fadzmaq/controllers/location.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -59,9 +60,7 @@ class PermissionPage extends StatelessWidget {
   }
 
   void moveOnPermitted(BuildContext context) async {
-    Location location = Location();
-
-    bool hasPermission = await location.hasPermission();
+    bool hasPermission = await sendLocation(context);
 
     if (hasPermission) {
       Navigator.of(context).pushReplacement(
