@@ -43,8 +43,8 @@ class UserPreferences extends StatefulWidget {
 class UserPreferencesState extends State<UserPreferences> {
   // const UserPreferencesPage([Key key]) : super(key: key);
 
-  double _locationDistance = 50;
-  int _roundDist = 50;
+  double _locationDistance = 20;
+  int _roundDist = 20;
   // bool _notificationsBool = true;
 
   @override
@@ -105,18 +105,18 @@ class UserPreferencesState extends State<UserPreferences> {
                         // Text("Distance"),
                         Expanded(
                           child: Slider(
-                            min: 10,
-                            max: 120,
+                            min: 1,
+                            max: 50,
                             // value: 50,
                             onChanged: (newDist) {
                               setState(() {
                                 _locationDistance = newDist;
-                                int rounded = (newDist / 5).round() * 5;
+                                int rounded = (newDist).round();
                                 _roundDist = rounded;
                               });
                             },
                             onChangeEnd: (endDist) {
-                              int rounded = (endDist / 5).round() * 5;
+                              int rounded = (endDist).round();
                               _locationDistance = endDist;
                               _roundDist = rounded;
 
