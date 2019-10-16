@@ -42,6 +42,7 @@ class MatchesList extends StatelessWidget {
       return Text(
         "\n\nNo Matches!\n\nTry browsing your recommendations\nfor people you might like!",
         textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.grey),
       );
     }
   }

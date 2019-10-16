@@ -75,6 +75,7 @@ class RecommendationsListState extends State<RecommendationsList> {
       return Text(
         "\n\nNo Recommendations!\n\nTry adding more hobbies to share,\nor increase your search radius.",
         textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.grey),
       );
     }
   }
