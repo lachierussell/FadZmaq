@@ -1,4 +1,5 @@
-# @file
+## @file
+# @brief Retrieves information about a users matches.
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
@@ -7,13 +8,15 @@
 # @author Lachlan Russell       22414249@student.uwa.edu.au
 # @author Jordan Russell        20357813@student.uwa.edu.au
 
-
 import fadzmaq.database.connection as db
 from fadzmaq.database.profile import build_profile_data
 
 
-# @brief Gets a users current matches
+## @brief Gets a users current matches.
+# This is a full list of matches.
+# @param subject    Your user ID.
 # @return A dictionary (JSON based) containing their match information.
+# @note This is not JSON, convert to JSON with `jsonify()`.
 def get_matches(subject):
     rows = db.get_db().execute(
         '''
@@ -39,7 +42,7 @@ def get_matches(subject):
                OR user_b = %s
                AND NOT matches.unmatch
         )
-        AND profile.user_id != %s;
+        AND profile.user_id != %s
         ''', subject, subject, subject, subject, subject, subject, subject
     )
 
@@ -52,7 +55,11 @@ def get_matches(subject):
     }
 
 
-# @brief Gets a match by id
+## @brief Gets a matches profile by their ID
+# @param uid    Your user id.
+# @param id     Their user id.
+# @return Their profile data.
+# @note This is not JSON, convert to JSON with `jsonify()`.
 def get_match_by_id(uid, id):
     print(uid, id)
     # EXTRACT(year FROM age(current_date, dob)) :: INTEGER AS age # If we need age calculation
@@ -77,7 +84,9 @@ def get_match_by_id(uid, id):
     return build_profile_data(rows.first(), 2)
 
 
-# Un-matches two users by setting their matched column to false.
+## @brief Un-matches two users by setting their matched column to false.
+# @param uid    Your user id.
+# @param id     Their user id.
 def unmatch(uid, id):
     rows = db.get_db().execute(
         '''
