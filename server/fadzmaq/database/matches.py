@@ -20,7 +20,11 @@ from fadzmaq.database.profile import build_profile_data
 def get_matches(subject):
     rows = db.get_db().execute(
         '''
-        SELECT profile.*, MAX(time) AS time, MAX(COALESCE(rating.rate_value, - 1)) AS rating
+        SELECT
+            profile.*,
+            MAX(time) AS time,
+            MAX(COALESCE(rating.rate_value, - 1)) AS rating,
+            MAX(COALESCE(distance.distance,-1)) AS distance
         FROM (
             SELECT user_b AS user_id, time
             FROM matches
@@ -36,14 +40,15 @@ def get_matches(subject):
             ) matches
         LEFT JOIN profile ON profile.user_id = matches.user_id
         LEFT JOIN rating ON matches.user_id = rating.user_to AND rating.user_from = %s
+        LEFT JOIN distance_table(%s) AS distance ON matches.user_id = distance.user_id
         GROUP BY profile.user_id
         ORDER BY time DESC
-        ''', subject, subject, subject, 
+        ''', subject, subject, subject, subject
     )
 
     matches = []
     for row in rows:
-        matches.append(build_profile_data(row, 3))
+        matches.append(build_profile_data(row, 2))
 
     return {
         "matches": matches
