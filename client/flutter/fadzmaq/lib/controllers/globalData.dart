@@ -155,7 +155,8 @@ Future loadModel(BuildContext context, Model model) async {
       throw Exception("Status code was " + response.statusCode.toString());
     }
   } catch (e) {
-    throw e;
+    // Do nothing for now
+    // throw e;
   }
 
   return response;

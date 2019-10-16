@@ -47,7 +47,7 @@ class EditHobbyPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose hobbies that you want to discover'),
+        title: Text('Hobbies to ' + discoverOrShare()),
       ),
       body: VerifyModel(
         model: Model.allHobbies,
@@ -94,7 +94,7 @@ List<Map> deriveResult(BuildContext context, var x) {
   // bool replacementMade = getUserProfile(context).replaceHobbyContainer(hobbyContainer);
   getUserProfile(context).replaceHobbyContainer(hobbyContainer);
   // if(replacementMade){
-    
+
   // }
 
   return ret;
@@ -156,70 +156,71 @@ class _EditHobbyPageState extends State<EditHobby> {
     //     title: Text("Choose hobbies to discover"),
     //   ),
     //   body:
+
+    double scrollHeight = MediaQuery.of(context).size.height - 160;
+
     return Padding(
       padding: EdgeInsets.all(10),
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            FormBuilder(
-              // context,
-              key: _fbKey,
-              autovalidate: true,
-              initialValue: {
-                'movie_rating': 5,
-              },
-              // readOnly: true,
+      child: Column(
+        children: <Widget>[
+          Container(
+            height: scrollHeight,
+            child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  FormBuilderCheckboxList(
-                    decoration: InputDecoration(labelText: "Hobbies"),
-                    attribute: "languages",
-
-                    initialValue: hobbies,
-                    leadingInput: true,
-                    options: y,
-                    onChanged: _onChanged,
+                  FormBuilder(
+                    // context,
+                    key: _fbKey,
+                    autovalidate: true,
+                    initialValue: {
+                      'movie_rating': 5,
+                    },
+                    // readOnly: true,
+                    child: Column(
+                      children: <Widget>[
+                        FormBuilderCheckboxList(
+                          decoration: InputDecoration(labelText: "Hobbies"),
+                          attribute: "languages",
+                          initialValue: hobbies,
+                          leadingInput: true,
+                          options: y,
+                          onChanged: _onChanged,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: MaterialButton(
-                    color: Theme.of(context).accentColor,
-                    child: Text(
-                      "Submit",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    onPressed: () {
-                      if (_fbKey.currentState.saveAndValidate()) {
-                        print(_fbKey.currentState.value);
-
-                        // compile json and changes user profile model
-                        Map<String, dynamic> hobJson =
-                            compileJson(context, _fbKey.currentState.value);
-
-                        httpPost(
-                            AppConfig.of(context).server + "profile/hobbies",
-                            json: json.encode(hobJson)).then((value){
-                              loadModelAsync(context, Model.recommendations);
-                            });
-                        Navigator.pop(context);
-                      } else {
-                        print(_fbKey.currentState.value);
-                        print("validation failed");
-                      }
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-              ],
+          ),
+          SizedBox(height: 10,),
+          MaterialButton(
+            color: Theme.of(context).accentColor,
+            child: Text(
+              "Submit",
+              style: TextStyle(color: Colors.white),
             ),
-          ],
-        ),
+            onPressed: () {
+              if (_fbKey.currentState.saveAndValidate()) {
+                print(_fbKey.currentState.value);
+
+                // compile json and changes user profile model
+                Map<String, dynamic> hobJson =
+                    compileJson(context, _fbKey.currentState.value);
+
+                httpPost(AppConfig.of(context).server + "profile/hobbies",
+                        json: json.encode(hobJson))
+                    .then((value) {
+                  loadModelAsync(context, Model.recommendations);
+                });
+                Navigator.pop(context);
+              } else {
+                print(_fbKey.currentState.value);
+                print("validation failed");
+              }
+            },
+          ),
+        ],
       ),
       // ),
     );

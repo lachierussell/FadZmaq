@@ -14,6 +14,7 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:flutter/rendering.dart';
 import 'dart:convert';
+import 'dart:math';
 
 class UserPreferencesPage extends StatelessWidget {
   /// the [VerifyModel] for this page
@@ -137,7 +138,7 @@ class UserPreferencesState extends State<UserPreferences> {
                             //     _roundDist = rounded;
                             //   });
                             // },
-                            value: _locationDistance,
+                            value: min(_locationDistance, 50),
                           ),
                         ),
                       ],
