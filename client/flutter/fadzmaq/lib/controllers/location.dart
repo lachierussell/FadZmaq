@@ -24,7 +24,9 @@ Future sendLocation(BuildContext context) async {
   String deviceToken = await _firebaseMessaging.getToken();
 
   // send nothing if token not available
-  if(deviceToken == null){deviceToken = "";}
+  if (deviceToken == null) {
+    deviceToken = "";
+  }
 
   print("deviceToken: " + deviceToken);
 
@@ -43,8 +45,8 @@ Map _compileJson(LocationData locationData, String deviceToken) {
     'location': {
       'lat': lat,
       "long": long,
-      "device": deviceToken,
-    }
+    },
+    "device": deviceToken,
   };
   print(map);
   return map;
