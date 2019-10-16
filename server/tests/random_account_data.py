@@ -1,3 +1,12 @@
+# @file
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Jordan Russell        20357813@student.uwa.edu.au
+
+
 male_name_list = [
     "Sam", "John", "Lee", "Ross", "Albert", "Taylor", "Harry", "Tim", "Henry", "Muhammad", "Rufus", "Ellis", "Scott", "Maxs", "John", "Jack", "Luis", "Ruben", "Simon",
     "Marco", "Mark", "Alex", "Adrian", "Robert", "Hugh", "Zac", "Yusuf", "Declan", "Tom", "David", "Mitch", "Ray", "Archie", "Ronald", "Ben", "Oliver", "George",

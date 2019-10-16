@@ -8,8 +8,10 @@
 -- This script builds our database schema and uploads it with dummy values.
 --
 -- Copyright FadZmaq © 2019      All rights reserved.
--- @author Thiren Naidoo         22257963@student.uwa.edu.au
 -- @author Lachlan Russell       22414249@student.uwa.edu.au
+-- @author Jordan Russell        20357813@student.uwa.edu.au
+-- @author Thiren Naidoo         22257963@student.uwa.edu.au
+
 
 DROP TABLE IF EXISTS user_hobbies;
 DROP TABLE IF EXISTS matches;

@@ -4,7 +4,9 @@
 # Professional Computing. Semester 2 2019
 #
 # Copyright FadZmaq © 2019      All rights reserved.
-# @author Lachlan Russell       22414249@student.uwa.edu.au
+# @author Lachlan Russell       22414249@student.uwa.edu.
+
+
 from firebase_admin import messaging
 import fadzmaq.database.connection as db
 

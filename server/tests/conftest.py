@@ -1,12 +1,11 @@
 # @file
-# @brief
-# tests/conftest.py
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
 #
 # Copyright FadZmaq © 2019      All rights reserved.
-# @author Jordan Russell    [email]
+# @author Jordan Russell        20357813@student.uwa.edu.au
+
 
 import pytest
 import fadzmaq

@@ -1,16 +1,17 @@
 # @file
-# @brief        The api specification.
-# fadzmaq/routes.py
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
 #
 # Copyright FadZmaq © 2019      All rights reserved.
 # @author Lachlan Russell       22414249@student.uwa.edu.au
+# @author Jordan Russell        20357813@student.uwa.edu.au
+# @author Thiren Naidoo         22257963@student.uwa.edu.au
+# @author Beining Chen          22384298@student.uwa.edu.au
 
-from flask import jsonify, request, Blueprint, current_app
+
+from flask import jsonify, request, Blueprint
 import fadzmaq
-from fadzmaq.api import recs_data
 from fadzmaq.database import profile, recs, matches, hobbies
 from firebase_admin import auth
 import json

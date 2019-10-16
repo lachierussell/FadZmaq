@@ -1,3 +1,10 @@
+# @file
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Jordan Russell        20357813@student.uwa.edu.au
 
 import random
 import string

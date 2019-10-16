@@ -1,3 +1,13 @@
+-- @file
+--
+-- FadZmaq Project
+-- Professional Computing. Semester 2 2019
+--
+-- This script builds our database schema and uploads it with dummy values.
+--
+-- Copyright FadZmaq © 2019      All rights reserved.
+-- @author Jordan Russell        20357813@student.uwa.edu.au
+
 -- Who is using the database in case it can't be properly refreshed
 SELECT pid AS process_id,
        usename AS username,
