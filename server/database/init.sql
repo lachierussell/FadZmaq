@@ -202,6 +202,32 @@ $compatible_rating$
     LANGUAGE SQL;
 
 
+-- -- @brief Calculates hobby compatibility between two users.
+-- -- Count number of hobbies for filtering / compatibility score
+-- CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR)
+--     RETURNS TABLE
+--             (
+--                 user_id VARCHAR,
+--                 compat  BIGINT
+--             )
+-- AS
+-- $compatability_score$
+-- SELECT DISTINCT(user_id),
+--                (
+--                    SELECT COUNT(me.hobby_id) compat
+--                    FROM user_hobbies me
+--                             INNER JOIN user_hobbies you
+--                                        ON me.hobby_id = you.hobby_id
+--                                            AND me.swap != you.swap
+--                    WHERE me.user_id = from_user
+--                      AND you.user_id = user_hobbies.user_id
+--                ) compat
+-- FROM user_hobbies
+-- WHERE user_id != from_user
+-- ORDER BY compat DESC;
+-- $compatability_score$
+--     LANGUAGE SQL;
+
 -- @brief Calculates hobby compatibility between two users.
 -- Count number of hobbies for filtering / compatibility score
 CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR)
@@ -212,19 +238,13 @@ CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR)
             )
 AS
 $compatability_score$
-SELECT DISTINCT(user_id),
-               (
-                   SELECT COUNT(me.hobby_id) compat
-                   FROM user_hobbies me
-                            INNER JOIN user_hobbies you
-                                       ON me.hobby_id = you.hobby_id
-                                           AND me.swap != you.swap
-                   WHERE me.user_id = from_user
-                     AND you.user_id = user_hobbies.user_id
-               ) compat
-FROM user_hobbies
-WHERE user_id != from_user
-ORDER BY compat DESC;
+SELECT user_id, Count(user_id) AS compat
+FROM   user_hobbies 
+WHERE  hobby_id IN(SELECT hobby_id 
+                   FROM   user_hobbies 
+                   WHERE  user_id = from_user) 
+GROUP  BY user_id 
+ORDER  BY compat DESC 
 $compatability_score$
     LANGUAGE SQL;
 
@@ -408,20 +428,28 @@ VALUES ('HJtnPGdccnbqsR1V0hWSJe9AWFx1', 'Thiren',
         'https://www.russell-systems.cc/other/ceac483c49a4b8c2c03e4eb3b7e213b8746b996bb7dd30468e0ea6044710a648.jpg');
 
 
+-- INSERT INTO hobbies (name)
+-- VALUES ('Boxing');
+-- INSERT INTO hobbies (name)
+-- VALUES ('Boating');
+-- INSERT INTO hobbies (name)
+-- VALUES ('Rock Climbing');
+-- INSERT INTO hobbies (name)
+-- VALUES ('Hiking');
+-- INSERT INTO hobbies (name)
+-- VALUES ('Golf');
+-- INSERT INTO hobbies (name)
+-- VALUES ('Surfing');
+-- INSERT INTO hobbies (name)
+-- VALUES ('Cycling');
+
 INSERT INTO hobbies (name)
-VALUES ('Boxing');
-INSERT INTO hobbies (name)
-VALUES ('Boating');
-INSERT INTO hobbies (name)
-VALUES ('Rock Climbing');
-INSERT INTO hobbies (name)
-VALUES ('Hiking');
-INSERT INTO hobbies (name)
-VALUES ('Golf');
-INSERT INTO hobbies (name)
-VALUES ('Surfing');
-INSERT INTO hobbies (name)
-VALUES ('Cycling');
+VALUES ('3D printing'), ('Board games'), ('Calligraphy'), ('Cooking'), ('Crocheting'), ('Cryptography'), ('Dance'), ('Drawing'),  ('Embroidery'), 
+('Jewelry making'),  ('Juggling'),  ('Knitting'), ('Magic'), ('Painting'),  ('Pottery'), ('Quilting'), ('Sculpting'), ('Sewing'), ('Singing'), 
+('Soapmaking'), ('Wood Carving'), ('Woodworking'), ('Writing'), ('Archery'), ('Astronomy'),  ('Baseball'), ('Basketball'), ('Beekeeping'), ('Bird watching'),
+('Cycling'), ('Fishing'),('Gardening'), ('Hiking'), ('Inline skating'), ('Jogging'), ('Kayaking'), ('Kitesurfing'), ('Mountain biking'), ('Netball'),
+('Paintball'), ('Parkour'), ('Photography'), ('Rock climbing'), ('Rugby'), ('Running'), ('Sailing'), ('Scuba diving'), ('Rowing'), ('Skateboarding'), ('Skiing'),
+('Snowboarding'), ('Surfing'), ('Swimming'), ('Taekwondo'), ('Tai chi');
 
 INSERT INTO user_hobbies (user_id, hobby_id, swap)
 VALUES ('b026324c6904b2a9cb4b88d6d61c81d1', 3, 'share');
