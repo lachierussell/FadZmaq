@@ -1,4 +1,4 @@
-# @file
+## @file
 # @brief Builds profile data and retrieves profile information.
 #
 # FadZmaq Project
