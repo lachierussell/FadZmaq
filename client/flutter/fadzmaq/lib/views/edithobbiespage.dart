@@ -91,10 +91,11 @@ List<Map> deriveResult(BuildContext context, var x) {
 
   // Replace the new hobby configuration
   // If a replacement was made load in the recommendations again
-  bool replacementMade = getUserProfile(context).replaceHobbyContainer(hobbyContainer);
-  if(replacementMade){
-    loadModelAsync(context, Model.recommendations);
-  }
+  // bool replacementMade = getUserProfile(context).replaceHobbyContainer(hobbyContainer);
+  getUserProfile(context).replaceHobbyContainer(hobbyContainer);
+  // if(replacementMade){
+    
+  // }
 
   return ret;
 }
@@ -194,12 +195,16 @@ class _EditHobbyPageState extends State<EditHobby> {
                     onPressed: () {
                       if (_fbKey.currentState.saveAndValidate()) {
                         print(_fbKey.currentState.value);
+
+                        // compile json and changes user profile model
                         Map<String, dynamic> hobJson =
                             compileJson(context, _fbKey.currentState.value);
 
                         httpPost(
                             AppConfig.of(context).server + "profile/hobbies",
-                            json: json.encode(hobJson));
+                            json: json.encode(hobJson)).then((value){
+                              loadModelAsync(context, Model.recommendations);
+                            });
                         Navigator.pop(context);
                       } else {
                         print(_fbKey.currentState.value);

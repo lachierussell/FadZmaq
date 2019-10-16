@@ -37,7 +37,6 @@ def make_random_account():
 
     # db stuff
     make_user_test(name, email, uid, photo)
-    profile.set_location(uid, random_lat(), random_long(), 'null device')
     set_location(uid, random_lat(), random_long())
 
     print("added: " + name + " - " + uid)

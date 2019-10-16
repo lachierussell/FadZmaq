@@ -99,19 +99,12 @@ class ProfileData {
   /// will return [true] on a replacement or insertion is made
   /// will return [false] if a hobby container of the same container type with the same
   /// hobbies already exists
-  bool replaceHobbyContainer(HobbyContainer hobbyContainer) {
+  void replaceHobbyContainer(HobbyContainer hobbyContainer) {
     for (HobbyContainer hc in hobbyContainers) {
       if (hc.container == hobbyContainer.container) {
-        if (!ListEquality().equals(hc.hobbies, hobbyContainer.hobbies)) {
-          hc.hobbies = hobbyContainer.hobbies;
-          return true;
-        } else {
-          return false;
-        }
+        hc.hobbies = hobbyContainer.hobbies;
       }
     }
-    hobbyContainers.add(hobbyContainer);
-    return false;
   }
 
   void replaceProfileField(String field, String value) {
