@@ -309,3 +309,17 @@ def pass_user(uid, id):
 # def test_add_users(num):
 #     random_account_gen.make_random_accounts(int(num), cred=current_app.config['DATABASE_URI'])
 #     return 'Added users', 200
+
+
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+# TESTS
+# ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##
+
+# 
+@route_bp.route('/tests/notify/<string:id>', methods=['GET'])
+def test_notify(id):
+    try:
+        recs.notify_match(id)
+    except Exception as e:
+        return 'failed: ' + str(e), 500
+    return "Notified", 200
