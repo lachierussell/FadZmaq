@@ -158,7 +158,7 @@ class ContactBody extends StatelessWidget {
     final String email = profile.getProfileField("email");
     final String phone = profile.getProfileField("phone");
 
-    if (email == null && phone == null) {
+    if ((email == null || email == "") && (phone == null || phone == "")) {
       return Container();
     }
 
