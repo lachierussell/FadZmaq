@@ -1,3 +1,12 @@
+# @file
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Jordan Russell        jordanrussell@live.com
+
+
 from sqlalchemy import create_engine
 from tests import random_account_gen 
 
