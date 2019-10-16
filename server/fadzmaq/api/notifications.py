@@ -10,13 +10,12 @@ import fadzmaq.database.connection as db
 
 
 def notify_match(id):
-    # TODO: query for token
     row = db.get_db().execute(
         '''
         SELECT device_id
         FROM location_data
         WHERE user_id = %s
-        ORDER BY ping_time
+        ORDER BY ping_time DESC
         LIMIT 1;
         ''', id
     ).first()
@@ -24,16 +23,26 @@ def notify_match(id):
     # This registration token comes from the client FCM SDKs.
     registration_token = row['device_id']
 
-    # See documentation on defining a message payload.
-    message = messaging.Message(
-        data={
-            'message': 'You have a new match!'
-        },
-        token=registration_token,
-    )
+    if(registration_token == None):
+        print("registration token was not found")
+        return
 
-    # Send a message to the device corresponding to the provided
-    # registration token.
-    response = messaging.send(message)
-    # Response is a message ID string.
-    print('Successfully sent message:', response)
+
+    notification = messaging.Notification(title='You have a new match!')
+
+    # See documentation on defining a message payload.
+    message = messaging.Message(notification= notification, token= registration_token)
+
+
+    try:
+        # Send a message to the device corresponding to the provided
+        # registration token.
+        response = messaging.send(message)
+        # Response is a message ID string.
+        print(response)
+        print('Successfully sent message:', response)
+    except ValueError as e:
+        print(str(e))
+        return 'Failed: ' + str(e), 500
+
+    
