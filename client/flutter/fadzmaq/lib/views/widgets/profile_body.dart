@@ -1,9 +1,13 @@
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/controllers/profile.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:flutter/material.dart';
+import 'package:fadzmaq/views/profilepage.dart';
+import 'package:http/http.dart' as http;
+import 'package:fadzmaq/models/app_config.dart';
 
 /// Helper (method?) to the ProfileFieldWidget.
 /// Builds a list of Text from the Profile data.
@@ -28,8 +32,10 @@ class ProfileFieldWidget extends StatelessWidget {
 }
 
 class ProfileBody extends StatelessWidget {
+  final ProfileType type;
   const ProfileBody({
     Key key,
+    this.type,
   }) : super(key: key);
 
   @override
@@ -40,9 +46,9 @@ class ProfileBody extends StatelessWidget {
     // right now just putting dash instead of the value
     // final String profileAge = pd.age != null ? pd.age : "-";
     final String profileName = pd.name != null ? pd.name : "-";
-
+    final int rating = pd.rating;
     final String bio = getProfileField(pd, "bio");
-
+    print(rating);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -50,6 +56,24 @@ class ProfileBody extends StatelessWidget {
         Text(profileName,
             style: TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 42.0, height: 1.5)),
+
+        type == ProfileType.match
+            ? Row(children: <Widget>[
+                IconButton(
+                    icon: Icon(Icons.thumb_down),
+                    onPressed: () {
+                      onThumbsDown(context, rating, pd.userId);
+                    },
+                    color: returnColor(rating, 0)),
+                IconButton(
+                  icon: Icon(Icons.thumb_up),
+                  onPressed: () {
+                    onThumbsUp(context, rating, pd.userId);
+                  },
+                  color: returnColor(rating, 1),
+                ),
+              ])
+            : Row(),
         BodyDivider(),
         ContactBody(),
         ProfileHobbies(
@@ -103,7 +127,12 @@ class ProfileHobbies extends StatelessWidget {
         SizedBox(
           height: 8,
         ),
-        Center(child: HobbyChips(hobbies: hobbies, hobbyCategory: direction, alignment: WrapAlignment.center,)),
+        Center(
+            child: HobbyChips(
+          hobbies: hobbies,
+          hobbyCategory: direction,
+          alignment: WrapAlignment.center,
+        )),
         SizedBox(
           height: 16,
         ),
@@ -158,6 +187,60 @@ Widget contactEntry(String name, String entry) {
 
 TextStyle bodyBold() {
   return TextStyle(fontWeight: FontWeight.bold);
+}
+
+void onThumbsUp(BuildContext context, int rating, String userId) {
+  print("thumbsup");
+  if (rating != 1) {
+    // http.post(AppConfig.of(context).server + "matches/thumbs/up/" + userId);
+    postAsync(context, "matches/thumbs/up/" + userId);
+    Navigator.pop(context);
+  } else {
+    // http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    postAsync(context, "matches/thumbs/" + userId, useDelete: true);
+    Navigator.pop(context);
+  }
+}
+
+void onThumbsDown(BuildContext context, int rating, String userId) {
+  print("thumbsdown");
+  if (rating != 0) {
+    // http.post(AppConfig.of(context).server + "matches/thumbs/down/" + userId);
+    postAsync(context, "matches/thumbs/down/" + userId);
+    Navigator.pop(context);
+  } else {
+    // http.delete(AppConfig.of(context).server + "matches/thumbs/" + userId);
+    postAsync(context, "matches/thumbs/" + userId, useDelete: true);
+    Navigator.pop(context);
+  }
+}
+
+Color returnColor(int rating, int thumbs) {
+  // rating
+  // -1 no rating
+  // 0 thumbs down
+  // 1 thumbs up
+
+  // thumbs 'enum'
+  // 0 thumbs down
+  // 1 thumbs up
+
+  // no rating
+  if (rating == -1) {
+    return Colors.grey;
+  }
+
+  // this is a thumbs down and we have rated thumbs down
+  if (thumbs == 0 && rating == 0) {
+    return Colors.blueAccent;
+  }
+
+  // this is a thumbs down and we have rated thumbs down
+  if (thumbs == 1 && rating == 1) {
+    return Colors.redAccent;
+  }
+
+  return Colors.grey;
 }
 
 class BodyDivider extends StatelessWidget {
