@@ -4,7 +4,7 @@ REM FadZmaq Project
 REM Professional Computing. Semester 2 2019
 REM
 REM Copyright FadZmaq © 2019      All rights reserved.
-REM @author Jordan Russell        20357813@student.uwa.edu.au
+REM @author Jordan Russell        jordanrussell@live.com
 
 @echo off
 type database\build_database.sql database\init.sql tests\build_test.sql database\init.sql tests\create_test_user.sql> temp.sql

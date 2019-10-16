@@ -4,7 +4,7 @@
 # Professional Computing. Semester 2 2019
 #
 # Copyright FadZmaq © 2019      All rights reserved.
-# @author Jordan Russell        20357813@student.uwa.edu.au
+# @author Jordan Russell        jordanrussell@live.com
 
 
 from sqlalchemy import create_engine

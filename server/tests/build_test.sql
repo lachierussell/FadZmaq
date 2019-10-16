@@ -3,7 +3,7 @@
 -- Professional Computing. Semester 2 2019
 --
 -- Copyright FadZmaq © 2019      All rights reserved.
--- @author Jordan Russell        20357813@student.uwa.edu.au
+-- @author Jordan Russell        jordanrussell@live.com
 
 -- this script is for creating a new test database as well as a user with privileges for that test db
 -- you will need to log in as root initially for this setup

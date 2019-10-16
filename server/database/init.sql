@@ -9,7 +9,7 @@
 --
 -- Copyright FadZmaq © 2019      All rights reserved.
 -- @author Lachlan Russell       22414249@student.uwa.edu.au
--- @author Jordan Russell        20357813@student.uwa.edu.au
+-- @author Jordan Russell        jordanrussell@live.com
 -- @author Thiren Naidoo         22257963@student.uwa.edu.au
 
 
