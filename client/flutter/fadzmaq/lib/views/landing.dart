@@ -23,7 +23,7 @@ class _LandingPageState extends State<LandingPage> {
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message");
         var notification = message['notification'];
-        String title = notification['title'];
+        String title = notification['title'] != null ? notification['title'] : "Fadzmaq Notification!";
         _matchSnack(title);
         // _showItemDialog(message);
       },
