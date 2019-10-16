@@ -51,6 +51,7 @@ def auth_required(func):
             # uid = '26ab0db90d72e28ad0ba1e22ee510510'
             # return func(uid=uid, *args, **kwargs)
             # Replace above return with below when in production
+            print(str(e))
             return 'Authentication failed: ' + str(e), 401
 
     authenticate.__name__ = func.__name__
