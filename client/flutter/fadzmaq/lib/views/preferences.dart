@@ -8,6 +8,7 @@ import 'package:fadzmaq/models/settings.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
+import 'package:fadzmaq/views/widgets/roundButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -90,14 +91,16 @@ class UserPreferencesState extends State<UserPreferences> {
                 new PreferenceButtons(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
+                  child: RoundButton(
+                    label: "Edit Profile",
                     onPressed: () {
                       editProfileFunction(context);
                     },
-                    child: Text("Edit Profile"),
                   ),
                 ),
-                SizedBox(height: 50,),
+                SizedBox(
+                  height: 50,
+                ),
                 Column(
                   children: <Widget>[
                     Text("Search Radius: " + _roundDist.toString() + "km"),
@@ -128,7 +131,8 @@ class UserPreferencesState extends State<UserPreferences> {
                                       json:
                                           json.encode(accountSettings.toJson()))
                                   .then((value) {
-                                loadModel(mainScaffold.currentContext, Model.recommendations);
+                                loadModel(mainScaffold.currentContext,
+                                    Model.recommendations);
                               });
                             },
                             // onChangeEnd: (newDist){
@@ -156,14 +160,16 @@ class UserPreferencesState extends State<UserPreferences> {
                 //     ),
                 //   ],
                 // ),
-                SizedBox(height: 120,),
+                SizedBox(
+                  height: 120,
+                ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
+                  child: RoundButton(
+                    label: "Log out",
                     onPressed: () {
                       logOut(context);
                     },
-                    child: Text("Log out"),
                   ),
                 ),
                 Padding(
@@ -171,14 +177,12 @@ class UserPreferencesState extends State<UserPreferences> {
                     vertical: 8.0,
                     horizontal: 20.0,
                   ),
-                  child: RaisedButton(
+                  child: RoundButton(
+                    label: "Delete Account",
+                    color: Colors.redAccent,
                     onPressed: () {
                       deleteDialog(context);
                     },
-                    child: Text(
-                      "Delete Account",
-                      style: TextStyle(color: Colors.red),
-                    ),
                   ),
                 ),
               ]),
@@ -215,7 +219,8 @@ class PreferenceButtons extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
+          child: RoundButton(
+            label: "View Profile",
             onPressed: () {
               Navigator.push(
                 context,
@@ -227,7 +232,6 @@ class PreferenceButtons extends StatelessWidget {
                         )),
               );
             },
-            child: Text("View Profile"),
           ),
         ),
       ],

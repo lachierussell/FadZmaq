@@ -2,6 +2,7 @@ import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/location.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/views/landing.dart';
+import 'package:fadzmaq/views/widgets/roundButton.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
@@ -41,23 +42,17 @@ class PermissionPage extends StatelessWidget {
                   style: TextStyle(fontSize: 18)),
             ),
             SizedBox(height: 32),
-            ButtonTheme(
-              minWidth: 220.0,
-              height: 50.0,
-              child: RaisedButton(
-                  textTheme: ButtonTextTheme.primary,
-                  child: Text(
-                    "Enable Location",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                  color: Theme.of(context).accentColor,
-                  onPressed: () async {
-                    await location.requestPermission();
-                    moveOnPermitted(context);
-                  },
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(60.0))),
-            )
+            RoundButton(
+              label: "Enable Location",
+              fontSize: 18,
+              minWidth: 220,
+              height: 50,
+            
+              onPressed: () async {
+                await location.requestPermission();
+                moveOnPermitted(context);
+              },
+            ),
           ],
         ),
       ),
@@ -66,7 +61,7 @@ class PermissionPage extends StatelessWidget {
 
   void moveOnPermitted(BuildContext context) async {
     bool hasPermission = await sendLocation(context);
-    
+
     if (hasPermission) {
       firstLoadGlobalModels(context);
       Navigator.of(context).pushReplacement(
