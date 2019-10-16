@@ -100,11 +100,14 @@ class ProfileData {
   /// will return [false] if a hobby container of the same container type with the same
   /// hobbies already exists
   void replaceHobbyContainer(HobbyContainer hobbyContainer) {
+    print("replace hobby container");
     for (HobbyContainer hc in hobbyContainers) {
       if (hc.container == hobbyContainer.container) {
         hc.hobbies = hobbyContainer.hobbies;
+        return;
       }
     }
+    hobbyContainers.add(hobbyContainer);
   }
 
   void replaceProfileField(String field, String value) {

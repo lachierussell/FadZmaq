@@ -1,10 +1,14 @@
 import 'package:fadzmaq/controllers/location.dart';
+import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 class PermissionPage extends StatelessWidget {
+  final bool navToEdit;
+
   const PermissionPage({
+    this.navToEdit,
     Key key,
   }) : super(key: key);
 
@@ -65,7 +69,7 @@ class PermissionPage extends StatelessWidget {
     if (hasPermission) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => LandingPage(),
+          builder: (context) => navToEdit ? EditProfilePage() : LandingPage(),
         ),
       );
     }

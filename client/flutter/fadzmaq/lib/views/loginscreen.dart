@@ -178,12 +178,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             print("B " + '$code' + " " + '$resonsee');
 
                             if (code == 200) {
+                            Location location = new Location();
+                            // don't request permission here
+
+                            bool hasPermission = await location.hasPermission();
+                            await firstLoadGlobalModels(context);
+                            if (hasPermission) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => EditProfilePage(),
-                                  // builder: (context) => LandingPage(),
-                                ),
+                                    builder: (context) => EditProfilePage()),
                               );
+                            } else {
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                    builder: (context) => PermissionPage(navToEdit: true,)),
+                              );
+                            }
                             }
 
                             //TODO what if we fail to make an account?
