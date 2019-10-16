@@ -146,8 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             print("A " + '$code' + " " + '$resonse');
                           }
 
-                          // 401: no user account
-                          if (code == 401) {
+                          // 404: no user account
+                          if (code == 404) {
                             // TODO make this better, its a bit of a hack at the moment
 
                             // Get our id token from firebase

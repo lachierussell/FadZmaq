@@ -74,7 +74,7 @@ class _GetRequestState<T> extends State<GetRequest<T>> {
                 data: fromJson<T>(json.decode(snapshot.data.body)),
                 child: widget.builder(context),
               );
-            } else if (snapshot.data.statusCode == 401) {
+            } else if (snapshot.data.statusCode == 404) {
               // not sure if this is the best way to do this but it works for now - Jordan
               // TODO return an error here and manage it further up
               return LoginScreen();

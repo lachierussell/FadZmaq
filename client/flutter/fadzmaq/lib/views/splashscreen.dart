@@ -53,7 +53,7 @@ class SplashScreenState extends State<SplashScreen> {
         code = response.statusCode;
       }
 
-      if (code == 401) {
+      if (code == 404) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
             // builder: (context) => UserPreferencesPage(),
