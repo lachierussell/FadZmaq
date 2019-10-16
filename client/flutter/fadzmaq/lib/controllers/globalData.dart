@@ -148,6 +148,7 @@ Future loadModel(BuildContext context, Model model) async {
   try {
     response = await httpGet(server);
     if (response.statusCode == 200) {
+      print("200 and loading in");
       responseJson = json.decode(response.body);
       await _loadJsonAndCache(mainModel, model, responseJson);
     } else {

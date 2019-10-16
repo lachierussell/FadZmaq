@@ -62,10 +62,10 @@ class SplashScreenState extends State<SplashScreen> {
         );
       } else {
 
-        
-        await firstLoadGlobalModels(context);
-
+        // ping location first so our recommendations will be up to date
         bool hasPermission = await sendLocation(context);
+        await firstLoadGlobalModels(context);
+        
 
         if (hasPermission) {
           Navigator.of(context).pushReplacement(
