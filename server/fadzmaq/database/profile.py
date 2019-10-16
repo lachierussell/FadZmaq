@@ -24,26 +24,34 @@ def update_profile(subject, uid):
 
 def build_profile_data(row, permission):
     assert type(permission) is int
+    permission = permission - 1
     assert permission <= 2
     # row = rows.first()
     assert row is not None, "Query retrieved no rows to build profile."
 
     profile_fields = []
     # permission_keys = [['bio', 'age', 'location'],
-    permission_keys = [['bio', 'location'],
-                       ['phone', 'email'],
-                       ['birth-date']
+    permission_keys = [['bio', 'distance'],
+                       ['bio', 'distance','phone', 'email'],
+                       ['bio','phone', 'email'],
                        ]
-    for perm in range(0, permission):
-        for key in permission_keys[perm]:
-            if key == 'location':
-                continue
-            profile_fields.append(
-                {
-                    "name": key,
-                    "display_value": str(row[key])
-                }
-            )
+
+    for key in permission_keys[permission]:
+
+        if key == 'distance':
+            if round(row[key]) == 0:
+                display = "<1km"
+            else:
+                display = "%skm" % round(row[key])
+        else:
+            display = str(row[key])
+
+        profile_fields.append(
+            {
+                "name": key,
+                "display_value": display
+            }
+        )
 
     profile = {
         'profile': {
@@ -71,7 +79,7 @@ def retrieve_profile(subject):
         ''', subject
     )
 
-    return build_profile_data(rows.first(), 2)
+    return build_profile_data(rows.first(), 3)
 
 
 # @brief Verifies the user is in the database
@@ -143,6 +151,7 @@ def update_settings(uid, value):
 def set_location(uid, lat, long):
     db.get_db().execute(
         '''
-        INSERT INTO location_data (user_id, lat, long) VALUES (%s, %s, %s)
-        ''', uid, float(lat), float(long)
+        INSERT INTO location_data (user_id, lat, long) VALUES (%s, %s, %s) ON CONFLICT
+        UPDATE location_data SET (lat, long) = (%s, %s) WHERE user_id = %s
+        ''', uid, float(lat), float(long), float(lat), float(long), uid
     )

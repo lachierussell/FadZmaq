@@ -48,7 +48,7 @@ def get_matches(subject):
 
     matches = []
     for row in rows:
-        matches.append(build_profile_data(row, 2))
+        matches.append(build_profile_data(row, 3))
 
     return {
         "matches": matches
@@ -77,7 +77,7 @@ def get_match_by_id(uid, id):
         );
         ''', uid, id, uid, id, uid, id
     )
-    return build_profile_data(rows.first(), 2)
+    return build_profile_data(rows.first(), 3)
 
 
 # Un-matches two users by setting their matched column to false.
