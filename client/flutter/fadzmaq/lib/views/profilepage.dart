@@ -21,14 +21,18 @@ class ProfileAppbar extends StatelessWidget {
       title: const Text('Profile'),
       actions: <Widget>[
         PopupMenuButton(
+          onSelected: (result) async {
+            if (result == "Unmatch") {
+              bool unmatched = await unmatchDialog(context, uid);
+              if(unmatched == true){
+                Navigator.pop(context);
+              }
+            }
+          },
           itemBuilder: (context) => [
             PopupMenuItem<String>(
               value: "Unmatch",
-              child: ListTile(
-                  title: Text("Unmatch"),
-                  onTap: () {
-                    unmatchDialog(context, uid);
-                  }),
+              child: Text("Unmatch"),
             ),
           ],
           onCanceled: () {

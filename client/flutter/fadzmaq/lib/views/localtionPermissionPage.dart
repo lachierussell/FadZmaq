@@ -51,6 +51,7 @@ class PermissionPage extends StatelessWidget {
               color: Theme.of(context).primaryColor,
             
               onPressed: () async {
+                print("requesting location permissions");
                 await location.requestPermission();
                 moveOnPermitted(context);
               },
@@ -70,6 +71,8 @@ class PermissionPage extends StatelessWidget {
           builder: (context) => SplashScreen(),
         ),
       );
+    }else{
+      print("Permission Failed - try running flutter clean");
     }
   }
 }

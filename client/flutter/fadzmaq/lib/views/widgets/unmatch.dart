@@ -7,12 +7,12 @@ void unmatch(BuildContext context, String uid) async {
 
     postAsync(context, "matches/" + uid, useDelete: true );
 
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(true);
   }
 
 //show alert dialog
-Future<void> unmatchDialog(BuildContext context, String uid) async {
-  return showDialog<void>(
+Future unmatchDialog(BuildContext context, String uid) async {
+  return showDialog(
     context: context,
     barrierDismissible: false, // user must tap button for close dialog!
     builder: (BuildContext context) {
@@ -24,7 +24,7 @@ Future<void> unmatchDialog(BuildContext context, String uid) async {
           FlatButton(
             child: const Text('CANCEL'),
             onPressed: () {
-              Navigator.of(context).pop();
+              Navigator.of(context).pop(false);
             },
           ),
           FlatButton(
