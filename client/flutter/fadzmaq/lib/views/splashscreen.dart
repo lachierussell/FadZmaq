@@ -26,9 +26,7 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
-    // var token = await user.getIdToken();
     super.initState();
-
     loadData();
   }
 
@@ -42,8 +40,9 @@ class SplashScreenState extends State<SplashScreen> {
         MaterialPageRoute(builder: (context) => LoginScreen()),
       );
       return;
-    } else {
-      // Make sure we have location permissions
+    }
+    // Make sure we have location permissions
+    else {
       if (await Location().hasPermission() == false) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => PermissionPage()),
@@ -55,7 +54,6 @@ class SplashScreenState extends State<SplashScreen> {
       ConfigResource config = AppConfig.of(context);
       http.Response response;
       String url = Globals.profileURL;
-      // TODO check for timeout here
       try {
         response = await httpGet(config.server + url);
       } catch (e) {
@@ -71,7 +69,7 @@ class SplashScreenState extends State<SplashScreen> {
         code = response.statusCode;
       }
 
-      // No account found
+      // No account found - create one
       if (code == 404) {
         var names = user.displayName.split(" ");
         String name = names[0];
@@ -83,15 +81,14 @@ class SplashScreenState extends State<SplashScreen> {
             name +
             '"}}';
 
-        // print(json);
-        // post to account with our auth
+        // post to account with our info
         http.Response response;
         response = await httpPost(config.server + "account", json: _json);
 
         // update our code
         code = response.statusCode;
 
-        // A non 2xx response, go to error page
+        // If a non 2xx response, go to error page
         String codeType = code.toString()[0];
         if (codeType != "2") {
           Navigator.of(context).pushReplacement(
@@ -100,8 +97,8 @@ class SplashScreenState extends State<SplashScreen> {
           return;
         }
 
-        // set up new account
-        // load user model and go to the edit profile page
+        // go to set up page for a new account
+        // load onyl the user model and go to the edit profile page
         // we can still get client errors (usually on an emulator)
         // so still expect problems
         try {
@@ -149,11 +146,6 @@ class SplashScreenState extends State<SplashScreen> {
         MaterialPageRoute(builder: (context) => LandingPage()),
       );
     }
-  }
-
-  void printWrapped(String text) {
-    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
   @override

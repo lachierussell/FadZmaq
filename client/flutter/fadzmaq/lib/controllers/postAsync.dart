@@ -34,10 +34,10 @@ Future<http.Response> postAsync(BuildContext context, String url,
       response = value;
       print("body: " + value.body);
     } else {
-      errorSnackRevised("failed!: " + value.statusCode.toString());
+      errorSnackRevised("Server error, action not completed!");
     }
   }).catchError((error) {
-    errorSnackRevised("failed!: " + error.toString());
+    errorSnackRevised("Server error, action not completed!");
   });
 
   await request;
