@@ -1,14 +1,26 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
+import 'package:fadzmaq/models/globalModel.dart';
+import 'package:fadzmaq/models/matches.dart';
+import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-
 void unmatch(BuildContext context, String uid) async {
+  MatchesData matches = getMatches(context);
 
-    postAsync(context, "matches/" + uid, useDelete: true );
-
-    Navigator.of(context).pop(true);
+  ProfileContainer toRemove;
+  for (ProfileContainer pc in matches.matches) {
+    if (pc.profile.userId == uid) {
+      toRemove = pc;
+    }
   }
+
+  if (toRemove != null) matches.matches.remove(toRemove);
+
+  postAsync(context, "matches/" + uid, useDelete: true);
+
+  Navigator.of(context).pop(true);
+}
 
 //show alert dialog
 Future unmatchDialog(BuildContext context, String uid) async {

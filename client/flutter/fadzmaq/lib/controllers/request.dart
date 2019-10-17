@@ -47,7 +47,7 @@ Future httpGet(String url, {var json}) async {
       headers: {"Authorization": result.token},
     );
   } on Exception catch (e) {
-    throw e;
+    return e;
   }
 
   return response;

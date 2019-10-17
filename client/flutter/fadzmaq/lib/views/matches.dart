@@ -1,6 +1,7 @@
 import 'package:fadzmaq/controllers/imageCache.dart';
 import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/models/globalModel.dart';
+import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/widgets/matchEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -23,7 +24,24 @@ class MatchesPage extends StatelessWidget {
   }
 }
 
-class MatchesList extends StatelessWidget {
+class MatchesList extends StatefulWidget {
+  @override
+  _MatchesListState createState() => _MatchesListState();
+}
+
+class _MatchesListState extends State<MatchesList> {
+  List<ProfileContainer> matchesList;
+
+  @override
+  void didChangeDependencies() {
+    if (matchesList == null) {
+      MatchesData matchesData = getMatches(context);
+      matchesList = matchesData.matches;
+    }
+
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     // MatchesData matchesData = RequestProvider.of<MatchesData>(context);
@@ -33,9 +51,9 @@ class MatchesList extends StatelessWidget {
     GlobalModel globalModel = getModel(context);
     cacheMatchPhotos(globalModel, matchesData);
 
-    if (matchesData.matches.length > 0) {
+    if (matchesList.length > 0) {
       return ListView.builder(
-        itemCount: matchesData.matches.length,
+        itemCount: matchesList.length,
         itemBuilder: _listItemBuilder,
       );
     } else {
@@ -49,7 +67,6 @@ class MatchesList extends StatelessWidget {
 
   Widget _listItemBuilder(BuildContext context, int index) {
     // MatchesData matchesData = RequestProvider.of<MatchesData>(context);
-    MatchesData matchesData = getMatches(context);
-    return MatchEntry(profile: matchesData.matches[index].profile);
+    return MatchEntry(profile: matchesList[index].profile);
   }
 }
