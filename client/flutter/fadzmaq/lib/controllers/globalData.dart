@@ -4,6 +4,7 @@ import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/hobbies.dart';
 import 'package:fadzmaq/models/settings.dart';
+import 'package:fadzmaq/views/errorPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/matches.dart';
@@ -56,9 +57,19 @@ class _VerifyModelState extends State<VerifyModel> {
   void didChangeDependencies() {
     if (_checkModel(context, widget.model) == false) {
       String server = AppConfig.of(context).server + _getURL(widget.model);
+      print("get new future");
       _future = httpGet(server);
+    } else {
+      print("should have future");
+      if (_future == null) print("BUT WE DON'T!");
     }
     super.didChangeDependencies();
+  }
+
+  @override
+  void initState() {
+    print("init for global data");
+    super.initState();
   }
 
   @override
@@ -70,34 +81,26 @@ class _VerifyModelState extends State<VerifyModel> {
       return FutureBuilder(
         future: _future,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
+          if (snapshot.connectionState == ConnectionState.none) {
+            return ErrorPage();
+          }
+          if (snapshot.hasError) {
+            return ErrorPage();
+          } else if (snapshot.hasData == false) {
+            // Show a loading spinner while waiting for data
+            return Center(child: CircularProgressIndicator());
+          } else {
             if (snapshot.data is Exception) {
-              return Center(child: Text(snapshot.data.toString()));
+              return ErrorPage();
             }
             if (snapshot.data.statusCode == 200) {
               dynamic responseJson = json.decode(snapshot.data.body);
               _loadJSON(getModel(context), widget.model, responseJson);
               return widget.builder(context);
-            } else if (snapshot.data.statusCode == 404) {
-              // not sure if this is the best way to do this but it works for now - Jordan
-              // TODO return an error here and manage it further up
-              return LoginScreen();
             } else {
-              // TODO make this handle better
-              return Text("Error with HTTP request: " +
-                  '${snapshot.data.statusCode.toString()} ' +
-                  ' ${snapshot.data.body.toString()}');
+              return ErrorPage();
             }
-          } else if (snapshot.hasError) {
-            return Text("${snapshot.error}");
-          }else{
-            return Text("problem");
           }
-
-          // By default, show a loading spinner.
-          // We can pipe something else in here later if we wish,
-          // or make our own default
-          return Center(child: CircularProgressIndicator());
         },
       );
     }

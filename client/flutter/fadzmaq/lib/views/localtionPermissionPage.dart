@@ -61,10 +61,9 @@ class PermissionPage extends StatelessWidget {
   }
 
   void moveOnPermitted(BuildContext context) async {
-    bool hasPermission = await sendLocation(context);
+    bool hasPermission = await Location().hasPermission();
 
     if (hasPermission) {
-      firstLoadGlobalModels(context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (context) => SplashScreen(),

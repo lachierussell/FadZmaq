@@ -10,11 +10,13 @@ import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/localtionPermissionPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
-import 'dart:convert';
+
+final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -43,6 +45,10 @@ class SplashScreenState extends State<SplashScreen> {
     }
     // Make sure we have location permissions
     else {
+      
+      //request notification from iOS
+      _firebaseMessaging.requestNotificationPermissions();
+
       if (await Location().hasPermission() == false) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => PermissionPage()),
