@@ -1,19 +1,17 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
-import 'package:fadzmaq/views/matches.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 
 
-void unmatch(BuildContext context) async {
+void unmatch(BuildContext context, String uid) async {
 
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => MatchesList()));
+    postAsync(context, "matches/" + uid, useDelete: true );
+
+    Navigator.of(context).pop();
   }
 
 //show alert dialog
-Future<void> unmatchDialog(BuildContext context) async {
+Future<void> unmatchDialog(BuildContext context, String uid) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button for close dialog!
@@ -32,7 +30,7 @@ Future<void> unmatchDialog(BuildContext context) async {
           FlatButton(
               child: const Text('ACCEPT'),
               onPressed: () {
-                unmatch(context);
+                unmatch(context, uid);
                 // Navigator.of(context).pop();
               }),
         ],
