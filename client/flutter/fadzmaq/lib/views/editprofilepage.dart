@@ -19,7 +19,6 @@ import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
 // import 'package:permission_handler/permission_handler.dart';
 
-
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({Key key}) : super(key: key);
 
@@ -143,7 +142,7 @@ class EditProfileState extends State<EditProfile> {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(30,10,30,10),
+        padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -172,7 +171,9 @@ class EditProfileState extends State<EditProfile> {
                             ),
                     ),
                     // Get an Image
-                    SizedBox(height: 10,),
+                    SizedBox(
+                      height: 10,
+                    ),
                     RaisedButton(
                       child: Text('Select Image'),
                       onPressed: getImage1,
@@ -182,15 +183,19 @@ class EditProfileState extends State<EditProfile> {
                     //     initialValue: imgurlForm,
                     //     readOnly: true,
                     //     decoration: InputDecoration(labelText: "")),
-                    SizedBox(height: 20,),
+                    SizedBox(
+                      height: 20,
+                    ),
                     FormBuilderTextField(
-                      attribute: "nickname",
-                      initialValue: userProfile.name,
-                      decoration: InputDecoration(labelText: "Nickname")),
-                    SizedBox(height: 20,),
+                        attribute: "nickname",
+                        initialValue: userProfile.name,
+                        decoration: InputDecoration(labelText: "Nickname")),
+                    SizedBox(
+                      height: 20,
+                    ),
                     ProfileHobbies(
-                      hobbies: userProfile.hobbyContainers,
-                      direction: HobbyDirection.discover),
+                        hobbies: userProfile.hobbyContainers,
+                        direction: HobbyDirection.discover),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RaisedButton(
@@ -206,8 +211,8 @@ class EditProfileState extends State<EditProfile> {
                       ),
                     ),
                     ProfileHobbies(
-                      hobbies: userProfile.hobbyContainers,
-                      direction: HobbyDirection.share),
+                        hobbies: userProfile.hobbyContainers,
+                        direction: HobbyDirection.share),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: RaisedButton(
@@ -237,7 +242,9 @@ class EditProfileState extends State<EditProfile> {
                   ],
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(
+                height: 20,
+              ),
               MaterialButton(
                 disabledColor: Colors.grey,
                 color: Theme.of(context).accentColor,
@@ -255,10 +262,8 @@ class EditProfileState extends State<EditProfile> {
                           await _uploadFile();
                         }
                         if (_fbKey.currentState.saveAndValidate()) {
-                          _fbKey.currentState.value
-                              .addAll({"photo": imgurl});
-                          print(
-                              "Sending" + '${_fbKey.currentState.value}');
+                          _fbKey.currentState.value.addAll({"photo": imgurl});
+                          print("Sending" + '${_fbKey.currentState.value}');
                           httpPost(server + "profile",
                               json: _fbKey.currentState.value);
 
@@ -267,21 +272,16 @@ class EditProfileState extends State<EditProfile> {
                           if (imgurl != null) userProfile.photo = imgurl;
                           String nickname =
                               _fbKey.currentState.value['nickname'];
-                          String email =
-                              _fbKey.currentState.value['email'];
-                          String phone =
-                              _fbKey.currentState.value['phone'];
+                          String email = _fbKey.currentState.value['email'];
+                          String phone = _fbKey.currentState.value['phone'];
                           String bio = _fbKey.currentState.value['bio'];
 
-                          if (nickname != null)
-                            userProfile.name = nickname;
+                          if (nickname != null) userProfile.name = nickname;
 
                           if (email != null)
-                            userProfile.replaceProfileField(
-                                "email", email);
+                            userProfile.replaceProfileField("email", email);
                           if (phone != null)
-                            userProfile.replaceProfileField(
-                                "phone", phone);
+                            userProfile.replaceProfileField("phone", phone);
                           if (bio != null)
                             userProfile.replaceProfileField("bio", bio);
 

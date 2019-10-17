@@ -8,6 +8,8 @@ class RoundButton extends StatelessWidget {
   final double height;
   final double fontSize;
   final Color color;
+   final Color textColor;
+   final ButtonTextTheme buttonTextTheme;
 
   RoundButton({
     this.onPressed,
@@ -16,20 +18,27 @@ class RoundButton extends StatelessWidget {
     this.height = 40,
     this.fontSize = 16,
     this.color,
+    this.textColor,
+    this.buttonTextTheme = ButtonTextTheme.primary,
+
   });
 
   @override
   Widget build(BuildContext context) {
+
+
     return ButtonTheme(
       minWidth: minWidth,
       height: height,
       child: RaisedButton(
-          textTheme: ButtonTextTheme.primary,
+        disabledColor: Colors.grey,
+          textTheme: buttonTextTheme,
+          textColor: textColor,
           child: Text(label, style: TextStyle(fontSize: fontSize)),
-          color: color != null ? color : Theme.of(context).accentColor,
+          color: color,
           onPressed: onPressed,
           shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(60.0))),
+              borderRadius: new BorderRadius.circular(20))),
     );
   }
 }
