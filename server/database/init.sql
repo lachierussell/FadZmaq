@@ -115,6 +115,8 @@ BEGIN
         INSERT INTO matches (user_a, user_b, time)
         VALUES (new.user_from, new.user_to, now());
         DELETE FROM votes WHERE user_to = new.user_from
+        AND user_from = new.user_to;
+        DELETE FROM votes WHERE user_to = new.user_to
         AND user_from = new.user_from;
         RETURN NULL;
     END IF;
