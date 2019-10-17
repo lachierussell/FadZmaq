@@ -52,9 +52,19 @@ class _MatchesListState extends State<MatchesList> {
     cacheMatchPhotos(globalModel, matchesData);
 
     if (matchesList.length > 0) {
-      return ListView.builder(
-        itemCount: matchesList.length,
-        itemBuilder: _listItemBuilder,
+      return RefreshIndicator(
+        onRefresh: () async {
+          dynamic newModel = await loadModel(context, Model.matches);
+          if (newModel.runtimeType == MatchesData && newModel.matches != null) {
+            setState(() {
+              matchesList = newModel.matches;
+            });
+          }
+        },
+        child: ListView.builder(
+          itemCount: matchesList.length,
+          itemBuilder: _listItemBuilder,
+        ),
       );
     } else {
       return Text(

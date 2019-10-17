@@ -60,16 +60,27 @@ class RecommendationsListState extends State<RecommendationsList> {
       // never more than 10 entries shown
       int numEntries = min(11, recommendationsList.length);
 
-      return ListView.separated(
-        separatorBuilder: (context, index) {
-          return Divider(
-            color: Colors.grey,
-            indent: 10,
-            endIndent: 10,
-          );
-        },
-        itemCount: numEntries,
-        itemBuilder: _listItemBuilder,
+      return RefreshIndicator(
+        onRefresh: (() async {
+          dynamic newModel = await loadModel(context, Model.recommendations);
+          if (newModel.runtimeType == RecommendationsData &&
+              newModel.recommendations != null) {
+            setState(() {
+              recommendationsList = newModel.recommendations;
+            });
+          }
+        }),
+        child: ListView.separated(
+          separatorBuilder: (context, index) {
+            return Divider(
+              color: Colors.grey,
+              indent: 10,
+              endIndent: 10,
+            );
+          },
+          itemCount: numEntries,
+          itemBuilder: _listItemBuilder,
+        ),
       );
     } else {
       return Text(
