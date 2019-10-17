@@ -13,9 +13,6 @@ Future<http.Response> postAsync(BuildContext context, String url,
     {var json, bool useGet = false, bool useDelete = false}) async {
   url = AppConfig.of(context).server + url;
 
-  // this is here so we can catch errors for the popup, but return the response as a null
-  http.Response response;
-
   // swap depending on what we got in
   // TODO merge httpGet and httpPost
   Function swapFunction;
@@ -27,20 +24,18 @@ Future<http.Response> postAsync(BuildContext context, String url,
     swapFunction = httpPost;
   }
 
-  Future request;
-  request = swapFunction(url, json: json).then((value) {
-    if (value.statusCode == 200 || value.statusCode == 204) {
-      // errorSnackRevised(context,"passed!: " + value.statusCode.toString() + "\n" + value.body);
-      response = value;
-      print("body: " + value.body);
+  http.Response response;
+  try {
+    response = await swapFunction(url, json: json);
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
     } else {
       errorSnackRevised("Server error, action not completed!");
     }
-  }).catchError((error) {
+  } catch (_) {
     errorSnackRevised("Server error, action not completed!");
-  });
+  }
 
-  await request;
   return response;
 }
 

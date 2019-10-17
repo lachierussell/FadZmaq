@@ -24,6 +24,20 @@ female_name_list = [
     "Summer", "Steph", "Jacqueline", "Maya", "Tessa",
 ]
 
+bio_paragraph_list = [
+    "Ut vel malesuada mauris, 😀 ac blandit nisi. Integer scelerisque nulla vel vestibulum sodales. Cras at tempus lacus. Curabitur sed nulla augue. Duis sit amet libero in arcu viverra gravida. Sed pharetra facilisis lacus, et dictum tellus rhoncus ac.",
+    "Donec gravida mi a accumsan molestie. Vivamus velit nunc, tincidunt vitae elit aliquet, scelerisque mattis augue. Nunc ullamcorper fermentum purus, at malesuada dolor sagittis sed. ",
+    "😀😀😀 \ned tempus sagittis leo, id varius enim vehicula vel. Cras fermentum nibh diam, id finibus dui porta nec. Nulla vel lectus elementum dui lobortis posuere. Praesent finibus pharetra dui a dictum.",
+    "In sollicitudin dolor ut quam eleifend egestas. Fusce elementum nunc et sem cursus rutrum. Vivamus vehicula elementum quam, id vestibulum urna auctor at. Fusce tincidunt ipsum ut egestas eleifend. Sed quis ullamcorper augue.",
+    "Nullam posuere, magna nec aliquam maximus, lacus magna luctus enim, eu condimentum massa quam eget massa. 😁",
+    "Proin fringilla rhoncus mi ac porttitor. Morbi et tortor quis arcu aliquam aliquam. In non dui sapien. ",
+    "Maecenas rutrum leo vitae arcu gravida semper.😆😆",
+    "Sed molestie velit eu arcu facilisis iaculis. Vestibulum egestas nunc non sapien tincidunt accumsan. Sed at sodales est. Nulla placerat sed mauris a porttitor. Sed finibus purus vel nunc fermentum ultricies.",
+    "Donec sit amet mauris est. Ut tincidunt neque at magna convallis semper. Ut viverra leo tristique dignissim viverra. Curabitur sed auctor ex. Nullam ac nunc sapien. 🙂",
+    "Proin dignissim suscipit felis in ornare. Cras commodo ullamcorper congue. Praesent nunc nunc, laoreet vel mattis et, malesuada non ex.🙂",    
+]
+
+
 female_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/4/4e/Tina_Fey_Muppets_Most_Wanted_Premiere_%28cropped%29.jpg",

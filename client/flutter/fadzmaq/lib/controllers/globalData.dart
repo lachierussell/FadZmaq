@@ -1,4 +1,5 @@
 import 'package:fadzmaq/controllers/imageCache.dart';
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/models/globalModel.dart';
@@ -57,20 +58,12 @@ class _VerifyModelState extends State<VerifyModel> {
   void didChangeDependencies() {
     if (_checkModel(context, widget.model) == false) {
       String server = AppConfig.of(context).server + _getURL(widget.model);
-      print("get new future");
       _future = httpGet(server);
-    } else {
-      print("should have future");
-      if (_future == null) print("BUT WE DON'T!");
     }
     super.didChangeDependencies();
   }
 
-  @override
-  void initState() {
-    print("init for global data");
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -135,8 +128,7 @@ loadModelAsync(BuildContext context, Model model) async {
     await loadModel(context, model);
   } catch (e) {
     print("loadModelAsync Error: " + e.toString());
-    // do nothing on error
-    // TODO maybe show a popup bar?
+    errorSnackRevised("Server Error!");
   }
 }
 
@@ -157,10 +149,10 @@ Future loadModel(BuildContext context, Model model) async {
       responseJson = json.decode(response.body);
       await _loadJsonAndCache(mainModel, model, responseJson);
     } else {
-      throw Exception("Status code was " + response.statusCode.toString());
+      return Exception("Status code was " + response.statusCode.toString());
     }
   } catch (e) {
-    throw e;
+    return e;
   }
 
   return response;

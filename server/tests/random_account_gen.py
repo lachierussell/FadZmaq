@@ -14,6 +14,7 @@ from tests.random_account_data import female_name_list
 from tests.random_account_data import male_name_list
 from tests.random_account_data import female_photo_list
 from tests.random_account_data import male_photo_list
+from tests.random_account_data import bio_paragraph_list
 
 from tests.random_account_db import make_user_test
 from tests.random_account_db import update_user_hobbies
@@ -41,9 +42,10 @@ def make_random_account():
     name = random_name(is_female)
     email = random_email(name)
     photo = random_photo(is_female)
+    bio = random_bio()
 
     # db stuff
-    make_user_test(name, email, uid, photo)
+    make_user_test(name, email, uid, photo, bio)
     update_user_hobbies(uid, random_hobby_request())
     set_location(uid, random_lat(), random_long())
 
@@ -71,7 +73,15 @@ def random_phone():
     return '042'.join(random.choice(string.digits) for i in range(7))
 
 # todo bio
+def random_bio():
+    number = random.choice([1, 2, 2, 2, 3, 3, 4])
+    bio = ""
+    for i in range(number):
+        bio = bio + random.choice(bio_paragraph_list) + "\n\n"
 
+    bio = (bio[:400]) if len(bio) > 400 else bio
+
+    return bio
 
 def random_name(is_female):
     if is_female:

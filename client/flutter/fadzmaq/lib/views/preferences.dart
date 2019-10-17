@@ -161,12 +161,14 @@ class UserPreferencesState extends State<UserPreferences> {
                 //   ],
                 // ),
                 SizedBox(
-                  height: 120,
+                  height: 140,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: RoundButton(
                     label: "Log out",
+                    color: Colors.grey,
+                    textColor: Colors.black,
                     onPressed: () {
                       logOut(context);
                     },
