@@ -2,6 +2,7 @@ import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/location.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/views/landing.dart';
+import 'package:fadzmaq/views/splashscreen.dart';
 import 'package:fadzmaq/views/widgets/roundButton.dart';
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -66,7 +67,7 @@ class PermissionPage extends StatelessWidget {
       firstLoadGlobalModels(context);
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => navToEdit ? EditProfilePage() : LandingPage(),
+          builder: (context) => SplashScreen(),
         ),
       );
     }

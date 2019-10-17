@@ -5,6 +5,8 @@ import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/localtionPermissionPage.dart';
+import 'package:fadzmaq/views/splashscreen.dart';
+import 'package:fadzmaq/views/widgets/roundButton.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -48,26 +50,26 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<FirebaseUser> _handleSignIn() async {
-    setState(() {
-      _isButtonDisabled = true;
-    });
-
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) return null;
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
+    if (googleAuth == null) return null;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
+    if (credential == null) return null;
+
     final FirebaseUser user =
         (await _auth.signInWithCredential(credential)).user;
 
-    var token = await user.getIdToken();
+    // var token = await user.getIdToken();
     // print("\nidToken: \"" + token.toString() + "\"\n");
     // debugPrint("token: \"" + token.token + "\"");
-    printWrapped(token.token);
+    // printWrapped(token.token);
     // print("signed in " + user.displayName + "\n");
     return user;
   }
@@ -107,133 +109,157 @@ class _LoginScreenState extends State<LoginScreen> {
                 size: 130,
               ),
             ),
+            SizedBox(
+              height: 30,
+            ),
             Center(
-              child: _isButtonDisabled
-                  ? CircularProgressIndicator()
-                  : RaisedButton(
-                      child: (Text("Login With Google")),
-                      onPressed: () async {
-                        // _handleSignIn().then((FirebaseUser user) {
-                        // print(user);
+              child: RoundButton(
+                  minWidth: 220,
+                  height: 50,
+                  fontSize: 18,
+                  label: "Login With Google",
+                  onPressed: _isButtonDisabled
+                      ? null
+                      : () async {
+                          // _handleSignIn().then((FirebaseUser user) {
+                          // print(user);
 
-                        // TODO add a future builder in here so we show a loading circle during log in
+                          // TODO add a future builder in here so we show a loading circle during log in
 
-                        FirebaseUser user = await _handleSignIn();
-                        // await sleep1();
+                          // If the user is logged in di
+                          setState(() {
+                            _isButtonDisabled = true;
+                          });
 
-                        if (user != null) {
-                          FirebaseAuth auth = FirebaseAuth.instance;
-                          FirebaseUser user = await auth.currentUser();
-                          IdTokenResult result = await user.getIdToken();
+                          FirebaseUser user = await _handleSignIn();
+                          // await sleep1();
 
-                          // a quick check to the server to see if we have an account already
-                          // fetch response code will use Firebase Authentication to send our token
-                          http.Response response;
-                          String url = Globals.profileURL;
-                          // TODO check for timeout here
-                          try {
-                            response = await httpGet(config.server + url);
-                          } catch (e) {
-                            print(e.toString());
+                          if (user == null) {
+                            setState(() {
+                              _isButtonDisabled = false;
+                            });
+                            return;
                           }
 
-                          int code = 500;
+                          if (user != null) {
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => SplashScreen()),
+                            );
+                            return;
 
-                          if (response != null) {
-                            code = response.statusCode;
+                            // everything below is redundant
 
-                            String resonse = response.body.toString();
-
-                            print("A " + '$code' + " " + '$resonse');
-                          }
-
-                          // 404: no user account
-                          if (code == 404) {
-                            // TODO make this better, its a bit of a hack at the moment
-
-                            // Get our id token from firebase
                             FirebaseAuth auth = FirebaseAuth.instance;
                             FirebaseUser user = await auth.currentUser();
+                            IdTokenResult result = await user.getIdToken();
 
-                            var names = user.displayName.split(" ");
-                            String name = names[0];
-
-                            // put together our post request for a new account
-                            String _json = '{"new_user":{"email":"' +
-                                user.email +
-                                '", "name":"' +
-                                name +
-                                '"}}';
-
-                            // print(json);
-                            // post to account with our auth
-                            http.Response response = await httpPost(
-                                config.server + "account",
-                                json: _json);
-
-                            // update our code
-                            code = response.statusCode;
-
-                            String resonsee = response.body.toString();
-
-                            print("B " + '$code' + " " + '$resonsee');
-
-                            if (code == 200) {
-                            Location location = new Location();
-                            // don't request permission here
-
-                            bool hasPermission = await sendLocation(context);
-                            await firstLoadGlobalModels(context);
-
-                            if (hasPermission) {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => EditProfilePage()),
-                              );
-                            } else {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => PermissionPage(navToEdit: true,)),
-                              );
-                            }
+                            // a quick check to the server to see if we have an account already
+                            // fetch response code will use Firebase Authentication to send our token
+                            http.Response response;
+                            String url = Globals.profileURL;
+                            // TODO check for timeout here
+                            try {
+                              response = await httpGet(config.server + url);
+                            } catch (e) {
+                              print(e.toString());
                             }
 
-                            //TODO what if we fail to make an account?
+                            int code = 500;
+
+                            if (response != null) {
+                              code = response.statusCode;
+
+                              String resonse = response.body.toString();
+
+                              print("A " + '$code' + " " + '$resonse');
+                            }
+
+                            // 404: no user account
+                            if (code == 404) {
+                              // TODO make this better, its a bit of a hack at the moment
+
+                              // Get our id token from firebase
+                              FirebaseAuth auth = FirebaseAuth.instance;
+                              FirebaseUser user = await auth.currentUser();
+
+                              var names = user.displayName.split(" ");
+                              String name = names[0];
+
+                              // put together our post request for a new account
+                              String _json = '{"new_user":{"email":"' +
+                                  user.email +
+                                  '", "name":"' +
+                                  name +
+                                  '"}}';
+
+                              // print(json);
+                              // post to account with our auth
+                              http.Response response = await httpPost(
+                                  config.server + "account",
+                                  json: _json);
+
+                              // update our code
+                              code = response.statusCode;
+
+                              String resonsee = response.body.toString();
+
+                              print("B " + '$code' + " " + '$resonsee');
+
+                              if (code == 200) {
+                                Location location = new Location();
+                                // don't request permission here
+
+                                bool hasPermission =
+                                    await sendLocation(context);
+                                await firstLoadGlobalModels(context);
+
+                                if (hasPermission) {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            EditProfilePage()),
+                                  );
+                                } else {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => PermissionPage(
+                                              navToEdit: true,
+                                            )),
+                                  );
+                                }
+                              }
+
+                              //TODO what if we fail to make an account?
+                            }
+
+                            // success with the server
+                            // go to main page (perferences at the moment)
+                            else if (code == 200) {
+                              bool hasPermission = await sendLocation(context);
+                              await firstLoadGlobalModels(context);
+
+                              if (hasPermission) {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => LandingPage()),
+                                );
+                              } else {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => PermissionPage()),
+                                );
+                              }
+                            }
+
+                            // TODO error check here
                           }
-
-                          // success with the server
-                          // go to main page (perferences at the moment)
-                          else if (code == 200) {
-
-                            bool hasPermission = await sendLocation(context);
-                            await firstLoadGlobalModels(context);
-
-                            if (hasPermission) {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => LandingPage()),
-                              );
-                            } else {
-                              Navigator.of(context).pushReplacement(
-                                MaterialPageRoute(
-                                    builder: (context) => PermissionPage()),
-                              );
-                            }
-                          }
-
-                          // TODO error check here
-                        }
-                        // }).catchError((e) => print(e));
-                      }),
+                          // }).catchError((e) => print(e));
+                        }),
             ),
           ],
         ),
       ),
     ));
-  }
-
-  // TODO remove me
-  Future sleep1() {
-    return new Future.delayed(const Duration(seconds: 2), () => "2");
   }
 }

@@ -131,7 +131,7 @@ class UserPreferencesState extends State<UserPreferences> {
                                       json:
                                           json.encode(accountSettings.toJson()))
                                   .then((value) {
-                                loadModel(mainScaffold.currentContext,
+                                loadModelAsync(mainScaffold.currentContext,
                                     Model.recommendations);
                               });
                             },

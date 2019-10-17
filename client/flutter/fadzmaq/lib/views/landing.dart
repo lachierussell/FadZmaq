@@ -63,7 +63,7 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        initialIndex: 2,
+        initialIndex: 1,
         length: 3,
         child: Scaffold(
           key: mainScaffold,

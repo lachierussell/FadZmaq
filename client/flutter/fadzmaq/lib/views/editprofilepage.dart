@@ -288,16 +288,8 @@ class EditProfileState extends State<EditProfile> {
                           // setState(() {
                           //   disableButton = false;
                           // });
-                          if (Navigator.canPop(context)) {
-                            Navigator.pop(context);
-                          } else {
-                            Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                // builder: (context) => UserPreferencesPage(),
-                                builder: (context) => LandingPage(),
-                              ),
-                            );
-                          }
+
+                          Navigator.pop(context);
                         } else {
                           print(_fbKey.currentState.value);
                           print("validation failed");

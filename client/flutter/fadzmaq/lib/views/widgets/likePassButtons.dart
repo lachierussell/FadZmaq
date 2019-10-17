@@ -59,7 +59,7 @@ void asyncMatchPopup(BuildContext context, ProfileData profile) async {
   try {
     matches = getMatches(context);
   } catch (e) {
-    await loadModel(context, Model.matches);
+    await loadModelAsync(context, Model.matches);
     matches = getMatches(context);
   }
 

@@ -84,7 +84,8 @@ AllHobbiesData getHobbies(BuildContext context) {
 
 AccountSettings getAccountSettings(BuildContext context) {
   GlobalModel model = getModel(context);
-  if (model.accountSettings == null) throw Exception("Settings model not found");
+  if (model.accountSettings == null)
+    throw Exception("Settings model not found");
   return model.accountSettings;
 }
 
@@ -98,5 +99,7 @@ ProfileData getUserProfile(BuildContext context) {
 /// Remove the current [GlobalModel] from [GlobalData]
 void cleanModel(BuildContext context) {
   GlobalData data = GlobalData.of(context);
-  data.container.model = GlobalModel();
+  if (data != null && data.container != null) {
+    data.container.model = GlobalModel();
+  }
 }

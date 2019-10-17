@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 
@@ -29,16 +31,24 @@ Future httpGet(String url, {var json}) async {
 
   FirebaseAuth auth = FirebaseAuth.instance;
   FirebaseUser user = await auth.currentUser();
+
+  if (user == null) {
+    throw Exception("User not logged in");
+  }
+
   IdTokenResult result = await user.getIdToken();
 
+  http.Response response;
   try {
-    return await http.get(
+    response = await http.get(
       url,
       headers: {"Authorization": result.token},
     );
-  } catch (e) {
-    return e;
+  } on Exception catch (e) {
+    throw e;
   }
+
+  return response;
 }
 
 // this has to be a typeless future to pass errors
@@ -53,3 +63,10 @@ Future httpDelete(String url, {var json}) async {
     return e;
   }
 }
+
+enum RestType { get, post, delete }
+
+Future _httpHandler(
+  String url, {
+  var json,
+}) {}
