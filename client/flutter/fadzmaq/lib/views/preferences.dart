@@ -14,9 +14,7 @@ import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:flutter/rendering.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:http/http.dart';
-import 'package:http/http.dart' as prefix1;
+
 
 class PreferencesTempApp extends StatelessWidget {
   const PreferencesTempApp();
@@ -269,3 +267,4 @@ class PreferenceButtons extends StatelessWidget {
     );
   }
 }
+

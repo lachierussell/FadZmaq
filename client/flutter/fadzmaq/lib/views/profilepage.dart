@@ -13,31 +13,32 @@ enum ProfileType { own, match, recommendation }
 class ProfileAppbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.transparent,
-      elevation: 0,
-      // action button
-    );
-  }
-  Widget  _selectPopup() =>
-      PopupMenuButton(
-        itemBuilder: (context) =>
-        [
-          PopupMenuItem(
-            value: 1,
-            child: Text("Unmatch"),
-          ),
-        ],
-        initialValue: 1,
-        onCanceled: () {
-          print("You have not chose anything.");
-        },
-        onSelected:(context) {
-          unmatchDialog(context);
-        }
-      );
+        return AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: const Text('Profile'),
+          actions: <Widget>[
+            PopupMenuButton(
+              itemBuilder: (context) =>
+              [
+               PopupMenuItem<String>(
+                 value: "Unmatch",
+                 child: ListTile(
+                     title: Text("Unmatch"),
+                     onTap:(){
+                       unmatchDialog(context);
+                     }
+                 ),
+               ),
+    ],
+    onCanceled: (){print("You have canceled the menu.");},
+    )
 
-}
+    ],
+        );
+    }
+  }
+
 class ProfilePage extends StatelessWidget {
   final String url;
   final ProfileData profile;
@@ -59,6 +60,8 @@ class ProfilePage extends StatelessWidget {
     // As we only pass profile data we convert it into a container
     final ProfileContainer container =
         (profile != null) ? ProfileContainer(profile: profile) : null;
+
+
 
     return Scaffold(
       body: GetRequest<ProfileContainer>(
@@ -105,6 +108,7 @@ class ProfilePageState extends StatelessWidget {
   Widget build(BuildContext context) {
     ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
     ProfileData profile = pc.profile;
+    
 
     return Scaffold(
       body: SingleChildScrollView(
