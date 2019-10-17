@@ -22,6 +22,7 @@ import 'package:fadzmaq/models/app_config.dart';
 import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
 
+
 class ProfileTempApp extends StatelessWidget {
   const ProfileTempApp();
 

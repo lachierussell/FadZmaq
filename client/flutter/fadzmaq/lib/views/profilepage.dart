@@ -1,6 +1,7 @@
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/profile_body.dart';
 import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
+import 'package:fadzmaq/views/widgets/unmatch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:fadzmaq/controllers/request.dart';
@@ -10,11 +11,33 @@ import 'package:fadzmaq/controllers/globals.dart';
 enum ProfileType { own, match, recommendation }
 
 class ProfileAppbar extends StatelessWidget {
+  final String uid;
+
+  ProfileAppbar({this.uid});
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      title: const Text('Profile'),
+      actions: <Widget>[
+        PopupMenuButton(
+          itemBuilder: (context) => [
+            PopupMenuItem<String>(
+              value: "Unmatch",
+              child: ListTile(
+                  title: Text("Unmatch"),
+                  onTap: () {
+                    unmatchDialog(context, uid);
+                  }),
+            ),
+          ],
+          onCanceled: () {
+            print("You have canceled the menu.");
+          },
+        )
+      ],
     );
   }
 }
@@ -60,7 +83,6 @@ class ProfilePage extends StatelessWidget {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-
                     LikeButton(profile: profile, type: LikePass.pass),
                     Expanded(
                       child: Container(
@@ -115,7 +137,9 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, right: 16),
-                    child: ProfileBody(type: this.type,),
+                    child: ProfileBody(
+                      type: this.type,
+                    ),
                   ),
                   type == ProfileType.recommendation
                       ? SizedBox(height: 140)
@@ -123,7 +147,7 @@ class ProfilePageState extends StatelessWidget {
                 ],
               ),
             ),
-            ProfileAppbar(),
+            ProfileAppbar(uid: profile.userId,),
           ],
         ),
       ),
