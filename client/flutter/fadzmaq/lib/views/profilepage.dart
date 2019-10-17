@@ -10,36 +10,42 @@ enum ProfileType { own, match, recommendation }
 
 class ProfileAppbar extends StatelessWidget {
   final String uid;
+  final ProfileType type;
 
-  ProfileAppbar({this.uid});
+  ProfileAppbar({
+    @required this.uid,
+    @required this.type,
+  })  : assert(uid != null),
+        assert(type != null);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
-      title: const Text('Profile'),
-      actions: <Widget>[
-        PopupMenuButton(
-          onSelected: (result) async {
-            if (result == "Unmatch") {
-              bool unmatched = await unmatchDialog(context, uid);
-              if(unmatched == true){
-                Navigator.pop(context);
-              }
-            }
-          },
-          itemBuilder: (context) => [
-            PopupMenuItem<String>(
-              value: "Unmatch",
-              child: Text("Unmatch"),
-            ),
-          ],
-          onCanceled: () {
-            print("You have canceled the menu.");
-          },
-        )
-      ],
+      actions: type == ProfileType.match
+          ? <Widget>[
+              PopupMenuButton(
+                onSelected: (result) async {
+                  if (result == "Unmatch") {
+                    bool unmatched = await unmatchDialog(context, uid);
+                    if (unmatched == true) {
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem<String>(
+                    value: "Unmatch",
+                    child: Text("Unmatch"),
+                  ),
+                ],
+                onCanceled: () {
+                  print("You have canceled the menu.");
+                },
+              )
+            ]
+          : null,
     );
   }
 }
@@ -144,6 +150,7 @@ class ProfilePageState extends StatelessWidget {
             ),
             ProfileAppbar(
               uid: profile.userId,
+              type: type,
             ),
           ],
         ),

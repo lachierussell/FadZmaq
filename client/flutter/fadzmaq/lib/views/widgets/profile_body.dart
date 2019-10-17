@@ -73,32 +73,38 @@ class ProfileBody extends StatelessWidget {
         bio != null ? Text(bio) : Container(),
         SizedBox(height: 15),
         BodyDivider(),
-        Text("Rate " + profileName,
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        SizedBox(height: 10),
         type == ProfileType.match
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  IconButton(
-                      iconSize: 40,
-                      icon: Icon(Icons.thumb_down),
-                      onPressed: () {
-                        onThumbsDown(context, rating, profile);
-                      },
-                      color: returnColor(rating, 0)),
-                  SizedBox(width: 25),
-                  IconButton(
-                    iconSize: 40,
-                    icon: Icon(Icons.thumb_up),
-                    onPressed: () {
-                      onThumbsUp(context, rating, profile);
-                    },
-                    color: returnColor(rating, 1),
+                  Text("Rate " + profileName,
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      IconButton(
+                          iconSize: 40,
+                          icon: Icon(Icons.thumb_down),
+                          onPressed: () {
+                            onThumbsDown(context, rating, profile);
+                          },
+                          color: returnColor(rating, 0)),
+                      SizedBox(width: 25),
+                      IconButton(
+                        iconSize: 40,
+                        icon: Icon(Icons.thumb_up),
+                        onPressed: () {
+                          onThumbsUp(context, rating, profile);
+                        },
+                        color: returnColor(rating, 1),
+                      ),
+                    ],
                   ),
                 ],
               )
             : Container(),
+
         SizedBox(height: 15),
       ],
     );
@@ -274,12 +280,12 @@ Color returnColor(int rating, int thumbs) {
 
   // this is a thumbs down and we have rated thumbs down
   if (thumbs == 0 && rating == 0) {
-    return Colors.blueAccent;
+    return Colors.redAccent;
   }
 
   // this is a thumbs down and we have rated thumbs down
   if (thumbs == 1 && rating == 1) {
-    return Colors.redAccent;
+    return Colors.blueAccent;
   }
 
   return Colors.grey;
