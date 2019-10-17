@@ -37,6 +37,7 @@ class ErrorPage extends StatelessWidget {
               fontSize: 18,
               minWidth: 220,
               height: 50,
+              color: Theme.of(context).accentColor,
               onPressed: () {
                 Navigator.of(context).pushReplacement(
                   MaterialPageRoute(
@@ -51,8 +52,6 @@ class ErrorPage extends StatelessWidget {
               fontSize: 18,
               minWidth: 220,
               height: 50,
-              color: Colors.grey,
-              textColor: Colors.black,
               onPressed: () {
                 logOut(context);
               },

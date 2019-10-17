@@ -52,6 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 50,
                   fontSize: 18,
                   label: "Login With Google",
+                  color: Theme.of(context).primaryColor,
                   onPressed: _isButtonDisabled
                       ? null
                       : () async {

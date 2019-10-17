@@ -35,10 +35,10 @@ class RoundButton extends StatelessWidget {
           textTheme: buttonTextTheme,
           textColor: textColor,
           child: Text(label, style: TextStyle(fontSize: fontSize)),
-          color: color,
+          color: color != null ? color : Theme.of(context).buttonColor,
           onPressed: onPressed,
           shape: RoundedRectangleBorder(
-              borderRadius: new BorderRadius.circular(20))),
+              borderRadius: new BorderRadius.circular(10))),
     );
   }
 }

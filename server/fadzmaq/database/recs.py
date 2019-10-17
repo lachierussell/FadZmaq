@@ -113,7 +113,7 @@ def get_recommendations(uid):
 
     top_users.sort(key=lambda top: top[1], reverse=True)
     top_users = top_users[:20]
-    print(top_users)
+    # print(top_users)
 
     recommendations = []
     for user in top_users:

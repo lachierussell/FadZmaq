@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
@@ -10,6 +11,7 @@ import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
 import 'package:fadzmaq/views/widgets/profile_body.dart';
+import 'package:fadzmaq/views/widgets/roundButton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +19,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as Im;
 import 'package:uuid/uuid.dart';
+import 'dart:convert';
 // import 'package:permission_handler/permission_handler.dart';
 
 class EditProfilePage extends StatelessWidget {
@@ -171,34 +174,21 @@ class EditProfileState extends State<EditProfile> {
                             ),
                     ),
                     // Get an Image
-                    SizedBox(
-                      height: 10,
-                    ),
-                    RaisedButton(
-                      child: Text('Select Image'),
-                      onPressed: getImage1,
-                    ),
-                    // FormBuilderTextField(
-                    //     attribute: "photo",
-                    //     initialValue: imgurlForm,
-                    //     readOnly: true,
-                    //     decoration: InputDecoration(labelText: "")),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 10),
+                    RoundButton(label: 'Select Image', onPressed: getImage1),
+                    SizedBox(height: 20),
                     FormBuilderTextField(
                         attribute: "nickname",
                         initialValue: userProfile.name,
                         decoration: InputDecoration(labelText: "Nickname")),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 30),
                     ProfileHobbies(
                         hobbies: userProfile.hobbyContainers,
                         direction: HobbyDirection.discover),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: RaisedButton(
+                      child: RoundButton(
+                        label: "Discover Hobbies",
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -207,15 +197,16 @@ class EditProfileState extends State<EditProfile> {
                                     EditHobbyPage2(isShare: false)),
                           );
                         },
-                        child: Text("Choose hobbies that you want to discover"),
                       ),
                     ),
+                    SizedBox(height: 30),
                     ProfileHobbies(
                         hobbies: userProfile.hobbyContainers,
                         direction: HobbyDirection.share),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: RaisedButton(
+                      child: RoundButton(
+                        label: "Share Hobbies",
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -224,7 +215,6 @@ class EditProfileState extends State<EditProfile> {
                                     EditHobbyPage2(isShare: true)),
                           );
                         },
-                        child: Text("Choose hobbies that you want to share"),
                       ),
                     ),
                     FormBuilderTextField(
@@ -238,20 +228,18 @@ class EditProfileState extends State<EditProfile> {
                     FormBuilderTextField(
                         attribute: "bio",
                         initialValue: bio,
+                        minLines: 1,
+                        maxLines: 10,
+                        maxLength: 400,
+                        maxLengthEnforced: true,
                         decoration: InputDecoration(labelText: "bio")),
                   ],
                 ),
               ),
-              SizedBox(
-                height: 20,
-              ),
-              MaterialButton(
-                disabledColor: Colors.grey,
+              SizedBox(height: 20),
+              RoundButton(
+                label: "Submit",
                 color: Theme.of(context).accentColor,
-                child: Text(
-                  "Submit",
-                  style: TextStyle(color: Colors.white),
-                ),
                 onPressed: disableButton
                     ? null
                     : () async {
@@ -262,14 +250,20 @@ class EditProfileState extends State<EditProfile> {
                           await _uploadFile();
                         }
                         if (_fbKey.currentState.saveAndValidate()) {
+                          if (imgurl != null) {
+                            userProfile.photo = imgurl;
+                          } else {
+                            imgurl = userProfile.photo;
+                          }
+
                           _fbKey.currentState.value.addAll({"photo": imgurl});
+
                           print("Sending" + '${_fbKey.currentState.value}');
-                          httpPost(server + "profile",
-                              json: _fbKey.currentState.value);
+                          postAsync(context, "profile",
+                              json: json.encode(_fbKey.currentState.value));
 
-                          print(_fbKey.currentState.value.toString());
+                          // httpGet(server + "profile");
 
-                          if (imgurl != null) userProfile.photo = imgurl;
                           String nickname =
                               _fbKey.currentState.value['nickname'];
                           String email = _fbKey.currentState.value['email'];

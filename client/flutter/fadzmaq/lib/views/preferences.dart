@@ -167,8 +167,6 @@ class UserPreferencesState extends State<UserPreferences> {
                   padding: const EdgeInsets.all(8.0),
                   child: RoundButton(
                     label: "Log out",
-                    color: Colors.grey,
-                    textColor: Colors.black,
                     onPressed: () {
                       logOut(context);
                     },

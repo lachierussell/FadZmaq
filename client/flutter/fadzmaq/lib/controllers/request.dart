@@ -11,12 +11,14 @@ Future httpPost(String url, {var json}) async {
   IdTokenResult result = await user.getIdToken();
 
   try {
-    if (json != null)
+    if (json != null) {
       return await http.post(url,
           headers: {"Authorization": result.token}, body: json);
-    else
+    } else {
       return await http.post(url, headers: {"Authorization": result.token});
+    }
   } catch (e) {
+    print("POST ERROR " + e.toString());
     return e;
   }
 }

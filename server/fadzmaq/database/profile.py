@@ -27,8 +27,8 @@ def update_profile(subject, uid):
         UPDATE profile
         SET nickname= %s, bio= %s, email= %s, phone= %s, photo= %s
         WHERE user_id= %s;
-        ''', subject.values['nickname'], subject.values['bio'], subject.values['email'],
-        subject.values['phone'], subject.values['photo'], uid
+        ''', subject['nickname'], subject['bio'], subject['email'],
+        subject['phone'], subject['photo'], uid
     )
 
 
