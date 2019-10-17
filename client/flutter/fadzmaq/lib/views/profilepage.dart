@@ -82,6 +82,7 @@ class ProfilePage extends StatelessWidget {
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
+
                     LikeButton(profile: profile, type: LikePass.pass),
                     Expanded(
                       child: Container(
@@ -137,7 +138,7 @@ class ProfilePageState extends StatelessWidget {
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, right: 16),
-                    child: ProfileBody(),
+                    child: ProfileBody(type: this.type,),
                   ),
                   type == ProfileType.recommendation
                       ? SizedBox(height: 140)

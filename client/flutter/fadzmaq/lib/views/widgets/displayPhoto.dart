@@ -22,7 +22,10 @@ class DisplayPhoto extends StatelessWidget {
     // https://upload.wikimedia.org/wikipedia/commons/6/61/Sam_Neill_2010.jpg
 
     if (url == null) {
-      return Text("Nope");
+      return SizedBox(
+        height: dimension,
+        width: dimension,
+      );
     }
 
     url = photoThumbURL(context, url, dimension);

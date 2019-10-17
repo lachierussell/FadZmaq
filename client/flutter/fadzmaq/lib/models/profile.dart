@@ -1,7 +1,7 @@
 import 'package:fadzmaq/models/hobbies.dart';
 
 class ProfileContainer {
-  final ProfileData profile;
+  ProfileData profile;
 
   ProfileContainer({
     this.profile,
@@ -54,11 +54,11 @@ class ProfileData {
   final String userId;
   // final String gender;
   // final String age;
-
 //  final ContactData contactDetails;
 
-  final String name;
-  final String photo;
+  String name;
+  String photo;
+  int rating;
 
   final List<ProfileField> profileFields;
   final List<HobbyContainer> hobbyContainers;
@@ -66,6 +66,7 @@ class ProfileData {
 
   ProfileData({
     this.userId,
+    this.rating,
     // this.gender,
     // this.age,
     this.name,
@@ -103,6 +104,7 @@ class ProfileData {
     return ProfileData(
       userId: json['user_id'],
       name: json['name'],
+      rating: json['rating'],
       photo: json['photo_location'],
       // age: profile['age'],
 //      contactDetails: contact,
@@ -133,11 +135,13 @@ class ProfileField {
   // final int id;
   final String displayValue;
   final String name;
+  final String rating;
 
   ProfileField({
     // this.id,
     this.displayValue,
     this.name,
+    this.rating,
   });
 
   factory ProfileField.fromJson(Map<String, dynamic> json) {
@@ -145,6 +149,7 @@ class ProfileField {
       // id: json['id'] as int,
       name: json['name'] as String,
       displayValue: json['display_value'] as String,
+      rating: json['rating'] as String,
     );
   }
 }

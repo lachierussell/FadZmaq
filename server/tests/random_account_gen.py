@@ -1,3 +1,10 @@
+# @file
+#
+# FadZmaq Project
+# Professional Computing. Semester 2 2019
+#
+# Copyright FadZmaq © 2019      All rights reserved.
+# @author Jordan Russell        jordanrussell@live.com
 
 import random
 import string
@@ -37,7 +44,7 @@ def make_random_account():
 
     # db stuff
     make_user_test(name, email, uid, photo)
-    update_user_hobbies(uid, random_hobby_request())
+    profile.set_location(uid, random_lat(), random_long(), 'null device')
     set_location(uid, random_lat(), random_long())
 
     print("added: " + name + " - " + uid)

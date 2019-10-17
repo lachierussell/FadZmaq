@@ -1,10 +1,26 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:math';
 import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/views/landing.dart';
+import 'package:fadzmaq/views/preferences.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/gestures.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:fadzmaq/main.dart';
+import 'package:flutter/material.dart';
+import 'package:fadzmaq/controllers/request.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:fadzmaq/models/app_config.dart';
+import 'package:image/image.dart' as Im;
+import 'package:uuid/uuid.dart';
 
 
 class ProfileTempApp extends StatelessWidget {
@@ -61,6 +77,56 @@ String profileFieldFromString(ProfileData pd, String fieldName) {
 }
 
 class EditProfileState extends State<EditProfile> {
+  File _image1;
+
+  String imgurl;
+
+  String imgurlForm;
+
+  bool disableButton = false;
+
+  final FirebaseStorage storage =
+      new FirebaseStorage(storageBucket: 'gs://fadzmaq1.appspot.com/');
+
+  // Get an image from your gallery
+  Future getImage1() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      final Directory tempDir = Directory.systemTemp;
+      final path = tempDir.path;
+      int rand = new Random().nextInt(10000);
+      Im.Image newimage = Im.decodeImage(image.readAsBytesSync());
+      newimage = Im.copyResizeCropSquare(newimage, 1080);
+      var newim1 = new File('$path/img_$rand.jpg')
+        ..writeAsBytesSync(Im.encodeJpg(newimage, quality: 52));
+
+      setState(() {
+        _image1 = newim1;
+      });
+    }
+  }
+
+  // Upload File to firebase
+  Future<Null> _uploadFile() async {
+    String fileName = "${Uuid().v1()}";
+    final StorageReference reference =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(_image1);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    final String url = (await taskSnapshot.ref.getDownloadURL());
+    print('URL Is $url');
+
+    setState(() {
+      imgurl = url;
+      imgurlForm = imgurl;
+    });
+  }
+
+  String returnImageURL() {
+    return imgurl;
+  }
+
   var data;
   bool autoValidate = true;
   bool readOnly = false;
@@ -102,6 +168,29 @@ class EditProfileState extends State<EditProfile> {
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: _image1 != null
+                          ? Image.file(
+                              _image1,
+                              height: Globals.recThumbDim,
+                              width: Globals.recThumbDim,
+                            )
+                          : DisplayPhoto(
+                              url: pd.photo,
+                              dimension: Globals.recThumbDim,
+                            ),
+                    ),
+                    // Get an Image
+                    RaisedButton(
+                      child: Text('Select Image'),
+                      onPressed: getImage1,
+                    ),
+                    FormBuilderTextField(
+                        attribute: "photo",
+                        initialValue: imgurlForm,
+                        readOnly: true,
+                        decoration: InputDecoration(labelText: "")),
                     FormBuilderTextField(
                         attribute: "nickname",
                         initialValue: pd.name,
@@ -125,22 +214,51 @@ class EditProfileState extends State<EditProfile> {
                 children: <Widget>[
                   Expanded(
                     child: MaterialButton(
+                      disabledColor: Colors.grey,
                       color: Theme.of(context).accentColor,
                       child: Text(
                         "Submit",
                         style: TextStyle(color: Colors.white),
                       ),
-                      onPressed: () {
-                        if (_fbKey.currentState.saveAndValidate()) {
-                          print(_fbKey.currentState.value);
-                          httpPost(server + Globals.profileURL, json:_fbKey.currentState.value);
+                      onPressed: disableButton
+                          ? null
+                          : () async {
+                              setState(() {
+                                disableButton = true;
+                              });
+                              if(_image1 != null){
+                                await _uploadFile();
+                              }
+                              if (_fbKey.currentState.saveAndValidate()) {
+                                _fbKey.currentState.value
+                                    .addAll({"photo": imgurl});
+                                print(
+                                    "Sending" + '${_fbKey.currentState.value}');
+                                httpPost(server + "profile",
+                                    json: _fbKey.currentState.value);
 
-                          Navigator.pop(context);
-                        } else {
-                          print(_fbKey.currentState.value);
-                          print("validation failed");
-                        }
-                      },
+                                if (imgurl != null) {
+                                  pd.photo = imgurl;
+                                }
+
+                                // setState(() {
+                                //   disableButton = false;
+                                // });
+                                if (Navigator.canPop(context)) {
+                                  Navigator.pop(context, pd);
+                                } else {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      // builder: (context) => UserPreferencesPage(),
+                                      builder: (context) => LandingPage(),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                print(_fbKey.currentState.value);
+                                print("validation failed");
+                              }
+                            },
                     ),
                   ),
                   SizedBox(

@@ -1,9 +1,12 @@
 import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/globals.dart';
+import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/models/app_config.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -29,22 +32,40 @@ class SplashScreenState extends State<SplashScreen> {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser user = await auth.currentUser();
     if (user != null) {
-      // var token = await user.getIdToken();
-      // printWrapped(token.token);
+      // TODO refactor this
+      ConfigResource config = AppConfig.of(context);
+      http.Response response;
+      String url = Globals.matchesURL;
+      // TODO check for timeout here
+      try {
+        response = await httpGet(config.server + url);
+      } catch (e) {
+        print(e.toString());
+      }
 
-      // String url = Globals.matchesURL;
-      // int code =
-      //     await fetchResponseCode(config.server + url);
+      int code = 500;
+      if (response != null) {
+        code = response.statusCode;
+      }
 
-      // TODO this should all be put after the login screen
-      await cacheImages(context);
+      if (code == 401) {
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            // builder: (context) => UserPreferencesPage(),
+            builder: (context) => LoginScreen(),
+          ),
+        );
+      } else {
+        // TODO this should all be put after the login screen
+        await cacheImages(context);
 
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          // builder: (context) => UserPreferencesPage(),
-          builder: (context) => LandingPage(),
-        ),
-      );
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            // builder: (context) => UserPreferencesPage(),
+            builder: (context) => LandingPage(),
+          ),
+        );
+      }
     } else {
       // TODO try for a silent google sign in
       Navigator.of(context).pushReplacement(

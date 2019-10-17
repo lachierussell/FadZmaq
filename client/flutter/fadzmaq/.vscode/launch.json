@@ -12,7 +12,7 @@
             "name": "Local",
             "request": "launch",
             "type": "dart",
-            "program": "lib/main_localhost.dart",
+            "program": "lib/main_local.dart",
             "args": ["-v"],
         },
         {
