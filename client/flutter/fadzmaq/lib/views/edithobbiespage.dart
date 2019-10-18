@@ -193,7 +193,7 @@ class _EditHobbyPageState extends State<EditHobby> {
               ),
             ),
           ),
-          SizedBox(height: 10,),
+          SizedBox(height: 10),
           MaterialButton(
             color: Theme.of(context).accentColor,
             child: Text(
@@ -209,10 +209,7 @@ class _EditHobbyPageState extends State<EditHobby> {
                     compileJson(context, _fbKey.currentState.value);
 
                 httpPost(AppConfig.of(context).server + "profile/hobbies",
-                        json: json.encode(hobJson))
-                    .then((value) {
-                  loadModelAsync(context, Model.recommendations);
-                });
+                    json: json.encode(hobJson));
                 Navigator.pop(context);
               } else {
                 print(_fbKey.currentState.value);

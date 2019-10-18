@@ -141,21 +141,23 @@ Future loadModel(BuildContext context, Model model) async {
 
   http.Response response;
   dynamic responseJson;
+  dynamic newModel;
 
   try {
     response = await httpGet(server);
+
     if (response.statusCode == 200) {
       print("200 and loading in");
       responseJson = json.decode(response.body);
-      await _loadJsonAndCache(mainModel, model, responseJson);
+      newModel = await _loadJsonAndCache(mainModel, model, responseJson);
     } else {
       return Exception("Status code was " + response.statusCode.toString());
     }
   } catch (e) {
     return e;
   }
-
-  return response;
+  print("loading complete");
+  return newModel;
 }
 
 /// returns the URL used for a given [model]
@@ -210,29 +212,30 @@ bool _checkModel(BuildContext context, Model model) {
 /// converts [json] to a [model] and caches any profile images present
 Future _loadJsonAndCache(
     GlobalModel globalModel, Model model, dynamic json) async {
-  _loadJSON(globalModel, model, json);
+  dynamic newModel = _loadJSON(globalModel, model, json);
   await _cacheModelImages(globalModel, model);
+  return newModel;
 }
 
 /// Converts given [json] into a [model]
-void _loadJSON(GlobalModel globalModel, Model model, dynamic json) {
+dynamic _loadJSON(GlobalModel globalModel, Model model, dynamic json) {
   switch (model) {
     case Model.matches:
-      globalModel.matches = MatchesData.fromJson(json);
+      return globalModel.matches = MatchesData.fromJson(json);
       break;
     case Model.recommendations:
-      globalModel.recommendations = RecommendationsData.fromJson(json);
+      return globalModel.recommendations = RecommendationsData.fromJson(json);
       break;
     case Model.userProfile:
       var pc = ProfileContainer.fromJson(json);
       if (pc == null) throw Exception("empty Profile Container");
-      globalModel.userProfile = pc.profile;
+      return globalModel.userProfile = pc.profile;
       break;
     case Model.allHobbies:
-      globalModel.allHobbies = AllHobbiesData.fromJson(json);
+      return globalModel.allHobbies = AllHobbiesData.fromJson(json);
       break;
     case Model.accountSettings:
-      globalModel.accountSettings = AccountSettings.fromJson(json);
+      return globalModel.accountSettings = AccountSettings.fromJson(json);
       break;
   }
 }

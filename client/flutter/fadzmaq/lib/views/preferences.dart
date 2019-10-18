@@ -93,8 +93,9 @@ class UserPreferencesState extends State<UserPreferences> {
                   padding: const EdgeInsets.all(8.0),
                   child: RoundButton(
                     label: "Edit Profile",
-                    onPressed: () {
-                      editProfileFunction(context);
+                    onPressed: () async{
+                      await editProfileFunction(context);
+                      loadModelAsync(context, Model.recommendations);
                     },
                   ),
                 ),
@@ -191,7 +192,7 @@ class UserPreferencesState extends State<UserPreferences> {
     );
   }
 
-  void editProfileFunction(BuildContext context) async {
+  Future<void> editProfileFunction(BuildContext context) async {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return EditProfilePage();
     }));
