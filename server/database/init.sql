@@ -342,15 +342,14 @@ FROM (
                              SELECT lat
                              FROM location_data
                              WHERE user_id = from_user
-                             ORDER BY ping_time
+                             ORDER BY ping_time DESC
                              LIMIT 1
                          ) ml,
                          (
                              SELECT long
                              FROM location_data
                              WHERE user_id = from_user
-                             ORDER BY ping_time
-                             LIMIT 1
+                             ORDER BY ping_time DESC
                          ) mlo
                   FROM location_data
                   ORDER BY ping_time DESC
