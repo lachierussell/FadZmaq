@@ -24,6 +24,20 @@ female_name_list = [
     "Summer", "Steph", "Jacqueline", "Maya", "Tessa",
 ]
 
+bio_paragraph_list = [
+    "Ut vel malesuada mauris, 😀 ac blandit nisi. Integer scelerisque nulla vel vestibulum sodales. Cras at tempus lacus. Curabitur sed nulla augue. Duis sit amet libero in arcu viverra gravida. Sed pharetra facilisis lacus, et dictum tellus rhoncus ac.",
+    "Donec gravida mi a accumsan molestie. Vivamus velit nunc, tincidunt vitae elit aliquet, scelerisque mattis augue. Nunc ullamcorper fermentum purus, at malesuada dolor sagittis sed. ",
+    "😀😀😀 \ned tempus sagittis leo, id varius enim vehicula vel. Cras fermentum nibh diam, id finibus dui porta nec. Nulla vel lectus elementum dui lobortis posuere. Praesent finibus pharetra dui a dictum.",
+    "In sollicitudin dolor ut quam eleifend egestas. Fusce elementum nunc et sem cursus rutrum. Vivamus vehicula elementum quam, id vestibulum urna auctor at. Fusce tincidunt ipsum ut egestas eleifend. Sed quis ullamcorper augue.",
+    "Nullam posuere, magna nec aliquam maximus, lacus magna luctus enim, eu condimentum massa quam eget massa. 😁",
+    "Proin fringilla rhoncus mi ac porttitor. Morbi et tortor quis arcu aliquam aliquam. In non dui sapien. ",
+    "Maecenas rutrum leo vitae arcu gravida semper.😆😆",
+    "Sed molestie velit eu arcu facilisis iaculis. Vestibulum egestas nunc non sapien tincidunt accumsan. Sed at sodales est. Nulla placerat sed mauris a porttitor. Sed finibus purus vel nunc fermentum ultricies.",
+    "Donec sit amet mauris est. Ut tincidunt neque at magna convallis semper. Ut viverra leo tristique dignissim viverra. Curabitur sed auctor ex. Nullam ac nunc sapien. 🙂",
+    "Proin dignissim suscipit felis in ornare. Cras commodo ullamcorper congue. Praesent nunc nunc, laoreet vel mattis et, malesuada non ex.🙂",    
+]
+
+
 female_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/1/10/Rooney_Mara_at_The_Discovery_premiere_during_day_2_of_the_2017_Sundance_Film_Festival_at_Eccles_Center_Theatre_on_January_20%2C_2017_in_Park_City%2C_Utah_%2832088061480%29_%28cropped%29.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/4/4e/Tina_Fey_Muppets_Most_Wanted_Premiere_%28cropped%29.jpg",
@@ -105,6 +119,13 @@ female_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/0/0f/CourteneyCoxFeb09.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/9/90/Jennifer_Connelly_2005.2.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/3/35/Lauren_Cohan_by_Gage_Skidmore_4.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/a/a5/Jane_Krakowski_%282005%29_%28cropped%29.jpeg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8a/Noomi_Rapace_Paris_Fashion_Week_Spring_Summer_2020.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/8/8b/Noomi_Rapace_in_LA.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/e/e5/Michelle_Dockery_2013_2.jpg",
+
+
+
     
 ]
 
@@ -136,7 +157,6 @@ male_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/5/59/Conan_O%27Brien_by_Gage_Skidmore_2.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/b/bd/Alec_Baldwin_Cannes_2012.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/9/95/Tracy_Morgan_3_Shankbone_2009_NYC.jpg",
-    "https://upload.wikimedia.org/wikipedia/commons/a/a5/Jane_Krakowski_%282005%29_%28cropped%29.jpeg",
     "https://upload.wikimedia.org/wikipedia/commons/5/5d/Jackmcbrayer.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/8/80/ScottAdsit.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/0/0a/Steve_Martin%2C_2017-08-11.jpg",
@@ -192,5 +212,13 @@ male_photo_list = [
     "https://upload.wikimedia.org/wikipedia/commons/0/0c/Charlie_Cox_by_Gage_Skidmore.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/5/5a/Mike_Colter_2018.jpg",
     "https://upload.wikimedia.org/wikipedia/commons/5/57/Finn_Jones_by_Gage_Skidmore.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/b/b4/Hugh_Grant_2014_crop.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/d/d4/Colin_Farrell_by_Gage_Skidmore.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/7/75/Jeremy_Strong_2014.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/4/48/Charlie_Hunnam_at_Berlinale_2017.jpeg",
+    "https://upload.wikimedia.org/wikipedia/commons/2/26/Matthew_McConaughey_Cannes_2015_2.jpg",
+    "https://upload.wikimedia.org/wikipedia/commons/1/14/GuyRitchiebyKathyHutchins.jpg",
+
+
 
 ]

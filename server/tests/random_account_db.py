@@ -37,18 +37,17 @@ def close_db():
         random_account_gen.connection = None
 
 
-def make_user_test(name, email, uid, photo):
-    rows = get_db().execute(
-        '''
-        INSERT INTO profile (nickname, email, user_id, photo) VALUES (%s, %s, %s, %s) RETURNING user_id;
-        ''', name, email, uid, photo
-    )
-    close_db()
-    for row in rows:
-        # print(str(row['user_id']))
-        return str(row['user_id'])
-    print('IOError: No Rows')
-    raise IOError
+def make_user_test(name, email, uid, photo, bio):
+    try:
+        rows = get_db().execute(
+            '''
+            INSERT INTO profile (nickname, email, user_id, photo, bio) VALUES (%s, %s, %s, %s, %s) RETURNING user_id;
+            ''', name, email, uid, photo, bio
+        )
+        close_db()
+    except Exception as e:
+        print(str(e))
+
 
 def get_hobby_list():
     try:
@@ -73,33 +72,39 @@ def get_hobby_list():
         return hobbies_list
 
     except Exception as e:
-        raise IOError(str(e))
+        print(str(e))
 
 # @brief Updates the users hobbies
 # Deletes current hobbies and updates with the new hobbies.
 def update_user_hobbies(uid, request):
     hobbies = request["hobbies"]
-    for category in hobbies:
-        get_db().execute(
-            '''
-            DELETE FROM user_hobbies
-            WHERE user_id = %s
-              AND swap = %s;
-            ''', uid, category['container']
-        )
-        for hobby in category['hobbies']:
+    try:
+        for category in hobbies:
             get_db().execute(
                 '''
-                INSERT INTO user_hobbies (user_id, hobby_id, swap)
-                VALUES (%s, %s, %s);
-                ''', uid, hobby['id'], category['container']
+                DELETE FROM user_hobbies
+                WHERE user_id = %s
+                AND swap = %s;
+                ''', uid, category['container']
             )
-    close_db()
+            for hobby in category['hobbies']:
+                get_db().execute(
+                    '''
+                    INSERT INTO user_hobbies (user_id, hobby_id, swap)
+                    VALUES (%s, %s, %s);
+                    ''', uid, hobby['id'], category['container']
+                )
+        close_db()
+    except Exception as e:
+        print(str(e))
 
 def set_location(uid, lat, long):
-    get_db().execute(
-        '''
-        INSERT INTO location_data (user_id, lat, long) VALUES (%s, %s, %s)
-        ''', uid, float(lat), float(long)
-    )
-    close_db()
+    try:
+        get_db().execute(
+            '''
+            INSERT INTO location_data (user_id, lat, long) VALUES (%s, %s, %s)
+            ''', uid, float(lat), float(long)
+        )
+        close_db()
+    except Exception as e:
+        print(str(e))

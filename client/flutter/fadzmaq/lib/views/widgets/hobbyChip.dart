@@ -78,6 +78,7 @@ class HobbyChip extends StatelessWidget {
   }
 }
 
+/// Returns the colour relative to the hobby's "direciton"
 Color getChipColor({
   HobbyDirection direction = HobbyDirection.none,
   double shade = 0,

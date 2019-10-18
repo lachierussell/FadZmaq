@@ -35,8 +35,11 @@ def notify_match(id):
         print('Message not sent: No device token')
         return
 
-    notification = messaging.Notification(title='You have a new match!')
+    if registration_token == "":
+        print('Message not sent: No device token')
+        return
 
+    notification = messaging.Notification(title='You have a new match!')
     # See documentation on defining a message payload.
     message = messaging.Message(notification= notification, token= registration_token)
 

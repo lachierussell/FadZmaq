@@ -1,9 +1,11 @@
 import 'package:fadzmaq/controllers/postAsync.dart';
-import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/likeResult.dart';
+import 'package:fadzmaq/models/matches.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:fadzmaq/views/widgets/matchDialog.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'dart:convert';
 
 enum LikePass { like, pass }
@@ -21,9 +23,6 @@ class LikeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String url = type == LikePass.like
-        ? "like/" + profile.userId
-        : "pass/" + profile.userId;
     final Color color = type == LikePass.like ? Colors.green : Colors.red;
     final IconData icon = type == LikePass.like ? Icons.done : Icons.clear;
     final double leftPad = type == LikePass.like ? 0 : 50;
@@ -44,8 +43,6 @@ class LikeButton extends StatelessWidget {
           heroTag: null,
           onPressed: () {
             // return the result of this button press to recommendations page
-            // TODO this should be more specific information
-            // Navigator.pop(context, profile.userId);
             Navigator.pop(context, type);
           },
         ),
@@ -54,11 +51,17 @@ class LikeButton extends StatelessWidget {
   }
 }
 
+/// Makes an async request and prepares a popup on certain response conditions
 void asyncMatchPopup(BuildContext context, ProfileData profile) async {
   print("asyncMatchPopup");
   // http.Response response = await postAsync(context, "like/" + profile.userId);
-
-  UserProfileContainer upc = RequestProvider.of<UserProfileContainer>(context);
+  MatchesData matches;
+  try {
+    matches = getMatches(context);
+  } catch (e) {
+    await loadModelAsync(context, Model.matches);
+    matches = getMatches(context);
+  }
 
   // do a post request for like
   // build the model if there is a response
@@ -66,14 +69,12 @@ void asyncMatchPopup(BuildContext context, ProfileData profile) async {
   await postAsync(context, "like/" + profile.userId).then((response) {
     if (response != null) {
       // print("RESPONSE! " + response.body);
-      LikeResult lr = LikeResult.fromJson(
-          json.decode(response.body));
+      LikeResult lr = LikeResult.fromJson(json.decode(response.body));
 
       if (lr.match == true && lr.matched != null && lr.matched.length > 0) {
-        matchPopup(context, lr.matched.first.profile, upc.profile);
+        matches.addToMatchesModel(lr.matched[0]);
+        matchPopup(lr.matched.first.profile);
       }
-    } else {
-      // print("asyncMatchPopup NULL!");
-    }
+    } else {}
   });
 }

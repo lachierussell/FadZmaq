@@ -1,53 +1,36 @@
+import 'package:fadzmaq/controllers/account.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
-import 'package:fadzmaq/views/edithobbiespage.dart';
+import 'package:fadzmaq/models/settings.dart';
+import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/widgets/deleteUser.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' as prefix0;
+import 'package:fadzmaq/views/widgets/roundButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:fadzmaq/views/loginscreen.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/editprofilepage.dart';
 import 'package:flutter/rendering.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
-
-class PreferencesTempApp extends StatelessWidget {
-  const PreferencesTempApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: new UserPreferencesPage(),
-    );
-  }
-}
-
-/// Test widget that lives below a [GetRequest<T>] model of type [ProfileData]
-class TestWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
-
-    return Text(profile.name);
-  }
-}
+import 'dart:convert';
+import 'dart:math';
 
 class UserPreferencesPage extends StatelessWidget {
-  /// the [GetRequest<ProfileData>] for this page
-  /// note [url] is matches and the [builder] creates the below children
+  /// the [VerifyModel] for this page
   /// this is a [builder] because [children] are initialised independent to heirachy
   /// only [builder] waits for the parent to initialise
   @override
   Widget build(BuildContext context) {
-    return GetRequest<ProfileContainer>(
-        url: Globals.profileURL,
+    return VerifyModel(
+        model: Model.userProfile,
         builder: (context) {
-          return UserPreferences();
+          return VerifyModel(
+              model: Model.accountSettings,
+              builder: (context) {
+                return UserPreferences();
+              });
         });
   }
 }
@@ -62,15 +45,21 @@ class UserPreferences extends StatefulWidget {
 class UserPreferencesState extends State<UserPreferences> {
   // const UserPreferencesPage([Key key]) : super(key: key);
 
-  double _locationDistance = 50;
-  int _roundDist = 50;
-  bool _notificationsBool = true;
-  ProfileData profile;
+  double _locationDistance = 20;
+  int _roundDist = 20;
+  // bool _notificationsBool = true;
 
   @override
   void didChangeDependencies() {
-    if (profile == null) {
-      profile = RequestProvider.of<ProfileContainer>(context).profile;
+    AccountSettings settings = getAccountSettings(context);
+
+    _locationDistance = settings.distanceSetting.toDouble();
+    _roundDist = settings.distanceSetting;
+
+    if (settings != null) {
+      print(settings.distanceSetting.toString());
+    } else {
+      print("settings null");
     }
 
     super.didChangeDependencies();
@@ -78,6 +67,8 @@ class UserPreferencesState extends State<UserPreferences> {
 
   @override
   Widget build(BuildContext context) {
+    ProfileData userProfile = getUserProfile(context);
+
     return SingleChildScrollView(
       // color: Colors.grey,
       child: Align(
@@ -89,39 +80,59 @@ class UserPreferencesState extends State<UserPreferences> {
               // crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
+                SizedBox(height: 20),
                 ClipRRect(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: DisplayPhoto(
-                    url: profile.photo,
+                    url: userProfile.photo,
                     dimension: Globals.recThumbDim,
                   ),
                 ),
                 new PreferenceButtons(),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
+                  child: RoundButton(
+                    label: "Edit Profile",
                     onPressed: () {
                       editProfileFunction(context);
                     },
-                    child: Text("Edit Profile"),
                   ),
+                ),
+                SizedBox(
+                  height: 50,
                 ),
                 Column(
                   children: <Widget>[
-                    Text("Distance: $_roundDist"),
+                    Text("Search Radius: " + _roundDist.toString() + "km"),
                     Row(
                       children: <Widget>[
-                        Text("Distance"),
+                        // Text("Distance"),
                         Expanded(
                           child: Slider(
-                            min: 10,
-                            max: 200,
+                            min: 1,
+                            max: 50,
                             // value: 50,
                             onChanged: (newDist) {
                               setState(() {
-                                int rounded = (newDist / 5).round() * 5;
                                 _locationDistance = newDist;
+                                int rounded = (newDist).round();
                                 _roundDist = rounded;
+                              });
+                            },
+                            onChangeEnd: (endDist) {
+                              int rounded = (endDist).round();
+                              _locationDistance = endDist;
+                              _roundDist = rounded;
+
+                              var accountSettings = getAccountSettings(context);
+                              accountSettings.distanceSetting = _roundDist;
+
+                              postAsync(context, Globals.settingsURL,
+                                      json:
+                                          json.encode(accountSettings.toJson()))
+                                  .then((value) {
+                                loadModelAsync(mainScaffold.currentContext,
+                                    Model.recommendations);
                               });
                             },
                             // onChangeEnd: (newDist){
@@ -131,38 +142,34 @@ class UserPreferencesState extends State<UserPreferences> {
                             //     _roundDist = rounded;
                             //   });
                             // },
-                            value: _locationDistance,
+                            value: min(_locationDistance, 50),
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                Row(
-                  children: <Widget>[
-                    Text("Notifications"),
-                    Switch(
-                      onChanged: (b) {
-                        setState(() => _notificationsBool = b);
-                      },
-                      value: _notificationsBool,
-                    ),
-                  ],
+                // Row(
+                //   children: <Widget>[
+                //     Text("Notifications"),
+                //     Switch(
+                //       onChanged: (b) {
+                //         setState(() => _notificationsBool = b);
+                //       },
+                //       value: _notificationsBool,
+                //     ),
+                //   ],
+                // ),
+                SizedBox(
+                  height: 140,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
-                    onPressed: logOut,
-                    child: Text("Log out"),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: RaisedButton(
+                  child: RoundButton(
+                    label: "Log out",
                     onPressed: () {
-                      postAsync(context, "profile");
+                      logOut(context);
                     },
-                    child: Text("Post Request Test"),
                   ),
                 ),
                 Padding(
@@ -170,14 +177,12 @@ class UserPreferencesState extends State<UserPreferences> {
                     vertical: 8.0,
                     horizontal: 20.0,
                   ),
-                  child: RaisedButton(
+                  child: RoundButton(
+                    label: "Delete Account",
+                    color: Colors.redAccent,
                     onPressed: () {
                       deleteDialog(context);
                     },
-                    child: Text(
-                      "Delete Account",
-                      style: TextStyle(color: Colors.red),
-                    ),
                   ),
                 ),
               ]),
@@ -186,31 +191,10 @@ class UserPreferencesState extends State<UserPreferences> {
     );
   }
 
-  // TODO temp living here, to be moved to auth(?)
-  void logOut() async {
-    await FirebaseAuth.instance.signOut();
-    GoogleSignIn _googleSignIn = GoogleSignIn();
-    _googleSignIn.signOut();
-
-    Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen()));
-  }
-
   void editProfileFunction(BuildContext context) async {
-    var result =
-        await Navigator.push(context, MaterialPageRoute(builder: (context) {
+    await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return EditProfilePage();
     }));
-
-    if (result != null) {
-      print("EDIT RESULT " + result.toString());
-      ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
-      pc.profile = result;
-
-      setState(() {
-        profile = result;
-      });
-    }
   }
 }
 
@@ -221,64 +205,33 @@ class PreferenceButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
+    // ProfileData profile = RequestProvider.of<ProfileContainer>(context).profile;
+    ProfileData userProfile = getUserProfile(context);
     return Column(
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(
             children: <Widget>[
-              /// here we see [TestWidget], it accesses the
-              /// [RequestProvider<T>] created by [GetRequest<T>]
-              /// to access the model data
-              ///
-              /// this is all test at the moment, I'll adjust it shortly,
-              /// but you can hopefully see how its arranged - Jordan
-              TestWidget(),
+              Text(userProfile.name),
             ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
+          child: RoundButton(
+            label: "View Profile",
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => ProfilePage(
                           url: Globals.profileURL,
-                          profile: profile,
+                          profile: userProfile,
                           type: ProfileType.own,
                         )),
               );
             },
-            child: Text("View Profile"),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EditHobbyPage2(isShare: false)),
-              );
-            },
-            child: Text("Choose hobbies that you want to discover"),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RaisedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EditHobbyPage2(isShare: true)),
-              );
-            },
-            child: Text("Choose hobbies that you want to share"),
           ),
         ),
       ],

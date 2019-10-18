@@ -1,9 +1,12 @@
 import 'dart:math';
+import 'package:fadzmaq/controllers/globalData.dart';
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/cache.dart';
+import 'package:fadzmaq/controllers/imageCache.dart';
 import 'package:fadzmaq/controllers/postAsync.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/models/recommendations.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/recommendationEntry.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -16,14 +19,15 @@ class RecommendationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetRequest<RecommendationsData>(
-        url: Globals.recsURL,
+    return VerifyModel(
+        model: Model.recommendations,
         builder: (context) {
-          return GetRequest<UserProfileContainer>(
-              url: Globals.profileURL,
+          return VerifyModel(
+              model: Model.userProfile,
               builder: (context) {
                 return RecommendationsList();
               });
+          ;
         });
   }
 }
@@ -41,11 +45,7 @@ class RecommendationsListState extends State<RecommendationsList> {
   @override
   void didChangeDependencies() {
     if (recommendationsList == null) {
-      RecommendationsData recommendationsData =
-          RequestProvider.of<RecommendationsData>(context);
-
-      cacheRecommendationPhotos(context, recommendationsData);
-
+      RecommendationsData recommendationsData = getRecommendations(context);
       recommendationsList = recommendationsData.recommendations;
     }
 
@@ -58,7 +58,7 @@ class RecommendationsListState extends State<RecommendationsList> {
 
     if (recommendationsList.length > 0) {
       // never more than 10 entries shown
-      int numEntries = min(10, recommendationsList.length);
+      int numEntries = min(11, recommendationsList.length);
 
       return ListView.separated(
         separatorBuilder: (context, index) {
@@ -72,12 +72,26 @@ class RecommendationsListState extends State<RecommendationsList> {
         itemBuilder: _listItemBuilder,
       );
     } else {
-      return Text("No recommendations");
+      return Text(
+        "\n\nNo Recommendations!\n\nTry adding more hobbies to share,\nor increase your search radius.",
+        textAlign: TextAlign.center,
+        style: TextStyle(color: Colors.grey),
+      );
     }
   }
 
   Widget _listItemBuilder(BuildContext context, int index) {
-    if(recommendationsList[index].profile == null) return null;
+    if (index == 10)
+      return SizedBox(
+        height: 75,
+        child: Center(
+            child: Text(
+          "To see more recommendations please like or pass\ncandidates from your current list",
+          textAlign: TextAlign.center,
+          style: TextStyle(color: Colors.grey),
+        )),
+      );
+    if (recommendationsList[index].profile == null) return null;
     return RecommendationEntry(
         profile: recommendationsList[index].profile, recommendationList: this);
   }
@@ -99,7 +113,8 @@ class RecommendationsListState extends State<RecommendationsList> {
     var rd = RecommendationsData.fromJson(json.decode(response.body));
     if (rd == null) return;
 
-    cacheRecommendationPhotos(context, rd);
+    GlobalModel globalModel = getModel(context);
+    cacheRecommendationPhotos(globalModel, rd);
 
     List<ProfileContainer> newList = rd.recommendations;
     if (recommendationsList == null) return;

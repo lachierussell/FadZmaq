@@ -127,9 +127,13 @@ def get_profile(uid):
 @auth_required
 def update_profile(uid):
     try:
-        profile.update_profile(request, uid)
+        
+        request_data = json.loads(request.get_data())
+        print("Request: " + str( request_data))
+        profile.update_profile(request_data, uid)
         return get_profile()
     except Exception as e:
+        print(str(e))
         return page_not_found, 404
 
 
@@ -140,9 +144,11 @@ def update_profile(uid):
 def update_hobbies(uid):
     try:
         request_data = json.loads(request.get_data())
+        print("Request: " + str( request_data))
         hobbies.update_user_hobbies(uid, request_data)
         return "Success", 200
     except Exception as e:
+        print(str(e))
         return page_not_found, 404
 
 ## @brief Updates a users location and device id.
@@ -332,7 +338,6 @@ def pass_user(uid, id):
         return "User passed", 200
     except Exception:
         return page_not_found, 404
-
 
 
 # ------- ## ------- ## ------- ## ------- ## ------- ## ------- ##

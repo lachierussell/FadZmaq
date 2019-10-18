@@ -110,7 +110,7 @@ def get_hobby_list():
     try:
         rows = db.get_db().execute(
             '''
-            SELECT * FROM hobbies;
+            SELECT * FROM hobbies ORDER BY name;
             '''
         )
 

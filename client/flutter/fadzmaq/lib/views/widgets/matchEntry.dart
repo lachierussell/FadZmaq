@@ -1,5 +1,4 @@
 import 'package:fadzmaq/controllers/globals.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
@@ -16,8 +15,6 @@ class MatchEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserProfileContainer upc =
-        RequestProvider.of<UserProfileContainer>(context);
 
     return GestureDetector(
       onTap: () {
@@ -27,7 +24,6 @@ class MatchEntry extends StatelessWidget {
               builder: (context) => ProfilePage(
                   url: "matches/" + profile.userId,
                   profile: profile,
-                  userData: upc,
                   type: ProfileType.match)),
         );
       },
