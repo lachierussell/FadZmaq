@@ -114,7 +114,10 @@ BEGIN
         ) THEN
         INSERT INTO matches (user_a, user_b, time)
         VALUES (new.user_from, new.user_to, now());
-        DELETE FROM votes WHERE user_to = new.user_from;
+        DELETE FROM votes WHERE user_to = new.user_from
+        AND user_from = new.user_to;
+        DELETE FROM votes WHERE user_to = new.user_to
+        AND user_from = new.user_from;
         RETURN NULL;
     END IF;
     RETURN new;
@@ -239,9 +242,9 @@ CREATE OR REPLACE FUNCTION compatibility(from_user VARCHAR)
 AS
 $compatability_score$
 SELECT  coalesce(my_share.user_id, my_discover.user_id) as user_id,
-        coalesce(count_share, 0) * coalesce(count_discover,0) * 2 + coalesce(count_share, 0) + coalesce(count_discover,0) AS compat
+        coalesce(count_share, 0) * coalesce(count_discover,0) * 2 + coalesce(count_share, 0) + coalesce(count_discover,0) + coalesce(vote_count * 4,0) AS compat
 FROM (
-	SELECT DISTINCT (user_id), Count(user_id) AS count_share
+	SELECT user_id, Count(user_id) AS count_share
 	FROM user_hobbies
 	WHERE hobby_id IN (
 			SELECT hobby_id
@@ -253,7 +256,7 @@ FROM (
 	GROUP BY user_id
 	) my_share
 FULL OUTER JOIN (
-	SELECT DISTINCT (user_id), Count(user_id) AS count_discover
+	SELECT user_id, Count(user_id) AS count_discover
 	FROM user_hobbies 
 	WHERE hobby_id IN (
 			SELECT hobby_id
@@ -265,6 +268,13 @@ FULL OUTER JOIN (
 	GROUP BY user_id
 	) my_discover
 ON (my_share.user_id = my_discover.user_id)
+LEFT JOIN (
+	SELECT user_from, count(user_to) as vote_count
+	FROM votes
+	WHERE user_to = from_user
+	GROUP BY user_from
+	)votes_for_me
+ON (coalesce(my_share.user_id, my_discover.user_id) = user_from)
 ORDER BY compat DESC
 $compatability_score$
     LANGUAGE SQL;

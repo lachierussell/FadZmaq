@@ -8,7 +8,7 @@
 
 
 male_name_list = [
-    "Sam", "John", "Lee", "Ross", "Albert", "Taylor", "Harry", "Tim", "Henry", "Muhammad", "Rufus", "Ellis", "Scott", "Maxs", "John", "Jack", "Luis", "Ruben", "Simon",
+    "Sam", "John", "Lee", "Ross", "Albert", "Taylor", "Harry", "Tim", "Henry", "Muhamm", "Rufus", "Ellis", "Scott", "Maxs", "John", "Jack", "Luis", "Ruben", "Simon",
     "Marco", "Mark", "Alex", "Adrian", "Robert", "Hugh", "Zac", "Yusuf", "Declan", "Tom", "David", "Mitch", "Ray", "Archie", "Ronald", "Ben", "Oliver", "George",
     "Ethan", "Jerry", "Charlie", "Justin", "Jesse", "Troy", "Andy", "Ewan", "Shane", "Marcel", "Walt", "Adam", "James", "Lawrence", "Joel", "Bruce", "Tony", "Chester",
     "Brendan", "Toby", "Hayden", "William", "Daniel", "Jake", "Conner", "Vincent", "Luke", "Russell", "Mike", "Don", "Patrick", "Seb", "Sean", "Shaun", "Harvey",
