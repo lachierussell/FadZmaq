@@ -6,7 +6,7 @@ Flutter is a cross platform development framework by Google. Make sure you have 
 To push a build to a physical device or to an android emulator, you will need the Android SDK. Download it here: [https://developer.android.com/studio](https://developer.android.com/studio)
 
 ## iOS
-Flutter also works with OSX and iOS but you must be running OSX to build for it.
+Flutter also works with macOS and iOS but you must be running macOS to build for it.
 
 ## IDE
 You can also run flutter from your chosen IDE, hot reloading is available on any IDE and will load any changes you make on the fly. Make sure you open the root folder of the flutter project rather than the git or you won’t be using the launch setup, and it also lanches a bit strangely.
