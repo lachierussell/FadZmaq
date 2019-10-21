@@ -1,5 +1,7 @@
 import 'package:fadzmaq/views/widgets/hobbyChip.dart';
 
+/// All the hobbies
+/// Used to select from the hobbies list
 class AllHobbiesData {
   List<HobbyData> hobbies;
 
@@ -42,7 +44,7 @@ class HobbyData {
 
   @override
   int get hashCode {
-    return id;
+    return id.hashCode;
   }
 }
 

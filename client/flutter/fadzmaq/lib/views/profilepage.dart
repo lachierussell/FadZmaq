@@ -1,20 +1,51 @@
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/profile_body.dart';
-import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
+import 'package:fadzmaq/views/widgets/likePassButtons.dart';
+import 'package:fadzmaq/views/widgets/unmatch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:fadzmaq/controllers/request.dart';
 import 'package:fadzmaq/models/profile.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 enum ProfileType { own, match, recommendation }
 
 class ProfileAppbar extends StatelessWidget {
+  final String uid;
+  final ProfileType type;
+
+  ProfileAppbar({
+    @required this.uid,
+    @required this.type,
+  })  : assert(uid != null),
+        assert(type != null);
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
+      actions: type == ProfileType.match
+          ? <Widget>[
+              PopupMenuButton(
+                onSelected: (result) async {
+                  if (result == "Unmatch") {
+                    bool unmatched = await unmatchDialog(context, uid);
+                    if (unmatched == true) {
+                      Navigator.pop(context);
+                    }
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem<String>(
+                    value: "Unmatch",
+                    child: Text("Unmatch"),
+                  ),
+                ],
+                onCanceled: () {
+                  print("You have canceled the menu.");
+                },
+              )
+            ]
+          : null,
     );
   }
 }
@@ -22,14 +53,12 @@ class ProfileAppbar extends StatelessWidget {
 class ProfilePage extends StatelessWidget {
   final String url;
   final ProfileData profile;
-  final UserProfileContainer userData;
   final ProfileType type;
 
   const ProfilePage({
     Key key,
     @required this.url,
     this.profile,
-    this.userData,
     @required this.type,
   })  : assert(url != null),
         assert(type != null),
@@ -38,23 +67,21 @@ class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // As we only pass profile data we convert it into a container
-    final ProfileContainer container =
-        (profile != null) ? ProfileContainer(profile: profile) : null;
+    // final ProfileContainer container =
+    //     (profile != null) ? ProfileContainer(profile: profile) : null;
 
     return Scaffold(
-      body: GetRequest<ProfileContainer>(
-        url: url,
-        model: container,
-        builder: (context) {
-          return GetRequest<UserProfileContainer>(
-            url: "profile",
-            model: userData,
-            builder: (context) {
-              return ProfilePageState(type: type);
-            },
-          );
-        },
+      body: ProfilePageState(
+        type: type,
+        profile: profile,
       ),
+      // GetRequest<ProfileContainer>(
+      //   url: url,
+      //   model: container,
+      //   builder: (context) {
+      //     return ProfilePageState(type: type);
+      //   },
+      // ),
       floatingActionButton:
           profile != null && type == ProfileType.recommendation
               ? Row(
@@ -77,24 +104,20 @@ class ProfilePage extends StatelessWidget {
 
 class ProfilePageState extends StatelessWidget {
   final ProfileType type;
+  final ProfileData profile;
 
   ProfilePageState({
+    @required this.profile,
     @required this.type,
-  })  : assert(type != null);
+  }) : assert(type != null);
 
   @override
   Widget build(BuildContext context) {
-
-
-  ProfileContainer pc = RequestProvider.of<ProfileContainer>(context);
-  ProfileData profile = pc.profile;
-
     return Scaffold(
       body: SingleChildScrollView(
         child: Stack(
           children: <Widget>[
             Container(
-              // margin: const EdgeInsets.only(top: 80),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -107,14 +130,17 @@ class ProfilePageState extends StatelessWidget {
                         height: MediaQuery.of(context).size.shortestSide,
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child: DisplayPhoto(url: profile.photo),
+                          child: DisplayPhoto(
+                            url: profile.photo,
+                            dimension: MediaQuery.of(context).size.shortestSide,
+                          ),
                         ),
                       ),
                     ),
                   ),
                   Container(
                     margin: EdgeInsets.only(left: 16, right: 16),
-                    child: ProfileBody(),
+                    child: ProfileBody(type: type, profile: profile),
                   ),
                   type == ProfileType.recommendation
                       ? SizedBox(height: 140)
@@ -122,7 +148,10 @@ class ProfilePageState extends StatelessWidget {
                 ],
               ),
             ),
-            ProfileAppbar(),
+            ProfileAppbar(
+              uid: profile.userId,
+              type: type,
+            ),
           ],
         ),
       ),

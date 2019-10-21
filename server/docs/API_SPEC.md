@@ -146,6 +146,7 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
     "profile": {
         "user_id": "29f51c08adac957424e06699b81acdb5",
         "name": "John",
+        "rating": -1,
         "photo_location": "URL",
         "profile_fields": [
             {
@@ -211,7 +212,8 @@ Not all methods have been specified. If 501 is an optional Fail code the route h
         {
             "profile": {
                 "user_id": "29f51c08adac957424e06699b81acdb5",
-                "name": "John",
+                "name": "John"
+                "rating": -1 // OR 0 (thumbs down) OR 1 (thumbs up),
                 "photo_location": "URL",
                 "profile_fields": [
                     {
@@ -529,7 +531,8 @@ none
         // This provides approximately 1km of resolution.
         "lat": -122.06,
         "long": 37.42
-    }	
+    },
+    "device": [device id]
 }
 
 // Recieve

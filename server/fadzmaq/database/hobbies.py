@@ -1,4 +1,7 @@
-# @file
+## @file
+# @brief Retrieves and builds hobby related data.
+# Contains the functions which collect the hobby data from the database and builds
+# this data into json object. The functions have been abstracted to reduce code overhead.
 #
 # FadZmaq Project
 # Professional Computing. Semester 2 2019
@@ -9,7 +12,7 @@
 import fadzmaq.database.connection as db
 
 
-# Retrieves the user hobbies
+## @brief Retrieves a users currently selected hobbies.
 # @param subject    User id
 # @return List of share/discover hobbies as per API spec.
 def get_hobbies(subject):
@@ -28,6 +31,13 @@ def get_hobbies(subject):
     return build_hobby_data(rows)
 
 
+## @brief Builds the selected hobby data into objects
+# Takes the ResultProxy rows and builds these into hobby containers. These are collected into categories
+# to provide the mobile client an indication of whether the user is sharing/discovering this hobby or it is a matched
+# hobby with another user.
+# @param rows   ResultProxy object containing the hobby data.
+# @return A python list of dictionaries representing the JSON objects.
+# @note This is not JSON. Convert to JSON with `jsonify()`
 def build_hobby_data(rows):
     share = []
     discover = []
@@ -58,6 +68,10 @@ def build_hobby_data(rows):
     return hobbies
 
 
+## @brief Helper function for building hobby data to containerise the categories.
+# @param offer      The type of container - `(discover|share|matched)`
+# @param hobbies    The list of hobbies that belong to this container.
+# @return A contain object (python dictionary).
 def containerize(offer, hobbies):
     return {
         'container': offer,
@@ -65,8 +79,10 @@ def containerize(offer, hobbies):
     }
 
 
-# @brief Updates the users hobbies
+## @brief Updates the users hobbies
 # Deletes current hobbies and updates with the new hobbies.
+# @param uid        The user id that we are updating
+# @param request    The object sent from client containing their update.
 def update_user_hobbies(uid, request):
     hobbies = request["hobbies"]
     for category in hobbies:
@@ -86,12 +102,15 @@ def update_user_hobbies(uid, request):
             )
 
 
-# @brief Retrieves the full list of hobbies from the db.
+## @brief Retrieves the full list of hobbies from the db.
+# This is of user selectable stored hobbies.
+# @return A list of hobbies in dictionaries.
+# @note This is not JSON. Convert to JSON with `jsonify()`
 def get_hobby_list():
     try:
         rows = db.get_db().execute(
             '''
-            SELECT * FROM hobbies;
+            SELECT * FROM hobbies ORDER BY name;
             '''
         )
 
@@ -112,6 +131,10 @@ def get_hobby_list():
         raise IOError(str(e))
 
 
+## @brief Retrieves the matched hobbies two users.
+# @param uid    Your user id
+# @param id     Their user id
+# @returns A list of hobbies in containers from `build_hobby_data()`
 def get_matched_hobbies(uid, id):
     try:
         rows = db.get_db().execute(

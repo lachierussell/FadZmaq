@@ -1,6 +1,7 @@
 import 'package:fadzmaq/models/profile.dart';
-import 'package:flutter/cupertino.dart';
 
+/// returned by the server once you like someone
+/// if there is a match the [ProfileContainer] is included
 class LikeResult {
   final bool match;
   final List<ProfileContainer> matched;

@@ -10,29 +10,36 @@ import 'package:flushbar/flushbar.dart';
 ///
 /// Asynchrounous, does not wait for a response
 Future<http.Response> postAsync(BuildContext context, String url,
-    {var json}) async {
+    {var json, bool useGet = false, bool useDelete = false}) async {
   url = AppConfig.of(context).server + url;
 
-  // this si here so we can catch erros for the popup, but return the response as a null
+  // swap depending on what we got in
+  // TODO merge httpGet and httpPost
+  Function swapFunction;
+  if (useGet) {
+    swapFunction = httpGet;
+  } else if (useDelete) {
+    swapFunction = httpDelete;
+  } else {
+    swapFunction = httpPost;
+  }
+
   http.Response response;
+  try {
+    response = await swapFunction(url, json: json);
 
-  Future request = httpPost(url, json: json).then((value) {
-    if (value.statusCode != 200) {
-      errorSnackRevised("failed!: " + value.statusCode.toString());
+    if (response.statusCode == 200 || response.statusCode == 204) {
     } else {
-      // errorSnackRevised(context,"passed!: " + value.statusCode.toString() + "\n" + value.body);
-      response = value;
-      print("body: " + value.body);
+      errorSnackRevised("Server error, action not completed!");
     }
-  }).catchError((error) {
-    errorSnackRevised("failed!: " + error.toString());
-  });
-
-  await request;
+  } catch (_) {
+    errorSnackRevised("Server error, action not completed!");
+  }
 
   return response;
 }
 
+/// snackbar for errors
 void errorSnackRevised(String s) {
   Flushbar flush;
   flush = Flushbar(
@@ -66,5 +73,5 @@ void errorSnackRevised(String s) {
 //   );
 
 //   // mainScaffold.currentState.showSnackBar(snackBar);
-//   Scaffold.of(context).showSnackBar(snackBar);
+//   Scaffold.of(mainScaffold.currentContext).showSnackBar(snackBar);
 // }

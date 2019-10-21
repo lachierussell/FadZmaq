@@ -1,20 +1,26 @@
+import 'dart:io';
+import 'dart:math';
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/app_config.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/models/globalModel.dart';
+import 'package:fadzmaq/views/edithobbiespage.dart';
+import 'package:fadzmaq/views/landing.dart';
+import 'package:fadzmaq/views/widgets/displayPhoto.dart';
+import 'package:fadzmaq/views/widgets/hobbyChips.dart';
+import 'package:fadzmaq/views/widgets/profile_body.dart';
+import 'package:fadzmaq/views/widgets/roundButton.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:flutter/cupertino.dart';
-
-class ProfileTempApp extends StatelessWidget {
-  const ProfileTempApp();
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const EditProfilePage(),
-    );
-  }
-}
+import 'package:image_picker/image_picker.dart';
+import 'package:image/image.dart' as Im;
+import 'package:uuid/uuid.dart';
+import 'dart:convert';
+// import 'package:permission_handler/permission_handler.dart';
 
 class EditProfilePage extends StatelessWidget {
   const EditProfilePage({Key key}) : super(key: key);
@@ -25,8 +31,8 @@ class EditProfilePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Edit Profile'),
       ),
-      body: GetRequest<ProfileContainer>(
-        url: "profile",
+      body: VerifyModel(
+        model: Model.userProfile,
         builder: (context) {
           return new EditProfile();
         },
@@ -59,6 +65,58 @@ String profileFieldFromString(ProfileData pd, String fieldName) {
 }
 
 class EditProfileState extends State<EditProfile> {
+  File _image1;
+
+  String imgurl;
+
+  String imgurlForm;
+
+  bool disableButton = false;
+
+  final FirebaseStorage storage =
+      new FirebaseStorage(storageBucket: 'gs://fadzmaq1.appspot.com/');
+
+  // Get an image from your gallery
+  Future getImage1() async {
+// Map<PermissionGroup, PermissionStatus> permissions = await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    if (image != null) {
+      final Directory tempDir = Directory.systemTemp;
+      final path = tempDir.path;
+      int rand = new Random().nextInt(10000);
+      Im.Image newimage = Im.decodeImage(image.readAsBytesSync());
+      newimage = Im.copyResizeCropSquare(newimage, 1080);
+      var newim1 = new File('$path/img_$rand.jpg')
+        ..writeAsBytesSync(Im.encodeJpg(newimage, quality: 52));
+
+      setState(() {
+        _image1 = newim1;
+      });
+    }
+  }
+
+  // Upload File to firebase
+  Future<Null> _uploadFile() async {
+    String fileName = "${Uuid().v1()}";
+    final StorageReference reference =
+        FirebaseStorage.instance.ref().child(fileName);
+    StorageUploadTask uploadTask = reference.putFile(_image1);
+    StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
+    final String url = (await taskSnapshot.ref.getDownloadURL());
+    print('URL Is $url');
+
+    setState(() {
+      imgurl = url;
+      imgurlForm = imgurl;
+    });
+  }
+
+  String returnImageURL() {
+    return imgurl;
+  }
+
   var data;
   bool autoValidate = true;
   bool readOnly = false;
@@ -71,13 +129,14 @@ class EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+    // ProfileData pd = RequestProvider.of<ProfileContainer>(context).profile;
+    ProfileData userProfile = getUserProfile(context);
     String server = AppConfig.of(context).server;
 
     // check for id 1 (about me) and grab the display value
-    String bio = profileFieldFromString(pd, "bio");
-    String contactPhone = profileFieldFromString(pd, "phone");
-    String contactEmail = profileFieldFromString(pd, "email");
+    String bio = profileFieldFromString(userProfile, "bio");
+    String contactPhone = profileFieldFromString(userProfile, "phone");
+    String contactEmail = profileFieldFromString(userProfile, "email");
 
 //    final String contact_phone =
 //        pd.contactDetails.phone != null ? pd.contactDetails.phone : "";
@@ -86,7 +145,7 @@ class EditProfileState extends State<EditProfile> {
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.fromLTRB(30, 10, 30, 10),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -100,10 +159,64 @@ class EditProfileState extends State<EditProfile> {
                 // readOnly: true,
                 child: Column(
                   children: <Widget>[
+                    SizedBox(height: 20),
+                    ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      child: _image1 != null
+                          ? Image.file(
+                              _image1,
+                              height: Globals.recThumbDim,
+                              width: Globals.recThumbDim,
+                            )
+                          : DisplayPhoto(
+                              url: userProfile.photo,
+                              dimension: Globals.recThumbDim,
+                            ),
+                    ),
+                    // Get an Image
+                    SizedBox(height: 10),
+                    RoundButton(label: 'Select Image', onPressed: getImage1),
+                    SizedBox(height: 20),
                     FormBuilderTextField(
                         attribute: "nickname",
-                        initialValue: pd.name,
+                        initialValue: userProfile.name,
                         decoration: InputDecoration(labelText: "Nickname")),
+                    SizedBox(height: 30),
+                    ProfileHobbies(
+                        hobbies: userProfile.hobbyContainers,
+                        direction: HobbyDirection.discover),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RoundButton(
+                        label: "Discover Hobbies",
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditHobbyPage2(isShare: false)),
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(height: 30),
+                    ProfileHobbies(
+                        hobbies: userProfile.hobbyContainers,
+                        direction: HobbyDirection.share),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: RoundButton(
+                        label: "Share Hobbies",
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    EditHobbyPage2(isShare: true)),
+                          );
+                        },
+                      ),
+                    ),
                     FormBuilderTextField(
                         attribute: "email",
                         initialValue: contactEmail,
@@ -115,23 +228,60 @@ class EditProfileState extends State<EditProfile> {
                     FormBuilderTextField(
                         attribute: "bio",
                         initialValue: bio,
+                        minLines: 1,
+                        maxLines: 10,
+                        maxLength: 400,
+                        maxLengthEnforced: true,
                         decoration: InputDecoration(labelText: "bio")),
                   ],
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  Expanded(
-                    child: MaterialButton(
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        "Submit",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
+              SizedBox(height: 20),
+              RoundButton(
+                label: "Submit",
+                color: Theme.of(context).accentColor,
+                onPressed: disableButton
+                    ? null
+                    : () async {
+                        setState(() {
+                          disableButton = true;
+                        });
+                        if (_image1 != null) {
+                          await _uploadFile();
+                        }
                         if (_fbKey.currentState.saveAndValidate()) {
-                          print(_fbKey.currentState.value);
-                          httpPost(server + "profile", json:_fbKey.currentState.value);
+                          if (imgurl != null) {
+                            userProfile.photo = imgurl;
+                          } else {
+                            imgurl = userProfile.photo;
+                          }
+
+                          _fbKey.currentState.value.addAll({"photo": imgurl});
+
+                          print("Sending" + '${_fbKey.currentState.value}');
+                          postAsync(context, "profile",
+                              json: json.encode(_fbKey.currentState.value));
+
+                          // httpGet(server + "profile");
+
+                          String nickname =
+                              _fbKey.currentState.value['nickname'];
+                          String email = _fbKey.currentState.value['email'];
+                          String phone = _fbKey.currentState.value['phone'];
+                          String bio = _fbKey.currentState.value['bio'];
+
+                          if (nickname != null) userProfile.name = nickname;
+
+                          if (email != null)
+                            userProfile.replaceProfileField("email", email);
+                          if (phone != null)
+                            userProfile.replaceProfileField("phone", phone);
+                          if (bio != null)
+                            userProfile.replaceProfileField("bio", bio);
+
+                          // setState(() {
+                          //   disableButton = false;
+                          // });
 
                           Navigator.pop(context);
                         } else {
@@ -139,12 +289,6 @@ class EditProfileState extends State<EditProfile> {
                           print("validation failed");
                         }
                       },
-                    ),
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                ],
               ),
             ],
           ),

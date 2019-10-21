@@ -1,10 +1,11 @@
-import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/globals.dart';
+import 'package:fadzmaq/controllers/postAsync.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/recommendations.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:fadzmaq/views/widgets/hobbyChips.dart';
-import 'package:fadzmaq/views/widgets/recommendationButtons.dart';
+import 'package:fadzmaq/views/widgets/likePassButtons.dart';
 import 'package:flutter/material.dart';
 
 /// Entry in the recommendation list
@@ -27,9 +28,6 @@ class RecommendationEntry extends StatelessWidget {
   /// If there is a response either way remove the entry from the list
   /// This needs to be a async as it waits for the page to return
   _navigateAwait(BuildContext context, ProfileData profile) async {
-    UserProfileContainer upc =
-        RequestProvider.of<UserProfileContainer>(context);
-
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
     final LikePass type = await Navigator.push(
@@ -38,20 +36,20 @@ class RecommendationEntry extends StatelessWidget {
         builder: (context) => ProfilePage(
           url: "matches/" + profile.userId,
           profile: profile,
-          userData: upc,
           type: ProfileType.recommendation,
         ),
       ),
     );
 
-    if (type == LikePass.like) {
-      asyncMatchPopup(context, profile);
-    }
-
     // make changes according to the result
     // in this case remove the recommendation we have just liked/disliked
-
-    recommendationList.removeItem(profile.userId);
+    if (type == LikePass.like) {
+      asyncMatchPopup(context, profile);
+      recommendationList.removeItem(profile.userId);
+    } else if (type == LikePass.pass) {
+      postAsync(context, "pass/" + profile.userId);
+      recommendationList.removeItem(profile.userId);
+    }
   }
 
   Widget _recommendationEntry(BuildContext context, ProfileData profile) {
@@ -70,7 +68,7 @@ class RecommendationEntry extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: DisplayPhoto(
                   url: profile.photo,
-                  dimension: 160,
+                  dimension: Globals.recThumbDim,
                 ),
               ),
             ),
@@ -102,7 +100,20 @@ Widget _getMatchText(BuildContext context, ProfileData profile) {
           style: _nameStyle,
         ),
       ),
-      SizedBox(height: 6),
+      SizedBox(height: 2),
+      
+      profile.getProfileField("distance") != "" ?
+      Row(
+        children: <Widget>[
+          Icon(
+            Icons.location_on,
+            color: Colors.grey,
+            size:16,
+          ),
+          Text(profile.getProfileField("distance"), style: TextStyle(color: Colors.grey),),
+        ],
+      ): Container(),
+      SizedBox(height: 10),
       HobbyChips(
         hobbies: profile.hobbyContainers,
         hobbyCategory: HobbyDirection.match,

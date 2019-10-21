@@ -1,4 +1,4 @@
-import 'package:fadzmaq/controllers/request.dart';
+import 'package:fadzmaq/controllers/globals.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/profilepage.dart';
 import 'package:fadzmaq/views/widgets/displayPhoto.dart';
@@ -16,15 +16,15 @@ class MatchEntry extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    UserProfileContainer upc =
-        RequestProvider.of<UserProfileContainer>(context);
-
     return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProfilePage(url: "matches/" + profile.userId, profile: profile, userData: upc, type: ProfileType.match)),
+              builder: (context) => ProfilePage(
+                  url: "matches/" + profile.userId,
+                  profile: profile,
+                  type: ProfileType.match)),
         );
       },
       behavior: HitTestBehavior.opaque,
@@ -38,7 +38,7 @@ class MatchEntry extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(10)),
                 child: DisplayPhoto(
                   url: profile.photo,
-                  dimension: 80,
+                  dimension: Globals.matchThumbDim,
                 ),
               ),
             ),
@@ -67,7 +67,9 @@ Widget _getMatchBody(BuildContext context, ProfileData profile) {
         // style: Theme.of(context).textTheme.title,
         style: _nameStyle,
       ),
-      SizedBox(height: 4,),
+      SizedBox(
+        height: 4,
+      ),
       HobbyChips(
         hobbies: profile.hobbyContainers,
         hobbyCategory: HobbyDirection.match,

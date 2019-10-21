@@ -1,7 +1,7 @@
 import 'package:fadzmaq/models/profile.dart';
 
 class RecommendationsData {
-  List<RecommendationContainer> recommendations;
+  List<ProfileContainer> recommendations;
 
   RecommendationsData({this.recommendations});
 
@@ -11,34 +11,11 @@ class RecommendationsData {
 
 RecommendationsData _recommendationsFromJson(Map<String, dynamic> json) {
   var recommendationsJson = json['recommendations'] as List;
-  List<RecommendationContainer> recommendations = recommendationsJson != null
-      ? recommendationsJson.map((i) => RecommendationContainer.fromJson(i)).toList()
+  List<ProfileContainer> recommendations = recommendationsJson != null
+      ? recommendationsJson.map((i) => ProfileContainer.fromJson(i)).toList()
       : null;
 
   return RecommendationsData(
     recommendations: recommendations,
   );
-}
-
-class RecommendationContainer {
-  final int rank;
-  final ProfileData user;
-
-  RecommendationContainer({
-    this.rank,
-    this.user,
-  });
-
-  factory RecommendationContainer.fromJson(Map<String, dynamic> json) {
-
-
-    var userJson = json['user'];
-    // print("USERJSON: " + userJson.toString());
-    ProfileData user = userJson != null ? ProfileData.fromJson(userJson) : null;
-
-    return RecommendationContainer(
-      rank: json['rank'],
-      user: user,
-    );
-  }
 }

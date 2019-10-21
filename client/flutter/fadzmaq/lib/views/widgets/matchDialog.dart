@@ -1,3 +1,6 @@
+import 'package:fadzmaq/controllers/globals.dart';
+import 'package:fadzmaq/controllers/globalData.dart';
+import 'package:fadzmaq/models/globalModel.dart';
 import 'package:fadzmaq/models/profile.dart';
 import 'package:fadzmaq/views/landing.dart';
 import 'package:fadzmaq/views/profilepage.dart';
@@ -5,8 +8,10 @@ import 'package:fadzmaq/views/widgets/displayPhoto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-Future<void> matchPopup(
-    BuildContext context, ProfileData profile, ProfileData userProfile) async {
+/// a pop up that occurs when a new match is made
+Future<void> matchPopup(ProfileData profile) async {
+  ProfileData userProfile = getUserProfile(mainScaffold.currentContext);
+
   return showDialog<void>(
     context: mainScaffold.currentContext,
     barrierDismissible: false, // user must tap button!
@@ -24,7 +29,7 @@ Future<void> matchPopup(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: DisplayPhoto(
                     url: userProfile.photo,
-                    dimension: 80,
+                    dimension: Globals.matchThumbDim,
                   ),
                 ),
                 SizedBox(width: 10),
@@ -34,7 +39,7 @@ Future<void> matchPopup(
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   child: DisplayPhoto(
                     url: profile.photo,
-                    dimension: 80,
+                    dimension: Globals.matchThumbDim,
                   ),
                 ),
               ],
@@ -58,7 +63,6 @@ Future<void> matchPopup(
                     builder: (context) => ProfilePage(
                           // just view our own profile for now
                           url: "matches/" + profile.userId,
-                          //TODO don't send the profile because it doesn't have contact info
                           profile: profile,
                           type: ProfileType.match,
                         )),
